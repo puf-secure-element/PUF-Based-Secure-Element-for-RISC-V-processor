@@ -1,0 +1,225 @@
+# //  Questa Sim-64
+# //  Version 2021.2_1 linux_x86_64 May 15 2021
+# //
+# //  Copyright 1991-2021 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  QuestaSim and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# vsim tb_sha256_top -voptargs="+acc" -do "log -r /*; add wave -r /*; run -all" 
+# Start time: 20:08:59 on Jul 02,2026
+# ** Note: (vsim-8009) Loading existing optimized design _opt
+# Loading sv_std.std
+# Loading work.tb_sha256_top(fast)
+# Loading work.sha256_top(fast)
+# Loading work.sha256(fast)
+# Loading work.sha256_m_schedule(fast)
+# Loading work.sha256_k_constant(fast)
+# log -r /*
+#  add wave -r /*
+#  run -all
+# T=5000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=15000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=25000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=35000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=45000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=55000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=65000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=75000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=85000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=95000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=105000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=115000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=125000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=135000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=145000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=155000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=165000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=175000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=185000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=195000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=205000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=215000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=225000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=235000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=245000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=255000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=265000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=275000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=285000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=295000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=305000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=315000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=325000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=335000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=345000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=355000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=365000 start=0 next=0 done=1 hash_valid=0 count=0
+# START SHA256
+# T=375000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=385000 start=0 next=0 done=1 hash_valid=0 count=0
+# T=395000 start=1 next=0 done=1 hash_valid=0 count=0
+# T=405000 start=0 next=0 done=0 hash_valid=0 count=0
+# T=415000 start=0 next=0 done=0 hash_valid=0 count=1
+# T=425000 start=0 next=0 done=0 hash_valid=0 count=2
+# T=435000 start=0 next=0 done=0 hash_valid=0 count=3
+# T=445000 start=0 next=0 done=0 hash_valid=0 count=4
+# T=455000 start=0 next=0 done=0 hash_valid=0 count=5
+# T=465000 start=0 next=0 done=0 hash_valid=0 count=6
+# T=475000 start=0 next=0 done=0 hash_valid=0 count=7
+# T=485000 start=0 next=0 done=0 hash_valid=0 count=8
+# T=495000 start=0 next=0 done=0 hash_valid=0 count=9
+# T=505000 start=0 next=0 done=0 hash_valid=0 count=10
+# T=515000 start=0 next=0 done=0 hash_valid=0 count=11
+# T=525000 start=0 next=0 done=0 hash_valid=0 count=12
+# T=535000 start=0 next=0 done=0 hash_valid=0 count=13
+# T=545000 start=0 next=0 done=0 hash_valid=0 count=14
+# T=555000 start=0 next=0 done=0 hash_valid=0 count=15
+# T=565000 start=0 next=0 done=0 hash_valid=0 count=16
+# T=575000 start=0 next=0 done=0 hash_valid=0 count=17
+# T=585000 start=0 next=0 done=0 hash_valid=0 count=18
+# T=595000 start=0 next=0 done=0 hash_valid=0 count=19
+# T=605000 start=0 next=0 done=0 hash_valid=0 count=20
+# T=615000 start=0 next=0 done=0 hash_valid=0 count=21
+# T=625000 start=0 next=0 done=0 hash_valid=0 count=22
+# T=635000 start=0 next=0 done=0 hash_valid=0 count=23
+# T=645000 start=0 next=0 done=0 hash_valid=0 count=24
+# T=655000 start=0 next=0 done=0 hash_valid=0 count=25
+# T=665000 start=0 next=0 done=0 hash_valid=0 count=26
+# T=675000 start=0 next=0 done=0 hash_valid=0 count=27
+# T=685000 start=0 next=0 done=0 hash_valid=0 count=28
+# T=695000 start=0 next=0 done=0 hash_valid=0 count=29
+# T=705000 start=0 next=0 done=0 hash_valid=0 count=30
+# T=715000 start=0 next=0 done=0 hash_valid=0 count=31
+# T=725000 start=0 next=0 done=0 hash_valid=0 count=32
+# T=735000 start=0 next=0 done=0 hash_valid=0 count=33
+# T=745000 start=0 next=0 done=0 hash_valid=0 count=34
+# T=755000 start=0 next=0 done=0 hash_valid=0 count=35
+# T=765000 start=0 next=0 done=0 hash_valid=0 count=36
+# T=775000 start=0 next=0 done=0 hash_valid=0 count=37
+# T=785000 start=0 next=0 done=0 hash_valid=0 count=38
+# T=795000 start=0 next=0 done=0 hash_valid=0 count=39
+# T=805000 start=0 next=0 done=0 hash_valid=0 count=40
+# T=815000 start=0 next=0 done=0 hash_valid=0 count=41
+# T=825000 start=0 next=0 done=0 hash_valid=0 count=42
+# T=835000 start=0 next=0 done=0 hash_valid=0 count=43
+# T=845000 start=0 next=0 done=0 hash_valid=0 count=44
+# T=855000 start=0 next=0 done=0 hash_valid=0 count=45
+# T=865000 start=0 next=0 done=0 hash_valid=0 count=46
+# T=875000 start=0 next=0 done=0 hash_valid=0 count=47
+# T=885000 start=0 next=0 done=0 hash_valid=0 count=48
+# T=895000 start=0 next=0 done=0 hash_valid=0 count=49
+# T=905000 start=0 next=0 done=0 hash_valid=0 count=50
+# T=915000 start=0 next=0 done=0 hash_valid=0 count=51
+# T=925000 start=0 next=0 done=0 hash_valid=0 count=52
+# T=935000 start=0 next=0 done=0 hash_valid=0 count=53
+# T=945000 start=0 next=0 done=0 hash_valid=0 count=54
+# T=955000 start=0 next=0 done=0 hash_valid=0 count=55
+# T=965000 start=0 next=0 done=0 hash_valid=0 count=56
+# T=975000 start=0 next=0 done=0 hash_valid=0 count=57
+# T=985000 start=0 next=0 done=0 hash_valid=0 count=58
+# T=995000 start=0 next=0 done=0 hash_valid=0 count=59
+# T=1005000 start=0 next=0 done=0 hash_valid=0 count=60
+# T=1015000 start=0 next=0 done=0 hash_valid=0 count=61
+# T=1025000 start=0 next=0 done=0 hash_valid=0 count=62
+# T=1035000 start=0 next=0 done=0 hash_valid=0 count=63
+# T=1045000 start=0 next=0 done=0 hash_valid=0 count=0
+# T=1055000 start=0 next=0 done=1 hash_valid=0 count=0
+# HASH VALID!
+# T=1065000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1075000 start=0 next=0 done=1 hash_valid=1 count=0
+# [1075000] READ Addr=00 Data=00000000
+# T=1085000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1095000 start=0 next=0 done=1 hash_valid=1 count=0
+# [1095000] READ Addr=04 Data=00000003
+# T=1105000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1115000 start=0 next=0 done=1 hash_valid=1 count=0
+# [1115000] READ Addr=20 Data=0ef738a8
+# T=1125000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1135000 start=0 next=0 done=1 hash_valid=1 count=0
+# [1135000] READ Addr=21 Data=eac368dd
+# T=1145000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1155000 start=0 next=0 done=1 hash_valid=1 count=0
+# [1155000] READ Addr=22 Data=c56908be
+# T=1165000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1175000 start=0 next=0 done=1 hash_valid=1 count=0
+# [1175000] READ Addr=23 Data=ee60cd3f
+# T=1185000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1195000 start=0 next=0 done=1 hash_valid=1 count=0
+# [1195000] READ Addr=24 Data=f220ae1a
+# T=1205000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1215000 start=0 next=0 done=1 hash_valid=1 count=0
+# [1215000] READ Addr=25 Data=1ef6325a
+# T=1225000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1235000 start=0 next=0 done=1 hash_valid=1 count=0
+# [1235000] READ Addr=26 Data=c28be6ab
+# T=1245000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1255000 start=0 next=0 done=1 hash_valid=1 count=0
+# [1255000] READ Addr=27 Data=c55c910b
+# T=1265000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1275000 start=0 next=0 done=1 hash_valid=1 count=0
+# [1275000] READ Addr=10 Data=61626380
+# T=1285000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1295000 start=0 next=0 done=1 hash_valid=1 count=0
+# [1295000] READ Addr=11 Data=00000000
+# T=1305000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1315000 start=0 next=0 done=1 hash_valid=1 count=0
+# [1315000] READ Addr=12 Data=00000000
+# T=1325000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1335000 start=0 next=0 done=1 hash_valid=1 count=0
+# [1335000] READ Addr=13 Data=00000000
+# T=1345000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1355000 start=0 next=0 done=1 hash_valid=1 count=0
+# [1355000] READ Addr=14 Data=00000000
+# T=1365000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1375000 start=0 next=0 done=1 hash_valid=1 count=0
+# [1375000] READ Addr=15 Data=00000000
+# T=1385000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1395000 start=0 next=0 done=1 hash_valid=1 count=0
+# [1395000] READ Addr=16 Data=00000000
+# T=1405000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1415000 start=0 next=0 done=1 hash_valid=1 count=0
+# [1415000] READ Addr=17 Data=00000000
+# T=1425000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1435000 start=0 next=0 done=1 hash_valid=1 count=0
+# [1435000] READ Addr=18 Data=00000000
+# T=1445000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1455000 start=0 next=0 done=1 hash_valid=1 count=0
+# [1455000] READ Addr=19 Data=00000000
+# T=1465000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1475000 start=0 next=0 done=1 hash_valid=1 count=0
+# [1475000] READ Addr=1a Data=00000000
+# T=1485000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1495000 start=0 next=0 done=1 hash_valid=1 count=0
+# [1495000] READ Addr=1b Data=00000000
+# T=1505000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1515000 start=0 next=0 done=1 hash_valid=1 count=0
+# [1515000] READ Addr=1c Data=00000000
+# T=1525000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1535000 start=0 next=0 done=1 hash_valid=1 count=0
+# [1535000] READ Addr=1d Data=00000000
+# T=1545000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1555000 start=0 next=0 done=1 hash_valid=1 count=0
+# [1555000] READ Addr=1e Data=00000000
+# T=1565000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1575000 start=0 next=0 done=1 hash_valid=1 count=0
+# [1575000] READ Addr=1f Data=00000018
+# T=1585000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1595000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1605000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1615000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1625000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1635000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1645000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1655000 start=0 next=0 done=1 hash_valid=1 count=0
+# T=1665000 start=0 next=0 done=1 hash_valid=1 count=0
+# ** Note: $finish    : ../tb/unit_tests/tb_sha256_top.sv(131)
+#    Time: 1675 ns  Iteration: 0  Instance: /tb_sha256_top
+# 1
+# Break in Module tb_sha256_top at ../tb/unit_tests/tb_sha256_top.sv line 131

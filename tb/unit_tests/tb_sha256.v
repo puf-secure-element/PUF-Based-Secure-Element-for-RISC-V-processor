@@ -38,12 +38,12 @@ always #5 clk = ~clk;
 // Display hash
 //----------------------------------------------------
 always @(posedge clk) begin
-    //if(hash_valid) begin
+    if(hash_valid) begin
         $display("--------------------------------------------");
         $display("Time = %0t", $time);
         $display("HASH = %064h", hash_out);
         $display("--------------------------------------------");
-    //end
+    end
 end
 
 
@@ -65,6 +65,15 @@ initial begin
     rst_n = 1;
 
     #20;
+
+    //------------------------------------------------
+    // Test 1
+    // Message = "abc"
+    //
+    // 61626380
+    // ...
+    // length = 24 bits
+    //------------------------------------------------
 
     data_in = {
         32'h61626380,
@@ -94,6 +103,12 @@ initial begin
     wait(hash_valid);
 
     #50;
+
+
+    //------------------------------------------------
+    // Test 2
+    // Another block (dummy data)
+    //------------------------------------------------
 
     wait(done);
 

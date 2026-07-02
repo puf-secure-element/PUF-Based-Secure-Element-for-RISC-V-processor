@@ -91,7 +91,7 @@ sha256_m_schedule m_schedule (
     .w_out(w)
 );
 
-sha256_k_constants k_constants (
+sha256_k_constant k_constant (
     .round(round_cnt_reg),
     .k_out(k)
 );
@@ -194,7 +194,7 @@ always @(*) begin
     h6_new  = 32'h0;
     h7_new  = 32'h0;
     h_we    = 1'b0;
-    if(state_reg == IDLE) begin
+    if(state_reg == IDLE && start) begin
         h_we = 1'b1;
         h0_new = SHA_H0_0;
         h1_new = SHA_H0_1;
@@ -227,6 +227,7 @@ always @(*) begin
     f_new  = 32'h0;
     g_new  = 32'h0;
     h_new  = 32'h0;
+    a2h_we = 1'b0;
     if(state_reg == IDLE) begin
         a2h_we = 1'b1;
         //
@@ -302,12 +303,15 @@ always @(*) begin
                 state           = ROUNDS;
                 state_update    = 1'b1;
                 first_block     = 1'b1;
+                hash_valid_we   = 1'b1;
+                hash_valid_new  = 1'b0;
             end
             if(next) begin
                 round_rst       = 1'b1;     //Reset counter before rounds start
                 state           = ROUNDS;
                 state_update    = 1'b1;
-
+                hash_valid_we   = 1'b1;
+                hash_valid_new  = 1'b0;
             end
         end
         ROUNDS: begin

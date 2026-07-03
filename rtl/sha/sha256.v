@@ -31,6 +31,7 @@ module sha256 (
     reg             ready_flag;
     reg     [31:0]  t1, t2;
     reg             hash_valid_we, hash_valid_new;
+    reg             hash_valid_rst;
 
     //
     reg             a2h_we;
@@ -297,7 +298,8 @@ module sha256 (
         hash_valid_we   = 1'b0;
         case(state_reg)
             IDLE: begin
-                ready_flag  = 1'b1;
+                ready_flag      = 1'b1;
+                hash_valid_we   = 1'b0;
                 if(start) begin
                     round_rst       = 1'b1;     //Reset counter before rounds start
                     state           = ROUNDS;

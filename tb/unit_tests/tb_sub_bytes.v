@@ -76,9 +76,9 @@ module tb_sub_bytes;
         #10;
 
         $display("==================================================");
-        $display("Input      : %h", data_in_t);
-        $display("SBOX Expected   : %h", expected);
-        $display("Sub Bytes Output : %h", data_out_t);
+        $display("Input             : %h", data_in_t);
+        $display("SBOX Expected     : %h", expected);
+        $display("Sub Bytes Output  : %h", data_out_t);
 
         //------------------------------
         // Compare

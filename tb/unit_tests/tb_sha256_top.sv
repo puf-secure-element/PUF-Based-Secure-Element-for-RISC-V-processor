@@ -10,8 +10,13 @@ reg         we;
 reg [7:0]   addr;
 reg [31:0]  wdata;
 
+reg  [511:0] ecc_response;
+reg          ecc_valid;
+
 wire [31:0] rdata;
 wire        error;
+wire [255:0] hash_out;
+wire         hash_valid;
 
 integer i;
 
@@ -21,12 +26,20 @@ integer i;
 sha256_top dut (
     .clk(clk),
     .rst_n(rst_n),
+
     .sel(sel),
     .we(we),
     .addr(addr),
     .wdata(wdata),
+
+    .ecc_response(ecc_response),
+    .ecc_valid(ecc_valid),
+
     .rdata(rdata),
-    .error(error)
+    .error(error),
+
+    .hash_out(hash_out),
+    .hash_valid(hash_valid)
 );
 
 //------------------------------------------------
@@ -80,92 +93,140 @@ endtask
 //------------------------------------------------
 initial begin
 
-    clk   = 0;
-    rst_n = 0;
+    clk          = 0;
+    rst_n        = 0;
 
-    sel   = 0;
-    we    = 0;
-    addr  = 0;
-    wdata = 0;
+    sel          = 0;
+    we           = 0;
+    addr         = 0;
+    wdata        = 0;
+
+    ecc_response = 512'd0;
+    ecc_valid    = 0;
 
     repeat(5) @(posedge clk);
     rst_n = 1;
 
-    write_reg(8'h10,32'h61626380);
-    write_reg(8'h11,32'h00000000);
-    write_reg(8'h12,32'h00000000);
-    write_reg(8'h13,32'h00000000);
-    write_reg(8'h14,32'h00000000);
-    write_reg(8'h15,32'h00000000);
-    write_reg(8'h16,32'h00000000);
-    write_reg(8'h17,32'h00000000);
-    write_reg(8'h18,32'h00000000);
-    write_reg(8'h19,32'h00000000);
-    write_reg(8'h1A,32'h00000000);
-    write_reg(8'h1B,32'h00000000);
-    write_reg(8'h1C,32'h00000000);
-    write_reg(8'h1D,32'h00000000);
-    write_reg(8'h1E,32'h00000000);
-    write_reg(8'h1F,32'h00000018);
+    //------------------------------------------------
+    // TEST 1 : "abc"
+    //------------------------------------------------
 
+    ecc_response = {
+        32'h61626380,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000018
+    };
 
-    $display("START SHA256");
+    ecc_valid = 1;
+
+    $display("\n==============================");
+    $display("START SHA256 : abc");
+    $display("==============================");
 
     write_reg(8'h00,32'h00000001);
 
-    @(posedge dut.hash_valid);
+    @(posedge hash_valid);
+
+    ecc_valid = 0;
 
     $display("HASH VALID!");
 
-    $display("\n===== Start Reading ADDR_CRTL Register =====");
     read_reg(8'h00);
-    $display("\n===== Start Reading ADDR_STATUS Register =====");
     read_reg(8'h04);
-    $display("\n===== Start Reading ADDR_BLOCK Register =====");
+
     for(i=0;i<8;i=i+1)
         read_reg(8'h20+i);
-    $display("\n===== Start Reading ADDR_HASH Register =====");
-    for(i=0;i<8;i=i+1)
-        read_reg(8'h10+i);
 
-    $display("\n===== Start new Test =====");
-    write_reg(8'h10,32'h68656c6c); 
-    write_reg(8'h11,32'h6f800000); 
-    write_reg(8'h12,32'h00000000);
-    write_reg(8'h13,32'h00000000);
-    write_reg(8'h14,32'h00000000);
-    write_reg(8'h15,32'h00000000);
-    write_reg(8'h16,32'h00000000);
-    write_reg(8'h17,32'h00000000);
-    write_reg(8'h18,32'h00000000);
-    write_reg(8'h19,32'h00000000);
-    write_reg(8'h1A,32'h00000000);
-    write_reg(8'h1B,32'h00000000);
-    write_reg(8'h1C,32'h00000000);
-    write_reg(8'h1D,32'h00000000);
-    write_reg(8'h1E,32'h00000000);
-    write_reg(8'h1F,32'h00000028); 
+    //------------------------------------------------
+    // TEST 2 : "abc"
+    //------------------------------------------------
 
+    ecc_response = {
+        32'h61626380,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000018
+    };
 
-    $display("START SHA256");
+    ecc_valid = 1;
+
+    $display("\n==============================");
+    $display("START SHA256 : Keep OLD Data in");
+    $display("==============================");
+
+    write_reg(8'h00,32'h1);
+
+    repeat(20) @(posedge clk);
+
+    //------------------------------------------------
+    // TEST 3 : "hello"
+    //------------------------------------------------
+
+    ecc_response = {
+        32'h68656c6c,
+        32'h6f800000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000000,
+        32'h00000028
+    };
+
+    ecc_valid = 1;
+
+    $display("\n==============================");
+    $display("START SHA256 : hello");
+    $display("==============================");
 
     write_reg(8'h00,32'h00000001);
-    @(posedge dut.hash_valid);
+
+    @(posedge hash_valid);
+
+    ecc_valid = 0;
 
     $display("HASH VALID!");
 
-    $display("\n===== Start Reading ADDR_CRTL Register =====");
     read_reg(8'h00);
-    $display("\n===== Start Reading ADDR_STATUS Register =====");
     read_reg(8'h04);
-    $display("\n===== Start Reading ADDR_BLOCK Register =====");
+
     for(i=0;i<8;i=i+1)
         read_reg(8'h20+i);
-    $display("\n===== Start Reading ADDR_HASH Register =====");
-    for(i=0;i<8;i=i+1)
-        read_reg(8'h10+i);
 
-    #200;
+    #100;
     $finish;
 
 end
@@ -173,13 +234,15 @@ end
 //------------------------------------------------
 // Monitor
 //------------------------------------------------
-always @(posedge clk) begin
-    $display("T=%0t start=%b next=%b done=%b hash_valid=%b count=%0d hash_out=%h",
-            $time,
-            dut.start_reg,
-            dut.next_reg,
-            dut.done,
-            dut.hash_valid, dut.sha256_core.round_cnt_reg, dut.hash_out);
+always @(posedge clk) begin 
+    $display("T=%0t start=%b next=%b done=%b hash_valid=%b count=%0d hash_out=%h", 
+            $time, 
+            dut.start_reg, 
+            dut.next_reg, 
+            dut.done, 
+            dut.hash_valid, 
+            dut.sha256_core.round_cnt_reg, 
+            dut.hash_out); 
 end
 
 endmodule

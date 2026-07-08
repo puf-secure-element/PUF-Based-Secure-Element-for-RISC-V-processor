@@ -113,7 +113,7 @@ initial begin
 
     write_reg(8'h00,32'h00000001);
 
-    wait(dut.hash_valid_reg);
+    @(posedge dut.hash_valid);
 
     $display("HASH VALID!");
 
@@ -128,7 +128,44 @@ initial begin
     for(i=0;i<8;i=i+1)
         read_reg(8'h10+i);
 
-    #100;
+    $display("\n===== Start new Test =====");
+    write_reg(8'h10,32'h68656c6c); 
+    write_reg(8'h11,32'h6f800000); 
+    write_reg(8'h12,32'h00000000);
+    write_reg(8'h13,32'h00000000);
+    write_reg(8'h14,32'h00000000);
+    write_reg(8'h15,32'h00000000);
+    write_reg(8'h16,32'h00000000);
+    write_reg(8'h17,32'h00000000);
+    write_reg(8'h18,32'h00000000);
+    write_reg(8'h19,32'h00000000);
+    write_reg(8'h1A,32'h00000000);
+    write_reg(8'h1B,32'h00000000);
+    write_reg(8'h1C,32'h00000000);
+    write_reg(8'h1D,32'h00000000);
+    write_reg(8'h1E,32'h00000000);
+    write_reg(8'h1F,32'h00000028); 
+
+
+    $display("START SHA256");
+
+    write_reg(8'h00,32'h00000001);
+    @(posedge dut.hash_valid);
+
+    $display("HASH VALID!");
+
+    $display("\n===== Start Reading ADDR_CRTL Register =====");
+    read_reg(8'h00);
+    $display("\n===== Start Reading ADDR_STATUS Register =====");
+    read_reg(8'h04);
+    $display("\n===== Start Reading ADDR_BLOCK Register =====");
+    for(i=0;i<8;i=i+1)
+        read_reg(8'h20+i);
+    $display("\n===== Start Reading ADDR_HASH Register =====");
+    for(i=0;i<8;i=i+1)
+        read_reg(8'h10+i);
+
+    #200;
     $finish;
 
 end
@@ -137,12 +174,12 @@ end
 // Monitor
 //------------------------------------------------
 always @(posedge clk) begin
-    $display("T=%0t start=%b next=%b done=%b hash_valid=%b count=%0d",
+    $display("T=%0t start=%b next=%b done=%b hash_valid=%b count=%0d hash_out=%h",
             $time,
             dut.start_reg,
             dut.next_reg,
             dut.done,
-            dut.hash_valid_reg, dut.sha256_core.round_cnt_reg);
+            dut.hash_valid, dut.sha256_core.round_cnt_reg, dut.hash_out);
 end
 
 endmodule

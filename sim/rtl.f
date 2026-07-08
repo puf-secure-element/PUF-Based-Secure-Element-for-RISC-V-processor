@@ -1,13 +1,5 @@
-+incdir+../RTL
-+incdir+../RTL/rv32i
-+incdir+../RTL/ahb
-+incdir+../RTL/SRAM
-+incdir+../RTL/apb
-+incdir+../RTL/timer
++incdir+../rtl/sha
++incdir+../rtl/aes_dual_rail/aes_core
 
-../RTL/*.v
-../RTL/rv32i/*.v
-../RTL/ahb/*.v
-../RTL/SRAM/*.v
-../RTL/apb/*.v
-../RTL/timer/*.v
+../rtl/sha/*.v
+../rtl/aes_dual_rail/aes_core/*.v

@@ -22,7 +22,7 @@ module ecc_top (
             hamming_decoder_32 dec_inst (
                 .noisy_data_i(raw_resp_i[i*32 +: 32]),
                 .parity_i    (helper_in_i[i*6 +: 6]),
-                .corr_data_o (corr_resp_o[i*32 +: 32])
+                .corr_data_o (decoded_resp[i*32 +: 32])
             );
             
         end

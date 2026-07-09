@@ -1,25 +1,21 @@
 module hamming_decoder_32 (
     input  wire [31:0] noisy_data_i,
     input  wire [5:0]  parity_i,
-    output reg  [31:0] corr_data_o // Chuyển thành reg vì gán giá trị trong khối always
+    output reg  [31:0] corr_data_o 
 );
     wire [5:0]  calc_parity;
     wire [5:0]  syndrome;
     reg  [37:0] codeword;
     
-    // Bước 1: Tính lại parity từ dữ liệu nhiễu nhận được
     hamming_encoder_32 re_encoder (
         .data_i  (noisy_data_i),
         .parity_o(calc_parity)
     );
     
-    // Bước 2: Tính toán Syndrome (Hội chứng lỗi)
     assign syndrome = calc_parity ^ parity_i;
     
-    // Bước 3: Định vị và sửa lỗi lật bit
     always @(*) begin
         codeword = 38'h0;
-        // Gán parity vào các vị trí lũy thừa của 2: 1, 2, 4, 8, 16, 32 (lùi 1 index cho mảng từ 0)
         codeword[0]  = parity_i[0];
         codeword[1]  = parity_i[1];
         codeword[3]  = parity_i[2];
@@ -27,7 +23,6 @@ module hamming_decoder_32 (
         codeword[15] = parity_i[4];
         codeword[31] = parity_i[5];
         
-        // Gán 32 bit dữ liệu vào các vị trí còn lại
         codeword[2]   = noisy_data_i[0];  codeword[4]   = noisy_data_i[1];  codeword[5]   = noisy_data_i[2];
         codeword[6]   = noisy_data_i[3];  codeword[8]   = noisy_data_i[4];  codeword[9]   = noisy_data_i[5];
         codeword[10]  = noisy_data_i[6];  codeword[11]  = noisy_data_i[7];  codeword[12]  = noisy_data_i[8];
@@ -40,12 +35,10 @@ module hamming_decoder_32 (
         codeword[33]  = noisy_data_i[27]; codeword[34]  = noisy_data_i[28]; codeword[35]  = noisy_data_i[29];
         codeword[36]  = noisy_data_i[30]; codeword[37]  = noisy_data_i[31];
         
-        // Bước 4: Sửa lỗi lật bit nếu syndrome khác 0
         if (syndrome != 6'b000000) begin
             codeword[syndrome - 1] = ~codeword[syndrome - 1];
         end
         
-        // Bước 5: Trích xuất lại dữ liệu đã sạch lỗi đưa ra ngoài
         corr_data_o[0]  = codeword[2];   corr_data_o[1]  = codeword[4];   corr_data_o[2]  = codeword[5];
         corr_data_o[3]  = codeword[6];   corr_data_o[4]  = codeword[8];   corr_data_o[5]  = codeword[9];
         corr_data_o[6]  = codeword[10];  corr_data_o[7]  = codeword[11];  corr_data_o[8]  = codeword[12];

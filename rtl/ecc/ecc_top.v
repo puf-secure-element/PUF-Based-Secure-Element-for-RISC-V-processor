@@ -1,15 +1,15 @@
 module ecc_top (
     input  wire         clk_i,
     input  wire         rst_n_i,
-    input  wire         mode_i,       // 0: Sinh Helper Data (Enroll), 1: Khôi phục khóa (Reconstruct)
-    input  wire [511:0] raw_resp_i,   // Dữ liệu thô từ PUF
-    input  wire [95:0]  helper_in_i,  // 96-bit Helper Data đọc về từ Flash
+    input  wire         mode_i,       
+    input  wire [511:0] raw_resp_i,  
+    input  wire [95:0]  helper_in_i,  
     
-    output wire [95:0]  helper_out_o, // 96-bit Helper Data sinh ra để ghi vào Flash
-    output wire [511:0] corr_resp_o   // 512-bit Dữ liệu đã sạch lỗi đưa sang SHA-256
+    output wire [95:0]  helper_out_o, 
+    output wire [511:0] corr_resp_o   
 );
 
-    // Sử dụng vòng lặp generate chuẩn Verilog-2001
+
     genvar i;
     generate
         for (i = 0; i < 16; i = i + 1) begin : ecc_segments

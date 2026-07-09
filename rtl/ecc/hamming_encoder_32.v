@@ -1,8 +1,7 @@
 module hamming_encoder_32 (
     input  wire [31:0] data_i,
-    output wire [5:0]  parity_o // Đây chính là Helper Data cho phân đoạn này
+    output wire [5:0]  parity_o 
 );
-    // Tính toán các bit Parity bằng cách XOR các vị trí dữ liệu tương ứng
     assign parity_o[0] = data_i[0] ^ data_i[1] ^ data_i[3] ^ data_i[4] ^ data_i[6] ^ data_i[8] ^ 
                          data_i[10] ^ data_i[11] ^ data_i[13] ^ data_i[15] ^ data_i[17] ^ data_i[19] ^ 
                          data_i[21] ^ data_i[23] ^ data_i[25] ^ data_i[26] ^ data_i[28] ^ data_i[30];

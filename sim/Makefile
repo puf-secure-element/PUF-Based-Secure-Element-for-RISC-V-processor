@@ -4,11 +4,11 @@ VLIB = vlib
 VMAP = vmap
 
 WORK = work
-TOP  = tb_sub_bytes
+TOP  = tb_aes
 
-RTL_F  = rtl.f
-TB_SRC = ../tb/unit_tests/$(TOP).v
-TB_MODELS = ../tb/golden_models/aes_sbox_golden.v
+RTL_F    = rtl.f
+GOLDEN_F = golden.f
+TB_SRC   = ../tb/unit_tests/$(TOP).v
 
 VOPT_ARGS = -voptargs="+acc"
 
@@ -21,7 +21,7 @@ $(WORK):
 	$(VMAP) $(WORK) $(WORK)
 
 compile: $(WORK)
-	$(VLOG) -sv -f $(RTL_F) $(TB_MODELS) $(TB_SRC)
+	$(VLOG) -sv -f $(RTL_F) -f $(GOLDEN_F) $(TB_SRC)
 
 simulate:
 	$(VSIM) -c $(TOP) $(VOPT_ARGS) -do "run -all; quit"

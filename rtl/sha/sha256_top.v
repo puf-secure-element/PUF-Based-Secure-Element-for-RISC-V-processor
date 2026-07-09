@@ -8,11 +8,6 @@ module sha256_top(
     //Input value from RISCV to control module
     input   wire [7:0]      addr,
     input   wire [31:0]     wdata,
-
-    //Input value from ECC
-    input   wire [511:0]    ecc_response,
-    input   wire            ecc_valid,
-
     output  wire [31:0]     rdata,      //Load data from RISCV instruction
     output  wire            error,
     output  wire [255:0]    hash_out,   //Transfer to AES
@@ -32,8 +27,8 @@ module sha256_top(
     wire [511:0]    data_in;
     reg  [31:0]     tmp_rdata;     
 
+    reg  [31:0]     block_reg [0:15];
     reg  [255:0]    hash_out_reg;
-    reg  [511:0]    ecc_reg;
     wire [255:0]    hash_out_tmp;
 
     reg             start_reg, next_reg, hash_valid_reg;
@@ -44,8 +39,8 @@ module sha256_top(
     assign next  = next_pulse;
 
     assign rdata    = tmp_rdata;
-    assign data_in = ecc_reg;
-    assign error    = sel && (addr != ADDR_CTRL) && (addr != ADDR_STATUS) && (addr < ADDR_HASH0 || addr > ADDR_HASH7);
+    assign data_in  = {block_reg[0], block_reg[1], block_reg[2], block_reg[3], block_reg[4], block_reg[5], block_reg[6], block_reg[7], block_reg[8], block_reg[9], block_reg[10], block_reg[11], block_reg[12], block_reg[13], block_reg[14], block_reg[15]};
+    assign error    = sel && (addr != ADDR_CTRL) && (addr != ADDR_STATUS) && (addr < ADDR_BLOCK0 || addr > ADDR_BLOCK15) && (addr < ADDR_HASH0 || addr > ADDR_HASH7);
     assign hash_out = hash_valid ? hash_out_tmp : 256'b0;
 
     sha256 sha256_core (

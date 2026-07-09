@@ -1,0 +1,373 @@
+m255
+K4
+z2
+!s99 nomlopt
+!s11f vlog 2021.2_1 2021.05, May 15 2021
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 d/home/nguyenminhkha/Downloads/PUF-Based-Secure-Element-for-RISC-V-processor-feature-init-repo/sim
+T_opt
+!s110 1783475541
+V5^o]>=S8ni71e?9bZ724e2
+04 12 4 work tb_sub_bytes fast 0
+=1-7c214ac8dcb4-6a4dad55-b485d-6e38
+!s124 OEM100
+o-quiet -auto_acc_if_foreign -work work +acc
+Z1 tCvgOpt 0
+n@_opt
+OL;O;2021.2_1;73
+vaes
+Z2 DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
+Z3 !s110 1783475540
+!i10b 1
+!s100 PXaa:d@[iiDc`E4WNOEfD1
+IXYGfaI1dQF8[<nUi0ZRZ20
+S1
+R0
+w1783332472
+8../rtl/aes_dual_rail/aes_core/aes.v
+F../rtl/aes_dual_rail/aes_core/aes.v
+!i122 0
+Z4 L0 1 7
+Z5 VDg1SIo80bB@j0V0VzS_@n1
+Z6 OL;L;2021.2_1;73
+r1
+!s85 0
+31
+Z7 !s108 1783475540.000000
+Z8 !s107 ../tb/unit_tests/tb_sub_bytes.v|../tb/golden_models/aes_sbox_golden.v|../rtl/aes_dual_rail/aes_core/sub_bytes.v|../rtl/aes_dual_rail/aes_core/shift_rows.v|../rtl/aes_dual_rail/aes_core/GF.v|../rtl/aes_dual_rail/aes_core/inv_aff.v|../rtl/aes_dual_rail/aes_core/last_round.v|../rtl/aes_dual_rail/aes_core/key_expansion.v|../rtl/aes_dual_rail/aes_core/encryption_round.v|../rtl/aes_dual_rail/aes_core/aes_encrypt.v|../rtl/aes_dual_rail/aes_core/aff_trans.v|../rtl/aes_dual_rail/aes_core/add_round_key.v|../rtl/aes_dual_rail/aes_core/single2dual_converter.v|../rtl/aes_dual_rail/aes_core/decryption_round.v|../rtl/aes_dual_rail/aes_core/mix_columns.v|../rtl/aes_dual_rail/aes_core/aes_decrypt.v|../rtl/aes_dual_rail/aes_core/dual2single_converter.v|../rtl/aes_dual_rail/aes_core/aes.v|../rtl/sha/sha256_top.v|../rtl/sha/sha256.v|../rtl/sha/sha256_m_schedule.v|../rtl/sha/sha256_k_constant.v|
+Z9 !s90 -sv|-f|rtl.f|../tb/golden_models/aes_sbox_golden.v|../tb/unit_tests/tb_sub_bytes.v|
+!i113 0
+Z10 o-sv -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+Z11 !s92 -sv +incdir+../rtl/sha +incdir+../rtl/aes_dual_rail/aes_core -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R1
+vaes_sbox_golden
+R2
+R3
+!i10b 1
+!s100 5e`:R9mmmJc[0;_WacmGV0
+I`j@fN6g]FDjzid8LfVGB70
+S1
+R0
+w1783475319
+8../tb/golden_models/aes_sbox_golden.v
+F../tb/golden_models/aes_sbox_golden.v
+!i122 0
+L0 1 269
+R5
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 0
+R10
+R11
+R1
+vaff_trans
+R2
+R3
+!i10b 1
+!s100 7cj9XZkh>B>_J5UB_B<B52
+I;G58K?WfgmiiMT]I<5Ybz2
+S1
+R0
+w1783474742
+8../rtl/aes_dual_rail/aes_core/aff_trans.v
+F../rtl/aes_dual_rail/aes_core/aff_trans.v
+!i122 0
+L0 1 27
+R5
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 0
+R10
+R11
+R1
+vdual2single_converter
+R2
+R3
+!i10b 1
+!s100 CWz9EK;Q^69No[>]`^k]M2
+IZWHX_FlmFW<f0nioOa7FE0
+S1
+R0
+w1783473157
+8../rtl/aes_dual_rail/aes_core/dual2single_converter.v
+F../rtl/aes_dual_rail/aes_core/dual2single_converter.v
+!i122 0
+R4
+R5
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 0
+R10
+R11
+R1
+vGF
+R2
+R3
+!i10b 1
+!s100 <jJWYc[GR`J^SL>66nD`:1
+IIGI_TVRD2P<jW>Q2Jea5<3
+S1
+R0
+w1783472904
+8../rtl/aes_dual_rail/aes_core/GF.v
+F../rtl/aes_dual_rail/aes_core/GF.v
+!i122 0
+L0 1 288
+R5
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 0
+R10
+R11
+R1
+n@g@f
+vinv_aff
+R2
+R3
+!i10b 1
+!s100 4`9>AZ7Sa67;omYFK?72g3
+ID7M`63h9h@V<Mn9FPMAUo0
+S1
+R0
+w1783472323
+8../rtl/aes_dual_rail/aes_core/inv_aff.v
+F../rtl/aes_dual_rail/aes_core/inv_aff.v
+!i122 0
+L0 1 28
+R5
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 0
+R10
+R11
+R1
+vkey_expansion
+R2
+R3
+!i10b 1
+!s100 ODh1;8GU?Eg>7W8:h^gkJ2
+IfOCYnOz>9aJfH3gdFA7313
+S1
+R0
+w1783066243
+8../rtl/aes_dual_rail/aes_core/key_expansion.v
+F../rtl/aes_dual_rail/aes_core/key_expansion.v
+!i122 0
+L0 1 47
+R5
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 0
+R10
+R11
+R1
+vsha256
+R2
+R3
+!i10b 1
+!s100 K`RUfNY_C6iC8M_JT;I]c2
+IhCMbN:hTna3g_o?B9=d>Q1
+S1
+R0
+w1783048441
+8../rtl/sha/sha256.v
+F../rtl/sha/sha256.v
+!i122 0
+L0 1 338
+R5
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 0
+R10
+R11
+R1
+vsha256_k_constant
+R2
+R3
+!i10b 1
+!s100 z7aD1Bo[Bl@>XaI;WeLjT0
+ISAEG>CmQ=j1_HSzd>:?L60
+S1
+R0
+w1782996015
+8../rtl/sha/sha256_k_constant.v
+F../rtl/sha/sha256_k_constant.v
+!i122 0
+L0 1 84
+R5
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 0
+R10
+R11
+R1
+vsha256_m_schedule
+R2
+R3
+!i10b 1
+!s100 9C2n>9dK2U`m8no]UF1oO1
+IZBPWK^<[9boeV4a:n6>e]2
+S1
+R0
+w1782995993
+8../rtl/sha/sha256_m_schedule.v
+F../rtl/sha/sha256_m_schedule.v
+!i122 0
+L0 1 152
+R5
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 0
+R10
+R11
+R1
+vsha256_top
+R2
+R3
+!i10b 1
+!s100 ]Vch0?4j^gcbCZ[Od=6O`2
+Id@6U;R6a`lX_glkLIJlGI2
+S1
+R0
+w1783046712
+8../rtl/sha/sha256_top.v
+F../rtl/sha/sha256_top.v
+!i122 0
+L0 1 120
+R5
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 0
+R10
+R11
+R1
+vsingle2dual_converter
+R2
+R3
+!i10b 1
+!s100 >1A2j87OJ@KFdP14[Mznd0
+IK_4=LNO4@]`D^8J0AGmI>3
+S1
+R0
+w1783473154
+8../rtl/aes_dual_rail/aes_core/single2dual_converter.v
+F../rtl/aes_dual_rail/aes_core/single2dual_converter.v
+!i122 0
+R4
+R5
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 0
+R10
+R11
+R1
+vsub_bytes
+R2
+R3
+!i10b 1
+!s100 b4V;P=a[BC^a2ocT?;IFE2
+IocZH9o]S9fC:]^1fQ^TNd0
+S1
+R0
+w1783475082
+8../rtl/aes_dual_rail/aes_core/sub_bytes.v
+F../rtl/aes_dual_rail/aes_core/sub_bytes.v
+!i122 0
+L0 1 159
+R5
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 0
+R10
+R11
+R1
+vtb_sub_bytes
+R2
+R3
+!i10b 1
+!s100 eO2YD>nHM:MLWS6KzjINo2
+IIG3_JSLVPc37_bjM8F`A]0
+S1
+R0
+w1783475368
+8../tb/unit_tests/tb_sub_bytes.v
+F../tb/unit_tests/tb_sub_bytes.v
+!i122 0
+L0 3 180
+R5
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 0
+R10
+R11
+R1

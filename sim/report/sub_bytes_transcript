@@ -1,0 +1,638 @@
+# vsim -c tb_sub_bytes -voptargs="+acc" -do "run -all; quit" 
+# Start time: 08:55:16 on Jul 08,2026
+# ** Note: (vsim-3812) Design is being optimized...
+# //  Questa Sim-64
+# //  Version 2021.2_1 linux_x86_64 May 15 2021
+# //
+# //  Copyright 1991-2021 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  QuestaSim and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# Loading sv_std.std
+# Loading work.tb_sub_bytes(fast)
+# Loading work.sub_bytes(fast)
+# Loading work.GF(fast)
+# Loading work.aff_trans(fast)
+# Loading work.inv_aff(fast)
+# Loading work.aes_sbox_golden(fast)
+# run -all
+# 
+# ========== SUB_BYTES ENCRYPTION TEST ==========
+# 
+# ==================================================
+# Input             : 00112233
+# SBOX Expected     : 638293c3
+# Sub Bytes Output  : 638293c3
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 01234567
+# SBOX Expected     : 7c266e85
+# Sub Bytes Output  : 7c266e85
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 89abcdef
+# SBOX Expected     : a762bddf
+# Sub Bytes Output  : a762bddf
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : ffffffff
+# SBOX Expected     : 16161616
+# Sub Bytes Output  : 16161616
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 00000000
+# SBOX Expected     : 63636363
+# Sub Bytes Output  : 63636363
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 12345678
+# SBOX Expected     : c918b1bc
+# Sub Bytes Output  : c918b1bc
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : deadbeef
+# SBOX Expected     : 1d95aedf
+# Sub Bytes Output  : 1d95aedf
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : cafebabe
+# SBOX Expected     : 74bbf4ae
+# Sub Bytes Output  : 74bbf4ae
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : a5a5a5a5
+# SBOX Expected     : 06060606
+# Sub Bytes Output  : 06060606
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 5a5a5a5a
+# SBOX Expected     : bebebebe
+# Sub Bytes Output  : bebebebe
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 12153524
+# SBOX Expected     : c9599636
+# Sub Bytes Output  : c9599636
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : c0895e81
+# SBOX Expected     : baa7580c
+# Sub Bytes Output  : baa7580c
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 8484d609
+# SBOX Expected     : 5f5ff601
+# Sub Bytes Output  : 5f5ff601
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : b1f05663
+# SBOX Expected     : c88cb1fb
+# Sub Bytes Output  : c88cb1fb
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 06b97b0d
+# SBOX Expected     : 6f5621d7
+# Sub Bytes Output  : 6f5621d7
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 46df998d
+# SBOX Expected     : 5a9eee5d
+# Sub Bytes Output  : 5a9eee5d
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : b2c28465
+# SBOX Expected     : 37255f4d
+# Sub Bytes Output  : 37255f4d
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 89375212
+# SBOX Expected     : a79a00c9
+# Sub Bytes Output  : a79a00c9
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 00f3e301
+# SBOX Expected     : 630d117c
+# Sub Bytes Output  : 630d117c
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 06d7cd0d
+# SBOX Expected     : 6f0ebdd7
+# Sub Bytes Output  : 6f0ebdd7
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 3b23f176
+# SBOX Expected     : e226a138
+# Sub Bytes Output  : e226a138
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 1e8dcd3d
+# SBOX Expected     : 725dbd27
+# Sub Bytes Output  : 725dbd27
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 76d457ed
+# SBOX Expected     : 38485b55
+# Sub Bytes Output  : 38485b55
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 462df78c
+# SBOX Expected     : 5ad86864
+# Sub Bytes Output  : 5ad86864
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 7cfde9f9
+# SBOX Expected     : 10541e99
+# Sub Bytes Output  : 10541e99
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : e33724c6
+# SBOX Expected     : 119a36b4
+# Sub Bytes Output  : 119a36b4
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : e2f784c5
+# SBOX Expected     : 98685fa6
+# Sub Bytes Output  : 98685fa6
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : d513d2aa
+# SBOX Expected     : 037db5ac
+# Sub Bytes Output  : 037db5ac
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 72aff7e5
+# SBOX Expected     : 407968d9
+# Sub Bytes Output  : 407968d9
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : bbd27277
+# SBOX Expected     : eab540f5
+# Sub Bytes Output  : eab540f5
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 8932d612
+# SBOX Expected     : a723f6c9
+# Sub Bytes Output  : a723f6c9
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 47ecdb8f
+# SBOX Expected     : a0ceb973
+# Sub Bytes Output  : a0ceb973
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 793069f2
+# SBOX Expected     : b604f989
+# Sub Bytes Output  : b604f989
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : e77696ce
+# SBOX Expected     : 9438908b
+# Sub Bytes Output  : 9438908b
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : f4007ae8
+# SBOX Expected     : bf63da9b
+# Sub Bytes Output  : bf63da9b
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : e2ca4ec5
+# SBOX Expected     : 98742fa6
+# Sub Bytes Output  : 98742fa6
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 2e58495c
+# SBOX Expected     : 316a3b4a
+# Sub Bytes Output  : 316a3b4a
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : de8e28bd
+# SBOX Expected     : 1d19347a
+# Sub Bytes Output  : 1d19347a
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 96ab582d
+# SBOX Expected     : 90626ad8
+# Sub Bytes Output  : 90626ad8
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : b2a72665
+# SBOX Expected     : 375cf74d
+# Sub Bytes Output  : 375cf74d
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : b1ef6263
+# SBOX Expected     : c8dfaafb
+# Sub Bytes Output  : c8dfaafb
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 0573870a
+# SBOX Expected     : 6b8f1767
+# Sub Bytes Output  : 6b8f1767
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : c03b2280
+# SBOX Expected     : bae293cd
+# Sub Bytes Output  : bae293cd
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 10642120
+# SBOX Expected     : ca43fdb7
+# Sub Bytes Output  : ca43fdb7
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 557845aa
+# SBOX Expected     : fcbc6eac
+# Sub Bytes Output  : fcbc6eac
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : cecccc9d
+# SBOX Expected     : 8b4b4b5e
+# Sub Bytes Output  : 8b4b4b5e
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : cb203e96
+# SBOX Expected     : 1fb7b290
+# Sub Bytes Output  : 1fb7b290
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 8983b813
+# SBOX Expected     : a7ec6c7d
+# Sub Bytes Output  : a7ec6c7d
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 86bc380d
+# SBOX Expected     : 446507d7
+# Sub Bytes Output  : 446507d7
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : a9a7d653
+# SBOX Expected     : d35cf6ed
+# Sub Bytes Output  : d35cf6ed
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 359fdd6b
+# SBOX Expected     : 96dbc17f
+# Sub Bytes Output  : 96dbc17f
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : eaa62ad5
+# SBOX Expected     : 8724e503
+# Sub Bytes Output  : 8724e503
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 81174a02
+# SBOX Expected     : 0cf0d677
+# Sub Bytes Output  : 0cf0d677
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : d7563eae
+# SBOX Expected     : 0eb1b2e4
+# Sub Bytes Output  : 0eb1b2e4
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 0effe91d
+# SBOX Expected     : ab161ea4
+# Sub Bytes Output  : ab161ea4
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : e7c572cf
+# SBOX Expected     : 94a6408a
+# Sub Bytes Output  : 94a6408a
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 11844923
+# SBOX Expected     : 825f3b26
+# Sub Bytes Output  : 825f3b26
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 0509650a
+# SBOX Expected     : 6b014d67
+# Sub Bytes Output  : 6b014d67
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : e5730aca
+# SBOX Expected     : d98f6774
+# Sub Bytes Output  : d98f6774
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# ==================================================
+# Input             : 9e314c3c
+# SBOX Expected     : 0bc729eb
+# Sub Bytes Output  : 0bc729eb
+# SBOX CHECK : PASS
+# Dual Rail  : PASS
+# Byte3 PASS
+# Byte2 PASS
+# Byte1 PASS
+# Byte0 PASS
+# 
+# ======================================
+# PASS = 60
+# FAIL = 0
+# ======================================
+# ALL TESTS PASSED
+# ** Note: $finish    : ../tb/unit_tests/tb_sub_bytes.v(178)
+#    Time: 640 ns  Iteration: 0  Instance: /tb_sub_bytes
+# End time: 08:55:17 on Jul 08,2026, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0

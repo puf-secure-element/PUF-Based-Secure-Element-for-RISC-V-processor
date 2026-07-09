@@ -1,0 +1,516 @@
+# vsim -c tb_key_expansion -voptargs="+acc" -do "run -all; quit" 
+# Start time: 15:05:00 on Jul 08,2026
+# ** Note: (vsim-3812) Design is being optimized...
+# //  Questa Sim-64
+# //  Version 2021.2_1 linux_x86_64 May 15 2021
+# //
+# //  Copyright 1991-2021 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  QuestaSim and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# Loading sv_std.std
+# Loading work.tb_key_expansion(fast)
+# Loading work.key_expansion(fast)
+# Loading work.sub_bytes(fast)
+# Loading work.GF(fast)
+# Loading work.aff_trans(fast)
+# Loading work.inv_aff(fast)
+# Loading work.key_expansion_golden(fast)
+# run -all
+# ---------------------------------------------
+# Comparing Expanded Keys
+# ---------------------------------------------
+# 
+# ===== Matched TRUE WORD 0 =====
+#  DUT    = 603deb10
+#  GOLDEN = 603deb10
+# 
+# ===== Matched FAILED WORD 0 =====
+#  DUT_F    = 9fc214ef
+#  EXPECTED = 9fc214ef
+# 
+# ===== Matched TRUE WORD 1 =====
+#  DUT    = 15ca71be
+#  GOLDEN = 15ca71be
+# 
+# ===== Matched FAILED WORD 1 =====
+#  DUT_F    = ea358e41
+#  EXPECTED = ea358e41
+# 
+# ===== Matched TRUE WORD 2 =====
+#  DUT    = 2b73aef0
+#  GOLDEN = 2b73aef0
+# 
+# ===== Matched FAILED WORD 2 =====
+#  DUT_F    = d48c510f
+#  EXPECTED = d48c510f
+# 
+# ===== Matched TRUE WORD 3 =====
+#  DUT    = 857d7781
+#  GOLDEN = 857d7781
+# 
+# ===== Matched FAILED WORD 3 =====
+#  DUT_F    = 7a82887e
+#  EXPECTED = 7a82887e
+# 
+# ===== Matched TRUE WORD 4 =====
+#  DUT    = 1f352c07
+#  GOLDEN = 1f352c07
+# 
+# ===== Matched FAILED WORD 4 =====
+#  DUT_F    = e0cad3f8
+#  EXPECTED = e0cad3f8
+# 
+# ===== Matched TRUE WORD 5 =====
+#  DUT    = 3b6108d7
+#  GOLDEN = 3b6108d7
+# 
+# ===== Matched FAILED WORD 5 =====
+#  DUT_F    = c49ef728
+#  EXPECTED = c49ef728
+# 
+# ===== Matched TRUE WORD 6 =====
+#  DUT    = 2d9810a3
+#  GOLDEN = 2d9810a3
+# 
+# ===== Matched FAILED WORD 6 =====
+#  DUT_F    = d267ef5c
+#  EXPECTED = d267ef5c
+# 
+# ===== Matched TRUE WORD 7 =====
+#  DUT    = 0914dff4
+#  GOLDEN = 0914dff4
+# 
+# ===== Matched FAILED WORD 7 =====
+#  DUT_F    = f6eb200b
+#  EXPECTED = f6eb200b
+# 
+# ===== Matched TRUE WORD 8 =====
+#  DUT    = 9ba35411
+#  GOLDEN = 9ba35411
+# 
+# ===== Matched FAILED WORD 8 =====
+#  DUT_F    = 645cabee
+#  EXPECTED = 645cabee
+# 
+# ===== Matched TRUE WORD 9 =====
+#  DUT    = 8e6925af
+#  GOLDEN = 8e6925af
+# 
+# ===== Matched FAILED WORD 9 =====
+#  DUT_F    = 7196da50
+#  EXPECTED = 7196da50
+# 
+# ===== Matched TRUE WORD 10 =====
+#  DUT    = a51a8b5f
+#  GOLDEN = a51a8b5f
+# 
+# ===== Matched FAILED WORD 10 =====
+#  DUT_F    = 5ae574a0
+#  EXPECTED = 5ae574a0
+# 
+# ===== Matched TRUE WORD 11 =====
+#  DUT    = 2067fcde
+#  GOLDEN = 2067fcde
+# 
+# ===== Matched FAILED WORD 11 =====
+#  DUT_F    = df980321
+#  EXPECTED = df980321
+# 
+# ===== Matched TRUE WORD 12 =====
+#  DUT    = a8b09c1a
+#  GOLDEN = a8b09c1a
+# 
+# ===== Matched FAILED WORD 12 =====
+#  DUT_F    = 574f63e5
+#  EXPECTED = 574f63e5
+# 
+# ===== Matched TRUE WORD 13 =====
+#  DUT    = 93d194cd
+#  GOLDEN = 93d194cd
+# 
+# ===== Matched FAILED WORD 13 =====
+#  DUT_F    = 6c2e6b32
+#  EXPECTED = 6c2e6b32
+# 
+# ===== Matched TRUE WORD 14 =====
+#  DUT    = be49846e
+#  GOLDEN = be49846e
+# 
+# ===== Matched FAILED WORD 14 =====
+#  DUT_F    = 41b67b91
+#  EXPECTED = 41b67b91
+# 
+# ===== Matched TRUE WORD 15 =====
+#  DUT    = b75d5b9a
+#  GOLDEN = b75d5b9a
+# 
+# ===== Matched FAILED WORD 15 =====
+#  DUT_F    = 48a2a465
+#  EXPECTED = 48a2a465
+# 
+# ===== Matched TRUE WORD 16 =====
+#  DUT    = d59aecb8
+#  GOLDEN = d59aecb8
+# 
+# ===== Matched FAILED WORD 16 =====
+#  DUT_F    = 2a651347
+#  EXPECTED = 2a651347
+# 
+# ===== Matched TRUE WORD 17 =====
+#  DUT    = 5bf3c917
+#  GOLDEN = 5bf3c917
+# 
+# ===== Matched FAILED WORD 17 =====
+#  DUT_F    = a40c36e8
+#  EXPECTED = a40c36e8
+# 
+# ===== Matched TRUE WORD 18 =====
+#  DUT    = fee94248
+#  GOLDEN = fee94248
+# 
+# ===== Matched FAILED WORD 18 =====
+#  DUT_F    = 0116bdb7
+#  EXPECTED = 0116bdb7
+# 
+# ===== Matched TRUE WORD 19 =====
+#  DUT    = de8ebe96
+#  GOLDEN = de8ebe96
+# 
+# ===== Matched FAILED WORD 19 =====
+#  DUT_F    = 21714169
+#  EXPECTED = 21714169
+# 
+# ===== Matched TRUE WORD 20 =====
+#  DUT    = b5a9328a
+#  GOLDEN = b5a9328a
+# 
+# ===== Matched FAILED WORD 20 =====
+#  DUT_F    = 4a56cd75
+#  EXPECTED = 4a56cd75
+# 
+# ===== Matched TRUE WORD 21 =====
+#  DUT    = 2678a647
+#  GOLDEN = 2678a647
+# 
+# ===== Matched FAILED WORD 21 =====
+#  DUT_F    = d98759b8
+#  EXPECTED = d98759b8
+# 
+# ===== Matched TRUE WORD 22 =====
+#  DUT    = 98312229
+#  GOLDEN = 98312229
+# 
+# ===== Matched FAILED WORD 22 =====
+#  DUT_F    = 67ceddd6
+#  EXPECTED = 67ceddd6
+# 
+# ===== Matched TRUE WORD 23 =====
+#  DUT    = 2f6c79b3
+#  GOLDEN = 2f6c79b3
+# 
+# ===== Matched FAILED WORD 23 =====
+#  DUT_F    = d093864c
+#  EXPECTED = d093864c
+# 
+# ===== Matched TRUE WORD 24 =====
+#  DUT    = 812c81ad
+#  GOLDEN = 812c81ad
+# 
+# ===== Matched FAILED WORD 24 =====
+#  DUT_F    = 7ed37e52
+#  EXPECTED = 7ed37e52
+# 
+# ===== Matched TRUE WORD 25 =====
+#  DUT    = dadf48ba
+#  GOLDEN = dadf48ba
+# 
+# ===== Matched FAILED WORD 25 =====
+#  DUT_F    = 2520b745
+#  EXPECTED = 2520b745
+# 
+# ===== Matched TRUE WORD 26 =====
+#  DUT    = 24360af2
+#  GOLDEN = 24360af2
+# 
+# ===== Matched FAILED WORD 26 =====
+#  DUT_F    = dbc9f50d
+#  EXPECTED = dbc9f50d
+# 
+# ===== Matched TRUE WORD 27 =====
+#  DUT    = fab8b464
+#  GOLDEN = fab8b464
+# 
+# ===== Matched FAILED WORD 27 =====
+#  DUT_F    = 05474b9b
+#  EXPECTED = 05474b9b
+# 
+# ===== Matched TRUE WORD 28 =====
+#  DUT    = 98c5bfc9
+#  GOLDEN = 98c5bfc9
+# 
+# ===== Matched FAILED WORD 28 =====
+#  DUT_F    = 673a4036
+#  EXPECTED = 673a4036
+# 
+# ===== Matched TRUE WORD 29 =====
+#  DUT    = bebd198e
+#  GOLDEN = bebd198e
+# 
+# ===== Matched FAILED WORD 29 =====
+#  DUT_F    = 4142e671
+#  EXPECTED = 4142e671
+# 
+# ===== Matched TRUE WORD 30 =====
+#  DUT    = 268c3ba7
+#  GOLDEN = 268c3ba7
+# 
+# ===== Matched FAILED WORD 30 =====
+#  DUT_F    = d973c458
+#  EXPECTED = d973c458
+# 
+# ===== Matched TRUE WORD 31 =====
+#  DUT    = 09e04214
+#  GOLDEN = 09e04214
+# 
+# ===== Matched FAILED WORD 31 =====
+#  DUT_F    = f61fbdeb
+#  EXPECTED = f61fbdeb
+# 
+# ===== Matched TRUE WORD 32 =====
+#  DUT    = 68007bac
+#  GOLDEN = 68007bac
+# 
+# ===== Matched FAILED WORD 32 =====
+#  DUT_F    = 97ff8453
+#  EXPECTED = 97ff8453
+# 
+# ===== Matched TRUE WORD 33 =====
+#  DUT    = b2df3316
+#  GOLDEN = b2df3316
+# 
+# ===== Matched FAILED WORD 33 =====
+#  DUT_F    = 4d20cce9
+#  EXPECTED = 4d20cce9
+# 
+# ===== Matched TRUE WORD 34 =====
+#  DUT    = 96e939e4
+#  GOLDEN = 96e939e4
+# 
+# ===== Matched FAILED WORD 34 =====
+#  DUT_F    = 6916c61b
+#  EXPECTED = 6916c61b
+# 
+# ===== Matched TRUE WORD 35 =====
+#  DUT    = 6c518d80
+#  GOLDEN = 6c518d80
+# 
+# ===== Matched FAILED WORD 35 =====
+#  DUT_F    = 93ae727f
+#  EXPECTED = 93ae727f
+# 
+# ===== Matched TRUE WORD 36 =====
+#  DUT    = c814e204
+#  GOLDEN = c814e204
+# 
+# ===== Matched FAILED WORD 36 =====
+#  DUT_F    = 37eb1dfb
+#  EXPECTED = 37eb1dfb
+# 
+# ===== Matched TRUE WORD 37 =====
+#  DUT    = 76a9fb8a
+#  GOLDEN = 76a9fb8a
+# 
+# ===== Matched FAILED WORD 37 =====
+#  DUT_F    = 89560475
+#  EXPECTED = 89560475
+# 
+# ===== Matched TRUE WORD 38 =====
+#  DUT    = 5025c02d
+#  GOLDEN = 5025c02d
+# 
+# ===== Matched FAILED WORD 38 =====
+#  DUT_F    = afda3fd2
+#  EXPECTED = afda3fd2
+# 
+# ===== Matched TRUE WORD 39 =====
+#  DUT    = 59c58239
+#  GOLDEN = 59c58239
+# 
+# ===== Matched FAILED WORD 39 =====
+#  DUT_F    = a63a7dc6
+#  EXPECTED = a63a7dc6
+# 
+# ===== Matched TRUE WORD 40 =====
+#  DUT    = de136967
+#  GOLDEN = de136967
+# 
+# ===== Matched FAILED WORD 40 =====
+#  DUT_F    = 21ec9698
+#  EXPECTED = 21ec9698
+# 
+# ===== Matched TRUE WORD 41 =====
+#  DUT    = 6ccc5a71
+#  GOLDEN = 6ccc5a71
+# 
+# ===== Matched FAILED WORD 41 =====
+#  DUT_F    = 9333a58e
+#  EXPECTED = 9333a58e
+# 
+# ===== Matched TRUE WORD 42 =====
+#  DUT    = fa256395
+#  GOLDEN = fa256395
+# 
+# ===== Matched FAILED WORD 42 =====
+#  DUT_F    = 05da9c6a
+#  EXPECTED = 05da9c6a
+# 
+# ===== Matched TRUE WORD 43 =====
+#  DUT    = 9674ee15
+#  GOLDEN = 9674ee15
+# 
+# ===== Matched FAILED WORD 43 =====
+#  DUT_F    = 698b11ea
+#  EXPECTED = 698b11ea
+# 
+# ===== Matched TRUE WORD 44 =====
+#  DUT    = 5886ca5d
+#  GOLDEN = 5886ca5d
+# 
+# ===== Matched FAILED WORD 44 =====
+#  DUT_F    = a77935a2
+#  EXPECTED = a77935a2
+# 
+# ===== Matched TRUE WORD 45 =====
+#  DUT    = 2e2f31d7
+#  GOLDEN = 2e2f31d7
+# 
+# ===== Matched FAILED WORD 45 =====
+#  DUT_F    = d1d0ce28
+#  EXPECTED = d1d0ce28
+# 
+# ===== Matched TRUE WORD 46 =====
+#  DUT    = 7e0af1fa
+#  GOLDEN = 7e0af1fa
+# 
+# ===== Matched FAILED WORD 46 =====
+#  DUT_F    = 81f50e05
+#  EXPECTED = 81f50e05
+# 
+# ===== Matched TRUE WORD 47 =====
+#  DUT    = 27cf73c3
+#  GOLDEN = 27cf73c3
+# 
+# ===== Matched FAILED WORD 47 =====
+#  DUT_F    = d8308c3c
+#  EXPECTED = d8308c3c
+# 
+# ===== Matched TRUE WORD 48 =====
+#  DUT    = 749c47ab
+#  GOLDEN = 749c47ab
+# 
+# ===== Matched FAILED WORD 48 =====
+#  DUT_F    = 8b63b854
+#  EXPECTED = 8b63b854
+# 
+# ===== Matched TRUE WORD 49 =====
+#  DUT    = 18501dda
+#  GOLDEN = 18501dda
+# 
+# ===== Matched FAILED WORD 49 =====
+#  DUT_F    = e7afe225
+#  EXPECTED = e7afe225
+# 
+# ===== Matched TRUE WORD 50 =====
+#  DUT    = e2757e4f
+#  GOLDEN = e2757e4f
+# 
+# ===== Matched FAILED WORD 50 =====
+#  DUT_F    = 1d8a81b0
+#  EXPECTED = 1d8a81b0
+# 
+# ===== Matched TRUE WORD 51 =====
+#  DUT    = 7401905a
+#  GOLDEN = 7401905a
+# 
+# ===== Matched FAILED WORD 51 =====
+#  DUT_F    = 8bfe6fa5
+#  EXPECTED = 8bfe6fa5
+# 
+# ===== Matched TRUE WORD 52 =====
+#  DUT    = cafaaae3
+#  GOLDEN = cafaaae3
+# 
+# ===== Matched FAILED WORD 52 =====
+#  DUT_F    = 3505551c
+#  EXPECTED = 3505551c
+# 
+# ===== Matched TRUE WORD 53 =====
+#  DUT    = e4d59b34
+#  GOLDEN = e4d59b34
+# 
+# ===== Matched FAILED WORD 53 =====
+#  DUT_F    = 1b2a64cb
+#  EXPECTED = 1b2a64cb
+# 
+# ===== Matched TRUE WORD 54 =====
+#  DUT    = 9adf6ace
+#  GOLDEN = 9adf6ace
+# 
+# ===== Matched FAILED WORD 54 =====
+#  DUT_F    = 65209531
+#  EXPECTED = 65209531
+# 
+# ===== Matched TRUE WORD 55 =====
+#  DUT    = bd10190d
+#  GOLDEN = bd10190d
+# 
+# ===== Matched FAILED WORD 55 =====
+#  DUT_F    = 42efe6f2
+#  EXPECTED = 42efe6f2
+# 
+# ===== Matched TRUE WORD 56 =====
+#  DUT    = fe4890d1
+#  GOLDEN = fe4890d1
+# 
+# ===== Matched FAILED WORD 56 =====
+#  DUT_F    = 01b76f2e
+#  EXPECTED = 01b76f2e
+# 
+# ===== Matched TRUE WORD 57 =====
+#  DUT    = e6188d0b
+#  GOLDEN = e6188d0b
+# 
+# ===== Matched FAILED WORD 57 =====
+#  DUT_F    = 19e772f4
+#  EXPECTED = 19e772f4
+# 
+# ===== Matched TRUE WORD 58 =====
+#  DUT    = 046df344
+#  GOLDEN = 046df344
+# 
+# ===== Matched FAILED WORD 58 =====
+#  DUT_F    = fb920cbb
+#  EXPECTED = fb920cbb
+# 
+# ===== Matched TRUE WORD 59 =====
+#  DUT    = 706c631e
+#  GOLDEN = 706c631e
+# 
+# ===== Matched FAILED WORD 59 =====
+#  DUT_F    = 8f939ce1
+#  EXPECTED = 8f939ce1
+# ---------------------------------------------
+# PASS : All 60 expanded words match.
+# ---------------------------------------------
+# ** Note: $finish    : ../tb/unit_tests/tb_key_expansion.v(108)
+#    Time: 40 ns  Iteration: 0  Instance: /tb_key_expansion
+# End time: 15:05:01 on Jul 08,2026, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0

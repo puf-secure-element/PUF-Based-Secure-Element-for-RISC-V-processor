@@ -1,3 +1,1 @@
-+incdir+../TB
-+incdir+../testcases
-
++incdir+../tb/unit_tests

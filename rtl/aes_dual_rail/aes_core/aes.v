@@ -26,11 +26,9 @@ module aes(
     reg     [127:0]      prev_plaintext;
     reg                  has_run;
     reg                  active;
-    reg                  mode;              // 0 = encrypt, 1 = decrypt (được chốt lại lúc bắt đầu 1 phiên chạy)
+    reg                  mode;         
 
-    // round key dùng cho round hiện tại:
-    //   - encrypt: round 0 -> w[0], round 14 -> w[14]  => index = round
-    //   - decrypt (InvCipher tương đương): round 0 -> w[14], round 14 -> w[0] => index = 14 - round
+
     wire    [3:0]         key_index;
     assign  key_index = mode ? (4'd14 - round) : round;
 
@@ -129,7 +127,7 @@ module aes(
                 round          <= 4'd0;
                 active         <= 1'b1;
                 has_run        <= 1'b1;
-                mode           <= decrypt;      // decrypt có ưu tiên nếu cả 2 cùng lên mức 1
+                mode           <= decrypt;      
                 prev_plaintext <= plaintext;
             end
 

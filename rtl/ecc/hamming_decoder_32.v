@@ -1,7 +1,6 @@
 module hamming_decoder_32 (
     input  wire [31:0] noisy_data_i,
     input  wire [5:0]  parity_i,
-    output reg  [31:0] corr_data_o 
     output reg  [31:0] corr_data_o
 );
     wire [5:0]  calc_parity;
@@ -36,7 +35,7 @@ module hamming_decoder_32 (
         codeword[33]  = noisy_data_i[27]; codeword[34]  = noisy_data_i[28]; codeword[35]  = noisy_data_i[29];
         codeword[36]  = noisy_data_i[30]; codeword[37]  = noisy_data_i[31];
         
-        if (syndrome != 6'b000000) begin
+        if (syndrome != 6'b000000 && syndrome <= 6'd38) begin
             codeword[syndrome - 1] = ~codeword[syndrome - 1];
         end
         

@@ -35,4 +35,5 @@ module ecc_top (
         end
     endgenerate
 
+     assign corr_resp_o = (mode_i == 1'b1) ? decoded_resp : raw_resp_i;
 endmodule

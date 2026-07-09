@@ -1,11 +1,8 @@
 module hamming_decoder_32 (
     input  wire [31:0] noisy_data_i,
     input  wire [5:0]  parity_i,
-<<<<<<< HEAD
     output reg  [31:0] corr_data_o 
-=======
     output reg  [31:0] corr_data_o
->>>>>>> 465bda21df2f34c1f9a4d8e71e18467d10919020
 );
     wire [5:0]  calc_parity;
     wire [5:0]  syndrome;

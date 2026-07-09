@@ -4,10 +4,11 @@ VLIB = vlib
 VMAP = vmap
 
 WORK = work
-TOP  = tb_rv32i
+TOP  = tb_key_expansion
 
-RTL_F  = rtl.f
-TB_SRC = ../TB/$(TOP).sv
+RTL_F    = rtl.f
+GOLDEN_F = golden.f
+TB_SRC   = ../tb/unit_tests/$(TOP).v
 
 VOPT_ARGS = -voptargs="+acc"
 
@@ -20,7 +21,7 @@ $(WORK):
 	$(VMAP) $(WORK) $(WORK)
 
 compile: $(WORK)
-	$(VLOG) -sv -f $(RTL_F) $(TB_SRC)
+	$(VLOG) -sv -f $(RTL_F) -f $(GOLDEN_F) $(TB_SRC)
 
 simulate:
 	$(VSIM) -c $(TOP) $(VOPT_ARGS) -do "run -all; quit"

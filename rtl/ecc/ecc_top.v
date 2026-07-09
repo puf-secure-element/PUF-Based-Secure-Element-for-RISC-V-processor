@@ -2,21 +2,17 @@ module ecc_top (
     input  wire         clk_i,
     input  wire         rst_n_i,
     input  wire         mode_i,       
-<<<<<<< HEAD
     input  wire [511:0] raw_resp_i,  
-=======
+
     input  wire [511:0] raw_resp_i,   
->>>>>>> 465bda21df2f34c1f9a4d8e71e18467d10919020
     input  wire [95:0]  helper_in_i,  
     
     output wire [95:0]  helper_out_o, 
     output wire [511:0] corr_resp_o   
 );
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 465bda21df2f34c1f9a4d8e71e18467d10919020
+ wire [511:0] decoded_resp;
+    
     genvar i;
     generate
         for (i = 0; i < 16; i = i + 1) begin : ecc_segments

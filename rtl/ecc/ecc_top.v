@@ -1,9 +1,10 @@
 module ecc_top (
-    input  wire         clk_i,
-    input  wire         rst_n_i,
+    //input  wire         clk_i,
+    //input  wire         rst_n_i,
     input  wire         mode_i,       
     input  wire [511:0] raw_resp_i,  
     input  wire [95:0]  helper_in_i,  
+    
     output wire [95:0]  helper_out_o, 
     output wire [511:0] corr_resp_o   
 );

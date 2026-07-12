@@ -4,7 +4,7 @@ VLIB = vlib
 VMAP = vmap
 
 WORK = work
-TOP  = tb_aes
+TOP  = tb_ecc_top
 
 RTL_F    = rtl.f
 GOLDEN_F = golden.f

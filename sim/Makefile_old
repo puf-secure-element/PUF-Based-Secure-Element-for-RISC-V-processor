@@ -4,11 +4,11 @@ VLIB = vlib
 VMAP = vmap
 
 WORK = work
-TOP  = tb_aes
+TOP  = tb_soc
 
 RTL_F    = rtl.f
 GOLDEN_F = golden.f
-TB_SRC   = ../tb/unit_tests/$(TOP).v
+TB_SRC   = ../tb/unit_tests/$(TOP).sv
 
 VOPT_ARGS = -voptargs="+acc"
 

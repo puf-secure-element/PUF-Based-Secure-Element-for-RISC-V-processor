@@ -1,4 +1,4 @@
-module rv32_old(
+module RV32I(
     input wire clk,
     input wire rst_n
 );

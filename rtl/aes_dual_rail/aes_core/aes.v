@@ -26,10 +26,13 @@ module aes(
     reg     [127:0]      prev_plaintext;
     reg                  has_run;
     reg                  active;
-    reg                  mode;         
-
+    reg                  mode;     
+    reg                  encrypt_reg, decrypt_reg;    
+    wire                 key_start;
+    reg                  key_ready_d;
 
     wire    [3:0]         key_index;
+
     assign  key_index = mode ? (4'd14 - round) : round;
 
     assign state_in_t = (round == 4'd0) ? plaintext  : state_t;
@@ -38,11 +41,21 @@ module aes(
     assign is_initial_round = (round == 4'd0);
     assign is_final_round   = (round == 4'd14);
 
+    assign key_start = key_is_ready & ~key_ready_d;
+
     key_expansion key_expansion_0(
         .key_in(key_in),
         .w_out_t(ke_out_t),
         .w_out_f(ke_out_f)
     );
+
+    always @(posedge clk or negedge rst_n) begin
+        if(!rst_n)
+            key_ready_d <= 0;
+        else
+            key_ready_d <= key_is_ready;
+    end
+    
 
     always @(*) begin
         case (key_index)
@@ -120,14 +133,27 @@ module aes(
             has_run        <= 1'b0;
             active         <= 1'b0;
             mode           <= 1'b0;
+            encrypt_reg    <= 1'b0;
+            decrypt_reg    <= 1'b0;
         end
         else begin
 
-            if (!active && key_is_ready && (encrypt || decrypt)) begin
+            if(encrypt) begin
+                encrypt_reg    <= 1'b1;
+            end
+            else if(decrypt) begin
+                decrypt_reg    <= 1'b1;
+            end
+            else if(done) begin
+                encrypt_reg    <= 1'b0;
+                decrypt_reg    <= 1'b0;
+            end
+
+            if (!active && key_start && (encrypt_reg || decrypt_reg)) begin
                 round          <= 4'd0;
                 active         <= 1'b1;
                 has_run        <= 1'b1;
-                mode           <= decrypt;      
+                mode           <= decrypt_reg;      
                 prev_plaintext <= plaintext;
             end
 

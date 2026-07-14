@@ -2,7 +2,7 @@ module soc(
     input   wire            clk,
     input   wire            rst_n,
 
-    output  wire    [255:0] data_out,
+    output  wire    [127:0] data_out,
     output  wire            done
 );
 
@@ -40,14 +40,18 @@ module soc(
 
     //PUF internal signals
     wire            puf_valid;
+    wire            start_puf;
+    wire    [511:0] puf_response;
 
 
-    assign  address =   rv_address[7:0];
+    assign  address     =   rv_address[7:0];
     //AES
-    assign  de      =   ((address == AES_ADDR_CTRL) && (rv_wdata[0] == 1)) ? 1'b1 : 1'b0;  //wdata[0] = 0
-    assign  en      =   ((address == AES_ADDR_CTRL) && (rv_wdata[1] == 1)) ? 1'b1 : 1'b0;  //wdata[1] = 1
+    assign  de          =   ((address == AES_ADDR_CTRL) && (rv_wdata[0] == 1)) ? 1'b1 : 1'b0;  //wdata[0] = 0
+    assign  en          =   ((address == AES_ADDR_CTRL) && (rv_wdata[1] == 1)) ? 1'b1 : 1'b0;  //wdata[1] = 1
     //ECC
-    assign  mode    =   ((address == ECC_ADDR_CTRL)) ? rv_wdata[0] : 1'bz;  //wdata[0] = 1
+    assign  mode        =   ((address == ECC_ADDR_CTRL) && rv_wdata[0]);  //wdata[0] = 1
+    //PUF
+    assign  start_puf   =   ((address == PUF_ADDR_CTRL) && (rv_wdata[0] == 1)) ? 1'b1 : 1'b0;  //wdata[1] = 1
 
     aes dut(
         .clk(clk),
@@ -56,7 +60,7 @@ module soc(
         .decrypt(de),
         .encrypt(en),
 
-        .plaintext(),       //4 Instructions delay 4 clk to create 128 bits plaintext
+        .plaintext(128'hD4A71F92_8C3EB650_19F8A2CD_7B45E10F),       //4 Instructions delay 4 clk to create 128 bits plaintext
 
         .key_is_ready(key_is_ready),
         .key_in(key),
@@ -94,13 +98,26 @@ module soc(
         .rst_n_i(rst_n),
         .mode_i(mode),
         .start_i(puf_valid),
-        .raw_resp_i(),
+        .raw_resp_i(puf_response),
         .helper_in_i(),
         .helper_val_i(),
 
         .helper_out_o(),
         .corr_resp_o(ecc_response),
         .corr_resp_val_o(ecc_valid)
+    );
+
+    ro_puf_core puf(
+        .clk(clk),
+        .rst_n(rst_n),
+
+        .start(start_puf),
+        .measure_window(32'd50),
+        .challenge(16'hA5A5),
+
+        .response(puf_response),
+        .response_ready(puf_valid),
+        .core_busy()
     );
 
 

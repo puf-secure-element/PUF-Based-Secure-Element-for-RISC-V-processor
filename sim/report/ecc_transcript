@@ -1,0 +1,473 @@
+mkdir -p log
+vlib work
+** Warning: (vlib-34) Library already exists at "work".
+Errors: 0, Warnings: 1
+vmap work work
+QuestaSim-64 vmap 2021.2_1 Lib Mapping Utility 2021.05 May 15 2021
+vmap work work 
+Modifying /opt/mentor_graphic/mentor_graphic/questasim/install/questasim/linux_x86_64/../modelsim.ini
+vlog -coveropt 3 +cover=bcestf  -timescale "1us/1ns" +define+UVM_NO_DPI -mfcu -suppress 2181 +acc +incdir+/opt/mentor_graphic/mentor_graphic/questasim/install/questasim/verilog_src/uvm-1.2/src /opt/mentor_graphic/mentor_graphic/questasim/install/questasim/verilog_src/uvm-1.2/src/uvm.sv  -f compile.f \
+  	+define+UVM_OBJECT_MUST_HAVE_CONSTRUCTOR 
+QuestaSim-64 vlog 2021.2_1 Compiler 2021.05 May 15 2021
+Start time: 15:23:29 on Jul 12,2026
+vlog -coveropt 3 "+cover=bcestf" -timescale 1us/1ns "+define+UVM_NO_DPI" -mfcu -suppress 2181 "+acc" "+incdir+/opt/mentor_graphic/mentor_graphic/questasim/install/questasim/verilog_src/uvm-1.2/src" /opt/mentor_graphic/mentor_graphic/questasim/install/questasim/verilog_src/uvm-1.2/src/uvm.sv -f compile.f "+define+UVM_OBJECT_MUST_HAVE_CONSTRUCTOR" 
+-- Compiling package uvm_pkg (uvm-1.2 Built-in)
+-- Compiling module sha256_k_constant
+-- Compiling module sha256_m_schedule
+-- Compiling module sha256
+-- Compiling module sha256_top
+-- Compiling module hamming_decoder_32
+-- Compiling module ecc_top
+-- Compiling module hamming_encoder_32
+-- Compiling module Control_unit
+-- Compiling module PC
+-- Compiling module Data_memory
+-- Compiling module Immediate_generator
+-- Compiling module Branch_prediction
+-- Compiling module ALU_control
+-- Compiling module rv32_old
+-- Compiling module Sign_extend
+-- Compiling module ALU
+-- Compiling module Forwarding_unit
+-- Compiling module Hazard_detection
+-- Compiling module Instruction_memory
+-- Compiling module Register_file
+-- Compiling module aes
+-- Compiling module aes_decrypt
+-- Compiling module mix_columns
+-- Compiling module inv_mix_columns
+-- Compiling module inv_shift_rows
+-- Compiling module add_round_key
+-- Compiling module aff_trans
+-- Compiling module aes_encrypt
+-- Compiling module key_expansion
+-- Compiling module inv_aff
+-- Compiling module GF
+-- Compiling module shift_rows
+-- Compiling module sub_bytes
+-- Compiling package ecc_pkg
+-- Importing package uvm_pkg (uvm-1.2 Built-in)
+-- Compiling interface ecc_interface
+-- Compiling package ecc_env_pkg
+-- Importing package ecc_pkg
+-- Compiling package seq_pkg
+-- Compiling package test_pkg
+-- Importing package ecc_env_pkg
+-- Importing package seq_pkg
+-- Compiling module testbench
+-- Importing package test_pkg
+-- Compiling module key_expansion_golden
+-- Compiling module aes_sbox_golden
+
+Top level modules:
+	sha256_top
+	rv32_old
+	aes
+	testbench
+	key_expansion_golden
+	aes_sbox_golden
+End time: 15:23:30 on Jul 12,2026, Elapsed time: 0:00:01
+Errors: 0, Warnings: 0
+vsim -sv_seed 1 -coverage -coveranalysis   -voptargs=+acc -assertdebug -c testbench   -do "coverage save -codeAll -cvg -onexit ecc_test_1.ucdb; log -r /*;run -all;" -l ecc_test_1.log	 +UVM_TESTNAME=ecc_test \
+          +UVM_VERBOSITY=UVM_HIGH \
+         
+Reading pref.tcl
+
+# 2021.2_1
+
+# vsim -sv_seed 1 -coverage -coveranalysis -voptargs="+acc" -assertdebug -c testbench -do "coverage save -codeAll -cvg -onexit ecc_test_1.ucdb; log -r /*;run -all;" -l ecc_test_1.log "+UVM_TESTNAME=ecc_test" "+UVM_VERBOSITY=UVM_HIGH" 
+# Start time: 15:23:31 on Jul 12,2026
+# Loading /tmp/nguyenminhkha@nguyenminhkha-Dell-G15-5511_dpi_53869/linux_x86_64_gcc-13/export_tramp.so
+# ** Note: (vsim-3812) Design is being optimized...
+# ** Warning: (vopt-13408) Code coverage will be disabled for some DUs/packages/classes and source files.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
+# //  Questa Sim-64
+# //  Version 2021.2_1 linux_x86_64 May 15 2021
+# //
+# //  Copyright 1991-2021 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  QuestaSim and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# ** Note: (vsim-8785) UVM-aware debugging capabilities will be disabled since no compiled "questa_uvm_pkg" can be found.
+# This also means that later if you turn on UVM-aware debugging your debug simulations may have
+# different random seeds from your non-debug simulations.
+# Loading sv_std.std
+# Loading work.ecc_interface(fast)
+# Loading work.uvm_pkg(fast)
+# Loading work.ecc_pkg(fast)
+# Loading work.seq_pkg(fast)
+# Loading work.ecc_env_pkg(fast)
+# Loading work.test_pkg(fast)
+# Loading work.testbench(fast)
+# Loading work.ecc_interface(fast__2)
+# Loading work.ecc_top(fast)
+# Loading work.hamming_encoder_32(fast)
+# Loading work.hamming_decoder_32(fast)
+# Compiling /tmp/nguyenminhkha@nguyenminhkha-Dell-G15-5511_dpi_53869/linux_x86_64_gcc-13/exportwrapper.c
+# Loading /tmp/nguyenminhkha@nguyenminhkha-Dell-G15-5511_dpi_53869/linux_x86_64_gcc-13/vsim_auto_compile.so
+# coverage save -codeAll -cvg -onexit ecc_test_1.ucdb
+#  log -r /*
+# run -all
+# UVM_INFO /opt/mentor_graphic/mentor_graphic/questasim/install/questasim/verilog_src/uvm-1.2/src/base/uvm_root.svh(392) @ 0: reporter [UVM/RELNOTES] 
+# ----------------------------------------------------------------
+# UVM-1.2
+# (C) 2007-2014 Mentor Graphics Corporation
+# (C) 2007-2014 Cadence Design Systems, Inc.
+# (C) 2006-2014 Synopsys, Inc.
+# (C) 2011-2013 Cypress Semiconductor Corp.
+# (C) 2013-2014 NVIDIA Corporation
+# ----------------------------------------------------------------
+# 
+#   ***********       IMPORTANT RELEASE NOTES         ************
+# 
+#   You are using a version of the UVM library that has been compiled
+#   with `UVM_NO_DEPRECATED undefined.
+#   See http://www.eda.org/svdb/view.php?id=3313 for more details.
+# 
+#   You are using a version of the UVM library that has been compiled
+#   with `UVM_OBJECT_DO_NOT_NEED_CONSTRUCTOR undefined.
+#   See http://www.eda.org/svdb/view.php?id=3770 for more details.
+# 
+#       (Specify +UVM_NO_RELNOTES to turn off this notice)
+# 
+# UVM_INFO /opt/mentor_graphic/mentor_graphic/questasim/install/questasim/verilog_src/uvm-1.2/src/base/uvm_root.svh(453) @ 0: reporter [NO_DPI_TSTNAME] UVM_NO_DPI defined--getting UVM_TESTNAME directly, without DPI
+# UVM_INFO @ 0: reporter [RNTST] Running test ecc_test...
+# UVM_INFO ./../tb/uvm/ecc_environment.sv(16) @ 0: uvm_test_top.ecc_env [build_phase] Entered ....
+# UVM_INFO ./../tb/uvm/ecc_environment.sv(26) @ 0: uvm_test_top.ecc_env [build_phase] Existing ....
+# UVM_INFO /opt/mentor_graphic/mentor_graphic/questasim/install/questasim/verilog_src/uvm-1.2/src/base/uvm_traversal.svh(279) @ 0: reporter [UVM/COMP/NAMECHECK] This implementation of the component name checks requires DPI to be enabled
+# UVM_INFO ./../testcases/ecc_base_test.sv(24) @ 0: uvm_test_top [start_of_simulation_phase] Entered...
+# UVM_INFO /opt/mentor_graphic/mentor_graphic/questasim/install/questasim/verilog_src/uvm-1.2/src/base/uvm_root.svh(579) @ 0: reporter [UVMTOP] UVM testbench topology:
+# --------------------------------------------------------------
+# Name                       Type                    Size  Value
+# --------------------------------------------------------------
+# uvm_test_top               ecc_test                -     @341 
+#   ecc_env                  ecc_environment         -     @355 
+#     ecc_agt                ecc_agent               -     @369 
+#       driver               ecc_driver              -     @393 
+#         rsp_port           uvm_analysis_port       -     @412 
+#         seq_item_port      uvm_seq_item_pull_port  -     @402 
+#       monitor              ecc_monitor             -     @422 
+#         ecc_a_port         uvm_analysis_port       -     @431 
+#       sequencer            ecc_sequencer           -     @441 
+#         rsp_export         uvm_analysis_export     -     @450 
+#         seq_item_export    uvm_seq_item_pull_imp   -     @568 
+#         arbitration_queue  array                   0     -    
+#         lock_queue         array                   0     -    
+#         num_last_reqs      integral                32    'd1  
+#         num_last_rsps      integral                32    'd1  
+#     ecc_scoreboard         ecc_scoreboard          -     @378 
+#       ecc_a_export         uvm_analysis_imp        -     @588 
+# --------------------------------------------------------------
+# 
+# UVM_INFO ./../testcases/ecc_base_test.sv(26) @ 0: uvm_test_top [start_of_simulation_phase] Exiting...
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(17) @ 0: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] 
+# 
+# ===== ROUND 0: ENROLLMENT =====
+# 
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(26) @ 65000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] Saved expected response = 6862fb77b5568fefd2bf42150e5a1a4a73b98a71985c55eccb29738635914c35b9aa7c83f6e99d091fd69f915978fc70e724da763a5e834036a96b0683f17d90
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 85000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 0: injected 1-bit error at bit 193
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 85000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 105000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 0: injected 1-bit error at bit 196
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 105000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 125000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 0: injected 1-bit error at bit 270
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 125000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 145000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 0: injected 1-bit error at bit 333
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 145000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 165000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 0: injected 1-bit error at bit 462
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 165000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 185000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 0: injected 1-bit error at bit 450
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 185000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 205000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 0: injected 1-bit error at bit 373
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 205000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 225000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 0: injected 1-bit error at bit 128
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 225000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 245000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 0: injected 1-bit error at bit 397
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 245000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 265000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 0: injected 1-bit error at bit 455
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(17) @ 265000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] 
+# 
+# ===== ROUND 1: ENROLLMENT =====
+# 
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 265000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(26) @ 285000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] Saved expected response = 10a984ac6372932f4d1f79f1975f82ab953133f6ed50c7c2e6652342e563cecabcae1cbc019be867022948fb7bf16df84b1276ec8a63f680a73888107d3a7f59
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 305000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 1: injected 1-bit error at bit 456
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 305000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 325000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 1: injected 1-bit error at bit 237
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 325000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 345000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 1: injected 1-bit error at bit 388
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 345000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 365000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 1: injected 1-bit error at bit 393
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 365000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 385000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 1: injected 1-bit error at bit 322
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 385000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 405000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 1: injected 1-bit error at bit 209
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 405000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 425000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 1: injected 1-bit error at bit 280
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 425000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 445000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 1: injected 1-bit error at bit 296
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 445000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 465000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 1: injected 1-bit error at bit 204
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 465000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 485000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 1: injected 1-bit error at bit 452
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(17) @ 485000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] 
+# 
+# ===== ROUND 2: ENROLLMENT =====
+# 
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 485000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(26) @ 505000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] Saved expected response = 29b37db34f7719ca5ab40787443047bc8472e365c5a1628af839da870e3bed0263de8e20e6d043089829578439e7cc07db774b807834dcb1afd530454aeb0a4f
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 525000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 2: injected 1-bit error at bit 340
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 525000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 545000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 2: injected 1-bit error at bit 158
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 545000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 565000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 2: injected 1-bit error at bit 146
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 565000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 585000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 2: injected 1-bit error at bit 238
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 585000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 605000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 2: injected 1-bit error at bit 457
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 605000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 625000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 2: injected 1-bit error at bit 351
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 625000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 645000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 2: injected 1-bit error at bit 380
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 645000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 665000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 2: injected 1-bit error at bit 212
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 665000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 685000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 2: injected 1-bit error at bit 473
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 685000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 705000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 2: injected 1-bit error at bit 419
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(17) @ 705000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] 
+# 
+# ===== ROUND 3: ENROLLMENT =====
+# 
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 705000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(26) @ 725000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] Saved expected response = fbface5c031c5de39a8fb0d52c3a7e9499af724f9e4d0c6e7a237e81a8ab9f58f64a46cf0cb1ac486f225680da0348e4f972f779122fbb36c1d0f46d6aec1f02
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 745000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 3: injected 1-bit error at bit 104
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 745000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 765000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 3: injected 1-bit error at bit 284
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 765000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 785000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 3: injected 1-bit error at bit 37
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 785000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 805000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 3: injected 1-bit error at bit 271
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 805000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 825000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 3: injected 1-bit error at bit 150
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 825000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 845000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 3: injected 1-bit error at bit 435
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 845000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 865000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 3: injected 1-bit error at bit 134
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 865000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 885000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 3: injected 1-bit error at bit 467
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 885000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 905000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 3: injected 1-bit error at bit 31
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 905000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 925000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 3: injected 1-bit error at bit 121
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(17) @ 925000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] 
+# 
+# ===== ROUND 4: ENROLLMENT =====
+# 
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 925000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(26) @ 945000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] Saved expected response = b872f7849843e8fa95ac872a4c9183ef3e8b6b123a964522272cc6fe523ec86eed94963fa2e54888ca4f9d71872e8fb5bc92552a465e8842db975213bd1bfb26
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 965000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 4: injected 1-bit error at bit 475
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 965000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 985000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 4: injected 1-bit error at bit 301
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 985000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 1005000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 4: injected 1-bit error at bit 228
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 1005000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 1025000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 4: injected 1-bit error at bit 32
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 1025000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 1045000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 4: injected 1-bit error at bit 316
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 1045000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 1065000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 4: injected 1-bit error at bit 168
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 1065000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 1085000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 4: injected 1-bit error at bit 391
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 1085000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 1105000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 4: injected 1-bit error at bit 511
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 1105000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 1125000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 4: injected 1-bit error at bit 440
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 1125000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO ./../sequences/ecc_test_sequence.sv(52) @ 1145000: uvm_test_top.ecc_env.ecc_agt.sequencer@@default_seq [SEQ] Round 4: injected 1-bit error at bit 344
+# UVM_INFO /opt/mentor_graphic/mentor_graphic/questasim/install/questasim/verilog_src/uvm-1.2/src/base/uvm_objection.svh(1270) @ 1145000: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
+# UVM_INFO ./../tb/uvm/ecc_scoreboard.sv(36) @ 1145000: uvm_test_top.ecc_env.ecc_scoreboard [ECC_SB] 
+# 
+# ===== ECC Reconstruction PASSED SUCCESSFULLY =====
+# 
+# UVM_INFO /opt/mentor_graphic/mentor_graphic/questasim/install/questasim/verilog_src/uvm-1.2/src/base/uvm_report_server.svh(847) @ 1145000: reporter [UVM/REPORT/SERVER] 
+# --- UVM Report Summary ---
+# 
+# ** Report counts by severity
+# UVM_INFO :  120
+# UVM_WARNING :    0
+# UVM_ERROR :    0
+# UVM_FATAL :    0
+# ** Report counts by id
+# [ECC_SB]    55
+# [NO_DPI_TSTNAME]     1
+# [RNTST]     1
+# [SEQ]    55
+# [TEST_DONE]     1
+# [UVM/COMP/NAMECHECK]     1
+# [UVM/RELNOTES]     1
+# [UVMTOP]     1
+# [build_phase]     2
+# [start_of_simulation_phase]     2
+# 
+# ** Note: $finish    : /opt/mentor_graphic/mentor_graphic/questasim/install/questasim/verilog_src/uvm-1.2/src/base/uvm_root.svh(517)
+#    Time: 1145 us  Iteration: 75  Instance: /testbench
+# Saving coverage database on exit...
+# End time: 15:23:34 on Jul 12,2026, Elapsed time: 0:00:03
+# Errors: 0, Warnings: 1
+mv ecc_test_1.log ./log
+cp -rf vsim.wlf log/ecc_test_1.wlf
+ln -sf ./log/ecc_test_1.log run.log

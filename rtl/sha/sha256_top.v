@@ -42,7 +42,7 @@ module sha256_top(
     assign next  = next_pulse;
 
     assign rdata    = tmp_rdata;
-    assign data_in = ecc_reg;
+    assign data_in  = ecc_reg;
     assign error    = sel && (addr != ADDR_CTRL) && (addr != ADDR_STATUS) && (addr < ADDR_HASH0 || addr > ADDR_HASH7);
     assign hash_out = hash_valid ? hash_out_tmp : 256'b0;
 
@@ -86,7 +86,7 @@ module sha256_top(
                 end
             end 
             
-            if (start_reg) begin
+            if (start_reg && ecc_valid) begin
                 start_reg <= 1'b0;
 
                 if (ecc_valid && (ecc_response != ecc_reg)) begin

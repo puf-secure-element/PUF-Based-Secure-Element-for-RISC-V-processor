@@ -1,5 +1,3 @@
-`timescale 1ns / 1ps
-
 module axi_slave_top (
     input  wire         clk,
     input  wire         rst_n,
@@ -25,20 +23,24 @@ module axi_slave_top (
 
     // System Signals
     output wire         irq,
-    output wire [127:0] data_out    // Thêm port xuất dữ liệu ra ngoài
+    output wire [127:0] data_out
 );
 
-    // Wires nội bộ
     wire reg_start, soft_reset;
     wire hw_busy, hw_done_pulse, hw_error_pulse;
-    wire [15:0]  reg_puf_challenge;
-    wire [31:0]  reg_puf_window;
-    wire [127:0] reg_aes_din;
-    wire [127:0] hw_aes_dout;
-    
     wire puf_start, ecc_start, sha_start, aes_start;
     wire puf_valid, ecc_valid, sha_valid, sha_error, aes_done;
 
+    wire [15:0]  reg_puf_challenge;
+    wire [31:0]  reg_puf_window;
+    wire         reg_ecc_mode;
+    wire [95:0]  reg_ecc_helper;
+    wire         reg_aes_decrypt_en;
+    wire         reg_aes_encrypt_en;
+    wire [127:0] reg_aes_plaintext;
+    wire [127:0] reg_aes_ciphertext;
+    wire [127:0] hw_aes_dout;
+    
     axi_reg_bank u_reg_bank (
         .clk                (clk),
         .rst_n              (rst_n),
@@ -65,9 +67,15 @@ module axi_slave_top (
         .hw_busy            (hw_busy),
         .hw_done_pulse      (hw_done_pulse),
         .hw_error_pulse     (hw_error_pulse),
+        
         .reg_puf_challenge  (reg_puf_challenge),
         .reg_puf_window     (reg_puf_window),
-        .reg_aes_din        (reg_aes_din),
+        .reg_ecc_mode       (reg_ecc_mode),
+        .reg_ecc_helper     (reg_ecc_helper),
+        .reg_aes_decrypt_en (reg_aes_decrypt_en),
+        .reg_aes_encrypt_en (reg_aes_encrypt_en),
+        .reg_aes_plaintext  (reg_aes_plaintext),
+        .reg_aes_ciphertext (reg_aes_ciphertext),
         .hw_aes_dout        (hw_aes_dout)
     );
 
@@ -93,9 +101,16 @@ module axi_slave_top (
     axi_slave_core u_core (
         .clk                (clk),
         .rst_n              (rst_n),
+        
         .puf_challenge      (reg_puf_challenge),
         .puf_window         (reg_puf_window),
-        .aes_din            (reg_aes_din),
+        .ecc_mode           (reg_ecc_mode),
+        .ecc_helper_in      (reg_ecc_helper),
+        .aes_decrypt_en     (reg_aes_decrypt_en),
+        .aes_encrypt_en     (reg_aes_encrypt_en),
+        .aes_plaintext      (reg_aes_plaintext),
+        .aes_ciphertext     (reg_aes_ciphertext),
+        
         .puf_start          (puf_start),
         .puf_valid          (puf_valid),
         .ecc_start          (ecc_start),
@@ -108,7 +123,6 @@ module axi_slave_top (
         .aes_dout           (hw_aes_dout)
     );
 
-    // Kéo thẳng tín hiệu data từ lõi AES ra ngoài port
     assign data_out = hw_aes_dout;
 
 endmodule

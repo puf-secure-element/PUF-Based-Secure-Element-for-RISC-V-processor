@@ -1,5 +1,3 @@
-`timescale 1ns / 1ps
-
 module RV32I(
     input wire clk,
     input wire rst_n,
@@ -54,17 +52,7 @@ module RV32I(
     // Tín hiệu Stall tổng hợp cho PC (dừng lại nếu có Data Hazard HOẶC Bus đang bận)
     wire global_stall = hazard_stall || bus_stall;
 
-    //================= GÁN TÍN HIỆU RA BUS =================//
-    assign mem_req   = EX_MEM_Mem_Read || EX_MEM_Mem_Write;
-    assign mem_we    = EX_MEM_Mem_Write;
-    assign mem_addr  = EX_MEM_ALU_result;
-    assign mem_wdata = EX_MEM_rv2;
-    assign mem_wstrb = 4'b1111; // Mặc định truy cập 32-bit word
-    
-    // Dữ liệu đọc về lấy thẳng từ bus
-    assign mem_data  = mem_rdata; 
-
-    //================= IF/ID =================//
+  //================= IF/ID =================//
     reg [31:0] IF_ID_pc;
     reg [31:0] IF_ID_Instruction;
 
@@ -102,6 +90,18 @@ module RV32I(
     reg MEM_WB_Mem_To_Reg;
     reg [31:0] MEM_WB_mem_data;
     reg [31:0] MEM_WB_ALU_result;
+  
+    //================= GÁN TÍN HIỆU RA BUS =================//
+    assign mem_req   = EX_MEM_Mem_Read || EX_MEM_Mem_Write;
+    assign mem_we    = EX_MEM_Mem_Write;
+    assign mem_addr  = EX_MEM_ALU_result;
+    assign mem_wdata = EX_MEM_rv2;
+    assign mem_wstrb = 4'b1111; // Mặc định truy cập 32-bit word
+    
+    // Dữ liệu đọc về lấy thẳng từ bus
+    assign mem_data  = mem_rdata; 
+
+    
 
     //================= Assign =================//
     assign Flush = Branch_taken || ID_EX_Jump;

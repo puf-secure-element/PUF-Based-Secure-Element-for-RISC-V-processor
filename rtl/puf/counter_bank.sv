@@ -19,4 +19,4 @@ module counter_bank #(
         end
     endgenerate
 
-endmodul
+endmodule

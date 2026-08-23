@@ -36,6 +36,7 @@ module soc (
     wire    [1:0]   axi_rresp;
     wire            axi_rvalid;
     wire            axi_rready;
+    wire            axi_out;
 
     // =========================================================================
     // TÍN HIỆU GIAO TIẾP NATIVE CPU
@@ -51,9 +52,11 @@ module soc (
 
     wire            key_is_ready, ecc_valid;
     wire    [7:0]   address;                    //Address written to control modules
+    wire            wr_valid;                   //Write valid signal to control modules
 
     //AES internal signals
     wire            de, en;
+    wire            done;   
 
     //SHA internal signals
     wire            sha_error;
@@ -70,13 +73,16 @@ module soc (
 
 
     assign  address     =   cpu_addr[7:0];
-    //AES
-    assign  de          =   ((address == AES_ADDR_CTRL) && (cpu_wdata[0] == 1)) ? 1'b1 : 1'b0;  //wdata[0] = 0
-    assign  en          =   ((address == AES_ADDR_CTRL) && (cpu_wdata[1] == 1)) ? 1'b1 : 1'b0;  //wdata[1] = 1
+    assign  wr_valid    = cpu_req && cpu_we;   // hoặc tín hiệu tương đương phía AXI (awvalid&&wvalid&&...)
     //ECC
-    assign  mode        =   ((address == ECC_ADDR_CTRL) && cpu_wdata[0]);  //wdata[0] = 1
+    assign  mode        = wr_valid && (address == ECC_ADDR_CTRL) && cpu_wdata[0];
     //PUF
-    assign  start_puf   =   ((address == PUF_ADDR_CTRL) && (cpu_wdata[0] == 1)) ? 1'b1 : 1'b0;  //wdata[1] = 1
+    assign  start_puf   = wr_valid && (address == PUF_ADDR_CTRL) && (cpu_wdata[0] == 1);
+    //AES
+    assign  en          = wr_valid && (address == AES_ADDR_CTRL) && (cpu_wdata[1] == 1);
+    assign  de          = wr_valid && (address == AES_ADDR_CTRL) && (cpu_wdata[0] == 1);
+    //SHA
+    assign  sha_addr    =   ((address == SHA_ADDR_CTRL) || (address == SHA_ADDR_STATUS)) ? cpu_addr[7:0] : 8'h0;  //wdata[1] = 1
 
     // =========================================================================
     // 1. KHỐI CPU RISC-V (Bản đã nâng cấp có mem_req, mem_ready)
@@ -158,7 +164,7 @@ module soc (
         
         // Cắm dây xuất ra SoC ngoài cùng
         .irq            (irq),
-        .data_out       (data_out)
+        .data_out       (axi_out)
     );
 
      aes dut(
@@ -184,7 +190,7 @@ module soc (
         .sel            (1'b1),
         .we             (1'b1),
 
-        .addr           (address),
+        .addr           (cpu_addr[7:0]),
         .wdata          (cpu_wdata),
 
         .ecc_response   (ecc_response),

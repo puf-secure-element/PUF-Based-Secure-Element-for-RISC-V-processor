@@ -27,9 +27,24 @@ module axi_slave_core (
     output wire [127:0] aes_dout
 );
 
-    wire [511:0] w_puf_response;
-    wire [511:0] w_ecc_response;
-    wire [255:0] w_sha_key;
+    wire [511:0]    w_puf_response;
+    wire [511:0]    w_ecc_response;
+    wire [255:0]    w_sha_key;
+    wire [31:0]     sha_wdata;
+
+    reg             ecc_valid_reg;
+
+    assign sha_wdata = sha_start ? 32'h1 : 32'h0;
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            ecc_valid_reg <= 1'b0;
+        end else begin
+            // Logic to handle the start signals and data flow
+            if(ecc_valid)
+                ecc_valid_reg <= 1'b1; // Capture ECC response when valid
+        end
+    end
 
     // 1. PUF
     ro_puf_core u_puf (
@@ -61,13 +76,13 @@ module axi_slave_core (
     sha256_top u_sha256 (
         .clk             (clk),
         .rst_n           (rst_n),
-        .sel             (sha_start), 
-        .we              (sha_start), 
+        .sel             (1'b1), 
+        .we              (1'b1), 
         .addr            (8'h00),      
-        .wdata           (32'h00000001),
+        .wdata           (sha_wdata),
         .rdata           (),
         .ecc_response    (w_ecc_response),
-        .ecc_valid       (ecc_valid),
+        .ecc_valid       (ecc_valid_reg),
         .error           (sha_error),
         .hash_out        (w_sha_key),
         .hash_valid      (sha_valid)

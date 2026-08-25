@@ -36,7 +36,6 @@ module soc (
     wire    [1:0]   axi_rresp;
     wire            axi_rvalid;
     wire            axi_rready;
-    wire            axi_out;
 
     // =========================================================================
     // TÍN HIỆU GIAO TIẾP NATIVE CPU
@@ -49,40 +48,6 @@ module soc (
     wire    [31:0]  cpu_rdata;
     wire            cpu_ready;
     wire            cpu_error;
-
-    wire            key_is_ready, ecc_valid;
-    wire    [7:0]   address;                    //Address written to control modules
-    wire            wr_valid;                   //Write valid signal to control modules
-
-    //AES internal signals
-    wire            de, en;
-    wire            done;   
-
-    //SHA internal signals
-    wire            sha_error;
-    wire    [255:0] key;
-
-    //ECC internal signals
-    wire            mode;
-    wire    [511:0] ecc_response;
-
-    //PUF internal signals
-    wire            puf_valid;
-    wire            start_puf;
-    wire    [511:0] puf_response;
-
-
-    assign  address     =   cpu_addr[7:0];
-    assign  wr_valid    = cpu_req && cpu_we;   // hoặc tín hiệu tương đương phía AXI (awvalid&&wvalid&&...)
-    //ECC
-    assign  mode        = wr_valid && (address == ECC_ADDR_CTRL) && cpu_wdata[0];
-    //PUF
-    assign  start_puf   = wr_valid && (address == PUF_ADDR_CTRL) && (cpu_wdata[0] == 1);
-    //AES
-    assign  en          = wr_valid && (address == AES_ADDR_CTRL) && (cpu_wdata[1] == 1);
-    assign  de          = wr_valid && (address == AES_ADDR_CTRL) && (cpu_wdata[0] == 1);
-    //SHA
-    assign  sha_addr    =   ((address == SHA_ADDR_CTRL) || (address == SHA_ADDR_STATUS)) ? cpu_addr[7:0] : 8'h0;  //wdata[1] = 1
 
     // =========================================================================
     // 1. KHỐI CPU RISC-V (Bản đã nâng cấp có mem_req, mem_ready)
@@ -164,71 +129,7 @@ module soc (
         
         // Cắm dây xuất ra SoC ngoài cùng
         .irq            (irq),
-        .data_out       (axi_out)
+        .data_out       (data_out)
     );
-
-     aes dut(
-        .clk            (clk),
-        .rst_n          (rst_n),
-
-        .decrypt        (de),
-        .encrypt        (en),
-
-        .plaintext      (128'hD4A71F92_8C3EB650_19F8A2CD_7B45E10F),       //4 Instructions delay 4 clk to create 128 bits plaintext
-
-        .key_is_ready   (key_is_ready),
-        .key_in         (key),
-        //Encrypt/Decrypt value
-        .data_out       (data_out),
-        .done           (done)
-    );
-
-    sha256_top sha256(
-        .clk            (clk),
-        .rst_n          (rst_n),
-
-        .sel            (1'b1),
-        .we             (1'b1),
-
-        .addr           (cpu_addr[7:0]),
-        .wdata          (cpu_wdata),
-
-        .ecc_response   (ecc_response),
-        .ecc_valid      (ecc_valid),
-
-        .rdata          (cpu_rdata),
-        .error          (sha_error),
-        .hash_out       (key),
-        .hash_valid     (key_is_ready)
-    );
-
-    ecc_top ecc(
-        .clk_i          (clk),
-        .rst_n_i        (rst_n),
-        .mode_i         (mode),
-        .start_i        (puf_valid),
-        .raw_resp_i     (puf_response),
-        .helper_in_i    (),
-        .helper_val_i   (),
-
-        .helper_out_o   (),
-        .corr_resp_o    (ecc_response),
-        .corr_resp_val_o(ecc_valid)
-    );
-
-    ro_puf_core puf(
-        .clk            (clk),
-        .rst_n          (rst_n),
-
-        .start          (start_puf),
-        .measure_window (32'd50),
-        .challenge      (16'hA5A5),
-
-        .response       (puf_response),
-        .response_ready (puf_valid),
-        .core_busy      ()
-    );
-
-
 
 endmodule

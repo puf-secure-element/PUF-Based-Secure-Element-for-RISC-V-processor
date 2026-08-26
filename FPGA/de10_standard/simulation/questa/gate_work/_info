@@ -1,0 +1,37 @@
+m255
+K4
+z2
+!s11f vlog 2025.2 2025.05, May 31 2025
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/Users/ADMIN/Desktop/VI MACH BAO MAT/fpga/de10_standard/simulation/questa
+vde10_standard
+2de10_standard.svo
+DXx6 sv_std 3 std 0 22 @5XbY]_OacJl=`ToSm<M^0
+!s110 1787725837
+!i10b 1
+!s100 `=4G2X;W2d]jj8D84`;;e3
+IOM37;2CH0B_cSLD4h[gc?2
+S1
+R0
+w1787725812
+8de10_standard.svo
+Fde10_standard.svo
+!i122 0
+L0 32 955577
+VDg1SIo80bB@j0V0VzS_@n1
+OL;L;2025.2;82
+r1
+!s85 0
+31
+!s108 1787725831.000000
+!s107 de10_standard.svo|
+!s90 -reportprogress|300|-sv|-work|work|+incdir+.|de10_standard.svo|
+!i113 0
+o-sv -work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+!s92 -sv -work work +incdir+. -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+tCvgOpt 0 defaultOptions 1085333592

@@ -71,7 +71,7 @@ module key_expansion (
 
         end
 
-        for (i = 0; i < 60; i = i + 1) begin
+        for (i = 0; i < 60; i = i + 1) begin : loop
             assign w_out_t[1919 - i*32 -: 32] = w_t[i];
             assign w_out_f[1919 - i*32 -: 32] = w_f[i];
         end

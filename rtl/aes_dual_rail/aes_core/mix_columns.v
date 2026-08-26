@@ -9,7 +9,7 @@ module mix_columns(
 
     genvar i;
     generate
-        for (i = 0; i < 4; i = i + 1) begin 
+        for (i = 0; i < 4; i = i + 1) begin : loop
 
             wire [7:0] a0_t, a0_f, a1_t, a1_f, a2_t, a2_f, a3_t, a3_f;
             assign a0_t = data_in_t[(i*32+24)+:8]; assign a0_f = data_in_f[(i*32+24)+:8];

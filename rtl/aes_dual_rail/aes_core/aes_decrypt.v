@@ -29,7 +29,7 @@ module aes_decrypt(
 
     genvar c;
     generate
-        for (c = 0; c < 4; c = c + 1) begin
+        for (c = 0; c < 4; c = c + 1) begin : loop
             sub_bytes sb_inst (
                 .en(1'b0),
                 .de(1'b1),

@@ -229,57 +229,57 @@ module aes (
     assign data_out = state_t;
     assign done = done_r;
 
-initial begin
+// initial begin
 
-    forever begin
-        @(posedge dut.clk);
+//     forever begin
+//         @(posedge dut.clk);
 
-        // ==========================================================
-        // AES DEBUG MONITOR
-        // ==========================================================
+//         // ==========================================================
+//         // AES DEBUG MONITOR
+//         // ==========================================================
 
-        if (state_t != 0) begin
+//         if (state_t != 0) begin
 
-            $display("");
-            $display("==============================================================");
-            $display("[AES MONITOR] TIME = %0t", $time);
-            $display("--------------------------------------------------------------");
+//             $display("");
+//             $display("==============================================================");
+//             $display("[AES MONITOR] TIME = %0t", $time);
+//             $display("--------------------------------------------------------------");
 
-            $display("[CTRL]");
-            $display("  round       = %0d", round);
+//             $display("[CTRL]");
+//             $display("  round       = %0d", round);
 
-            $display("");
-            $display("[STATE]");
-            $display("  STATE_T     = %032h", state_t);
-            $display("  STATE_F     = %032h", state_f);
-            $display("  XOR         = %032h",
-                     state_t ^ state_f);
+//             $display("");
+//             $display("[STATE]");
+//             $display("  STATE_T     = %032h", state_t);
+//             $display("  STATE_F     = %032h", state_f);
+//             $display("  XOR         = %032h",
+//                      state_t ^ state_f);
 
-            $display("");
-            $display("[KEY]");
-            $display("  KEY_T       = %032h", round_key_t);
-            $display("  KEY_F       = %032h", round_key_f);
-            $display("  KEY_XOR     = %032h",
-                     round_key_t ^ round_key_f);
+//             $display("");
+//             $display("[KEY]");
+//             $display("  KEY_T       = %032h", round_key_t);
+//             $display("  KEY_F       = %032h", round_key_f);
+//             $display("  KEY_XOR     = %032h",
+//                      round_key_t ^ round_key_f);
 
-            $display("");
-            $display("[CHECK]");
-            if ((state_t ^ state_f)
-                 == 128'hFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF)
-                $display("  STATE DUAL-RAIL = VALID");
-            else
-                $display("  STATE DUAL-RAIL = INVALID");
+//             $display("");
+//             $display("[CHECK]");
+//             if ((state_t ^ state_f)
+//                  == 128'hFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF)
+//                 $display("  STATE DUAL-RAIL = VALID");
+//             else
+//                 $display("  STATE DUAL-RAIL = INVALID");
 
-            if ((round_key_t ^ round_key_f)
-                 == 128'hFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF)
-                $display("  KEY   DUAL-RAIL = VALID");
-            else
-                $display("  KEY   DUAL-RAIL = INVALID");
+//             if ((round_key_t ^ round_key_f)
+//                  == 128'hFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF)
+//                 $display("  KEY   DUAL-RAIL = VALID");
+//             else
+//                 $display("  KEY   DUAL-RAIL = INVALID");
 
-            $display("==============================================================");
-        end
-    end
+//             $display("==============================================================");
+//         end
+//     end
 
-end
+// end
 
 endmodule

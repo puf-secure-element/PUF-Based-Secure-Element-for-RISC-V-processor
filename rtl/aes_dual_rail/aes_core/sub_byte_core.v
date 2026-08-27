@@ -1,9 +1,3 @@
-// sub_byte_core: shared single-byte dual-rail SubBytes / InvSubBytes engine.
-// This is the ONLY S-box instance in the whole design (1x GF + 1x aff_trans + 1x inv_aff).
-// It is reused serially, one byte per cycle, by:
-//   - the round datapath's SubBytes/InvSubBytes stage (16 bytes/round)
-//   - the key-expansion SubWord step
-// Purely combinational; the caller supplies one byte per cycle and registers the result.
 module sub_byte_core(
     input  wire       en,          // 1 = forward S-box (encrypt path / key expansion SubWord)
     input  wire       de,          // 1 = inverse S-box (decrypt path)

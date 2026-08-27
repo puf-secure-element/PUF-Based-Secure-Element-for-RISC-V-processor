@@ -1,5 +1,5 @@
 Timing Analyzer report for de10_standard
-Wed Aug 26 13:30:03 2026
+Thu Aug 27 20:17:51 2026
 Quartus Prime Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
 
 
@@ -102,14 +102,14 @@ on the Quartus Prime software download page.
 ; Number detected on machine ; 8           ;
 ; Maximum allowed            ; 4           ;
 ;                            ;             ;
-; Average used               ; 2.06        ;
+; Average used               ; 1.94        ;
 ; Maximum used               ; 4           ;
 ;                            ;             ;
 ; Usage by Processor         ; % Time Used ;
 ;     Processor 1            ; 100.0%      ;
-;     Processor 2            ;  35.3%      ;
-;     Processor 3            ;  35.3%      ;
-;     Processor 4            ;  35.3%      ;
+;     Processor 2            ;  31.2%      ;
+;     Processor 3            ;  31.2%      ;
+;     Processor 4            ;  31.2%      ;
 +----------------------------+-------------+
 
 
@@ -123,14 +123,14 @@ on the Quartus Prime software download page.
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------+--------+------------+-------+-------+------------+-----------+-------------+-------+--------+-----------+------------+----------+--------+--------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 
-+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Slow 1100mV 85C Model Fmax Summary                                                                                                                                                                                            ;
-+------------+-----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------+
-; Fmax       ; Restricted Fmax ; Clock Name                                                                                                                                                                              ; Note ;
-+------------+-----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------+
-; 44.63 MHz  ; 44.63 MHz       ; CLOCK_50                                                                                                                                                                                ;      ;
-; 246.85 MHz ; 246.85 MHz      ; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ;      ;
-+------------+-----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------+
++------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Slow 1100mV 85C Model Fmax Summary                                                                                                                                                                                           ;
++-----------+-----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------+
+; Fmax      ; Restricted Fmax ; Clock Name                                                                                                                                                                              ; Note ;
++-----------+-----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------+
+; 36.94 MHz ; 36.94 MHz       ; CLOCK_50                                                                                                                                                                                ;      ;
+; 257.8 MHz ; 257.8 MHz       ; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ;      ;
++-----------+-----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------+
 This panel reports FMAX for every clock in the design, regardless of the user-specified clock periods.  FMAX is only computed for paths where the source and destination registers or ports are driven by the same clock.  Paths of different clocks, including generated clocks, are ignored.  For paths between a clock and its inversion, FMAX is computed as if the rising and falling edges are scaled along with FMAX, such that the duty cycle (in terms of a percentage) is maintained. Altera recommends that you always use clock constraints and other slack reports for sign-off analysis.
 
 
@@ -145,8 +145,8 @@ HTML report is unavailable in plain text report export.
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------+---------------+
 ; Clock                                                                                                                                                                                   ; Slack   ; End Point TNS ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------+---------------+
-; CLOCK_50                                                                                                                                                                                ; -21.406 ; -136985.485   ;
-; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -3.051  ; -4146.763     ;
+; CLOCK_50                                                                                                                                                                                ; -26.073 ; -109060.359   ;
+; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -2.879  ; -3907.143     ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------+---------------+
 
 
@@ -155,8 +155,8 @@ HTML report is unavailable in plain text report export.
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------+---------------+
 ; Clock                                                                                                                                                                                   ; Slack ; End Point TNS ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------+---------------+
-; CLOCK_50                                                                                                                                                                                ; 0.220 ; 0.000         ;
-; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; 0.292 ; 0.000         ;
+; CLOCK_50                                                                                                                                                                                ; 0.229 ; 0.000         ;
+; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; 0.385 ; 0.000         ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------+---------------+
 
 
@@ -165,7 +165,7 @@ HTML report is unavailable in plain text report export.
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------+
 ; Clock                                                                                                                                                                                   ; Slack  ; End Point TNS ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------+
-; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -3.733 ; -6434.687     ;
+; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -4.039 ; -7255.794     ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------+
 
 
@@ -174,7 +174,7 @@ HTML report is unavailable in plain text report export.
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------+---------------+
 ; Clock                                                                                                                                                                                   ; Slack ; End Point TNS ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------+---------------+
-; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; 1.840 ; 0.000         ;
+; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; 2.478 ; 0.000         ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------+---------------+
 
 
@@ -183,8 +183,8 @@ HTML report is unavailable in plain text report export.
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------+
 ; Clock                                                                                                                                                                                   ; Slack  ; End Point TNS ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------+
-; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -0.605 ; -1166.634     ;
-; CLOCK_50                                                                                                                                                                                ; -0.394 ; -9274.409     ;
+; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -0.495 ; -1267.852     ;
+; CLOCK_50                                                                                                                                                                                ; -0.394 ; -6783.742     ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------+
 
 
@@ -200,8 +200,8 @@ Design MTBF is not calculated because the design doesn't meet its timing require
 +------------+-----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------+
 ; Fmax       ; Restricted Fmax ; Clock Name                                                                                                                                                                              ; Note ;
 +------------+-----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------+
-; 45.2 MHz   ; 45.2 MHz        ; CLOCK_50                                                                                                                                                                                ;      ;
-; 250.19 MHz ; 250.19 MHz      ; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ;      ;
+; 37.77 MHz  ; 37.77 MHz       ; CLOCK_50                                                                                                                                                                                ;      ;
+; 264.34 MHz ; 264.34 MHz      ; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ;      ;
 +------------+-----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------+
 This panel reports FMAX for every clock in the design, regardless of the user-specified clock periods.  FMAX is only computed for paths where the source and destination registers or ports are driven by the same clock.  Paths of different clocks, including generated clocks, are ignored.  For paths between a clock and its inversion, FMAX is computed as if the rising and falling edges are scaled along with FMAX, such that the duty cycle (in terms of a percentage) is maintained. Altera recommends that you always use clock constraints and other slack reports for sign-off analysis.
 
@@ -211,8 +211,8 @@ This panel reports FMAX for every clock in the design, regardless of the user-sp
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------+---------------+
 ; Clock                                                                                                                                                                                   ; Slack   ; End Point TNS ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------+---------------+
-; CLOCK_50                                                                                                                                                                                ; -21.123 ; -131534.258   ;
-; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -2.997  ; -4165.860     ;
+; CLOCK_50                                                                                                                                                                                ; -25.473 ; -104835.422   ;
+; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -2.783  ; -3932.544     ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------+---------------+
 
 
@@ -221,8 +221,8 @@ This panel reports FMAX for every clock in the design, regardless of the user-sp
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------+---------------+
 ; Clock                                                                                                                                                                                   ; Slack ; End Point TNS ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------+---------------+
-; CLOCK_50                                                                                                                                                                                ; 0.069 ; 0.000         ;
-; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; 0.293 ; 0.000         ;
+; CLOCK_50                                                                                                                                                                                ; 0.156 ; 0.000         ;
+; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; 0.363 ; 0.000         ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------+---------------+
 
 
@@ -231,7 +231,7 @@ This panel reports FMAX for every clock in the design, regardless of the user-sp
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------+
 ; Clock                                                                                                                                                                                   ; Slack  ; End Point TNS ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------+
-; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -3.839 ; -6661.467     ;
+; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -4.118 ; -7454.427     ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------+
 
 
@@ -240,7 +240,7 @@ This panel reports FMAX for every clock in the design, regardless of the user-sp
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------+---------------+
 ; Clock                                                                                                                                                                                   ; Slack ; End Point TNS ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------+---------------+
-; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; 1.998 ; 0.000         ;
+; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; 2.611 ; 0.000         ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------+---------------+
 
 
@@ -249,8 +249,8 @@ This panel reports FMAX for every clock in the design, regardless of the user-sp
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------+
 ; Clock                                                                                                                                                                                   ; Slack  ; End Point TNS ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------+
-; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -0.621 ; -1163.223     ;
-; CLOCK_50                                                                                                                                                                                ; -0.394 ; -10045.927    ;
+; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -0.483 ; -1250.871     ;
+; CLOCK_50                                                                                                                                                                                ; -0.394 ; -7402.075     ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------+
 
 
@@ -266,8 +266,8 @@ Design MTBF is not calculated because the design doesn't meet its timing require
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------+---------------+
 ; Clock                                                                                                                                                                                   ; Slack   ; End Point TNS ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------+---------------+
-; CLOCK_50                                                                                                                                                                                ; -12.448 ; -83519.562    ;
-; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -1.587  ; -1902.539     ;
+; CLOCK_50                                                                                                                                                                                ; -15.194 ; -66350.294    ;
+; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -1.520  ; -1740.663     ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------+---------------+
 
 
@@ -276,8 +276,8 @@ Design MTBF is not calculated because the design doesn't meet its timing require
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------+---------------+
 ; Clock                                                                                                                                                                                   ; Slack ; End Point TNS ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------+---------------+
-; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; 0.096 ; 0.000         ;
-; CLOCK_50                                                                                                                                                                                ; 0.130 ; 0.000         ;
+; CLOCK_50                                                                                                                                                                                ; 0.136 ; 0.000         ;
+; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; 0.153 ; 0.000         ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------+---------------+
 
 
@@ -286,7 +286,7 @@ Design MTBF is not calculated because the design doesn't meet its timing require
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------+
 ; Clock                                                                                                                                                                                   ; Slack  ; End Point TNS ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------+
-; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -1.995 ; -3283.028     ;
+; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -2.169 ; -3764.077     ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------+
 
 
@@ -295,7 +295,7 @@ Design MTBF is not calculated because the design doesn't meet its timing require
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------+---------------+
 ; Clock                                                                                                                                                                                   ; Slack ; End Point TNS ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------+---------------+
-; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; 0.921 ; 0.000         ;
+; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; 1.282 ; 0.000         ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------+---------------+
 
 
@@ -304,8 +304,8 @@ Design MTBF is not calculated because the design doesn't meet its timing require
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------+
 ; Clock                                                                                                                                                                                   ; Slack  ; End Point TNS ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------+
-; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -0.280 ; -21.778       ;
-; CLOCK_50                                                                                                                                                                                ; -0.087 ; -1323.534     ;
+; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -0.200 ; -65.258       ;
+; CLOCK_50                                                                                                                                                                                ; -0.088 ; -965.324      ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------+
 
 
@@ -321,8 +321,8 @@ Design MTBF is not calculated because the design doesn't meet its timing require
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------+---------------+
 ; Clock                                                                                                                                                                                   ; Slack   ; End Point TNS ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------+---------------+
-; CLOCK_50                                                                                                                                                                                ; -11.197 ; -71940.062    ;
-; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -1.375  ; -1665.898     ;
+; CLOCK_50                                                                                                                                                                                ; -13.591 ; -57306.819    ;
+; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -1.302  ; -1521.242     ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------+---------------+
 
 
@@ -331,8 +331,8 @@ Design MTBF is not calculated because the design doesn't meet its timing require
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------+---------------+
 ; Clock                                                                                                                                                                                   ; Slack ; End Point TNS ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------+---------------+
-; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; 0.084 ; 0.000         ;
-; CLOCK_50                                                                                                                                                                                ; 0.120 ; 0.000         ;
+; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; 0.124 ; 0.000         ;
+; CLOCK_50                                                                                                                                                                                ; 0.126 ; 0.000         ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------+---------------+
 
 
@@ -341,7 +341,7 @@ Design MTBF is not calculated because the design doesn't meet its timing require
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------+
 ; Clock                                                                                                                                                                                   ; Slack  ; End Point TNS ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------+
-; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -1.953 ; -3253.292     ;
+; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -2.097 ; -3696.850     ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------+
 
 
@@ -350,7 +350,7 @@ Design MTBF is not calculated because the design doesn't meet its timing require
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------+---------------+
 ; Clock                                                                                                                                                                                   ; Slack ; End Point TNS ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------+---------------+
-; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; 1.035 ; 0.000         ;
+; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; 1.365 ; 0.000         ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------+---------------+
 
 
@@ -359,8 +359,8 @@ Design MTBF is not calculated because the design doesn't meet its timing require
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------+
 ; Clock                                                                                                                                                                                   ; Slack  ; End Point TNS ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------+
-; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -0.208 ; -10.976       ;
-; CLOCK_50                                                                                                                                                                                ; -0.087 ; -1343.933     ;
+; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -0.133 ; -22.873       ;
+; CLOCK_50                                                                                                                                                                                ; -0.087 ; -983.605      ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+---------------+
 
 
@@ -376,12 +376,12 @@ Design MTBF is not calculated because the design doesn't meet its timing require
 +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+-------+-----------+---------+---------------------+
 ; Clock                                                                                                                                                                                    ; Setup       ; Hold  ; Recovery  ; Removal ; Minimum Pulse Width ;
 +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+-------+-----------+---------+---------------------+
-; Worst-case Slack                                                                                                                                                                         ; -21.406     ; 0.069 ; -3.839    ; 0.921   ; -0.621              ;
-;  CLOCK_50                                                                                                                                                                                ; -21.406     ; 0.069 ; N/A       ; N/A     ; -0.394              ;
-;  soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -3.051      ; 0.084 ; -3.839    ; 0.921   ; -0.621              ;
-; Design-wide TNS                                                                                                                                                                          ; -141132.248 ; 0.0   ; -6661.467 ; 0.0     ; -11209.15           ;
-;  CLOCK_50                                                                                                                                                                                ; -136985.485 ; 0.000 ; N/A       ; N/A     ; -10045.927          ;
-;  soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -4165.860   ; 0.000 ; -6661.467 ; 0.000   ; -1166.634           ;
+; Worst-case Slack                                                                                                                                                                         ; -26.073     ; 0.124 ; -4.118    ; 1.282   ; -0.495              ;
+;  CLOCK_50                                                                                                                                                                                ; -26.073     ; 0.126 ; N/A       ; N/A     ; -0.394              ;
+;  soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -2.879      ; 0.124 ; -4.118    ; 1.282   ; -0.495              ;
+; Design-wide TNS                                                                                                                                                                          ; -112967.502 ; 0.0   ; -7454.427 ; 0.0     ; -8652.946           ;
+;  CLOCK_50                                                                                                                                                                                ; -109060.359 ; 0.000 ; N/A       ; N/A     ; -7402.075           ;
+;  soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; -3932.544   ; 0.000 ; -7454.427 ; 0.000   ; -1267.852           ;
 +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+-------+-----------+---------+---------------------+
 
 
@@ -421,16 +421,16 @@ Design MTBF is not calculated because the design doesn't meet its timing require
 +---------+--------------+---------------------+---------------------+------------------------------+------------------------------+---------------------+---------------------+--------------------------------------+--------------------------------------+-----------------------------+-----------------------------+----------------------------+----------------------------+-----------------------------+-----------------------------+--------------------+--------------------+-------------------------------------+-------------------------------------+----------------------------+----------------------------+---------------------------+---------------------------+
 ; Pin     ; I/O Standard ; Board Delay on Rise ; Board Delay on Fall ; Steady State Voh at FPGA Pin ; Steady State Vol at FPGA Pin ; Voh Max at FPGA Pin ; Vol Min at FPGA Pin ; Ringback Voltage on Rise at FPGA Pin ; Ringback Voltage on Fall at FPGA Pin ; 10-90 Rise Time at FPGA Pin ; 90-10 Fall Time at FPGA Pin ; Monotonic Rise at FPGA Pin ; Monotonic Fall at FPGA Pin ; Steady State Voh at Far-end ; Steady State Vol at Far-end ; Voh Max at Far-end ; Vol Min at Far-end ; Ringback Voltage on Rise at Far-end ; Ringback Voltage on Fall at Far-end ; 10-90 Rise Time at Far-end ; 90-10 Fall Time at Far-end ; Monotonic Rise at Far-end ; Monotonic Fall at Far-end ;
 +---------+--------------+---------------------+---------------------+------------------------------+------------------------------+---------------------+---------------------+--------------------------------------+--------------------------------------+-----------------------------+-----------------------------+----------------------------+----------------------------+-----------------------------+-----------------------------+--------------------+--------------------+-------------------------------------+-------------------------------------+----------------------------+----------------------------+---------------------------+---------------------------+
-; LEDR[0] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.07e-07 V                   ; 2.36 V              ; -0.0231 V           ; 0.14 V                               ; 0.089 V                              ; 4.52e-10 s                  ; 4.35e-10 s                  ; No                         ; Yes                        ; 2.32 V                      ; 3.07e-07 V                  ; 2.36 V             ; -0.0231 V          ; 0.14 V                              ; 0.089 V                             ; 4.52e-10 s                 ; 4.35e-10 s                 ; No                        ; Yes                       ;
+; LEDR[0] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.52e-07 V                   ; 2.42 V              ; -0.0557 V           ; 0.175 V                              ; 0.114 V                              ; 4.5e-10 s                   ; 4.35e-10 s                  ; No                         ; No                         ; 2.32 V                      ; 3.52e-07 V                  ; 2.42 V             ; -0.0557 V          ; 0.175 V                             ; 0.114 V                             ; 4.5e-10 s                  ; 4.35e-10 s                 ; No                        ; No                        ;
 ; LEDR[1] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.6e-07 V                    ; 2.41 V              ; -0.0463 V           ; 0.201 V                              ; 0.131 V                              ; 4.61e-10 s                  ; 4.53e-10 s                  ; No                         ; Yes                        ; 2.32 V                      ; 3.6e-07 V                   ; 2.41 V             ; -0.0463 V          ; 0.201 V                             ; 0.131 V                             ; 4.61e-10 s                 ; 4.53e-10 s                 ; No                        ; Yes                       ;
-; LEDR[2] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.52e-07 V                   ; 2.42 V              ; -0.0557 V           ; 0.175 V                              ; 0.114 V                              ; 4.5e-10 s                   ; 4.35e-10 s                  ; No                         ; No                         ; 2.32 V                      ; 3.52e-07 V                  ; 2.42 V             ; -0.0557 V          ; 0.175 V                             ; 0.114 V                             ; 4.5e-10 s                  ; 4.35e-10 s                 ; No                        ; No                        ;
+; LEDR[2] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.52e-07 V                   ; 2.42 V              ; -0.0568 V           ; 0.173 V                              ; 0.113 V                              ; 4.5e-10 s                   ; 4.35e-10 s                  ; No                         ; No                         ; 2.32 V                      ; 3.52e-07 V                  ; 2.42 V             ; -0.0568 V          ; 0.173 V                             ; 0.113 V                             ; 4.5e-10 s                  ; 4.35e-10 s                 ; No                        ; No                        ;
 ; LEDR[3] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.6e-07 V                    ; 2.41 V              ; -0.0463 V           ; 0.201 V                              ; 0.131 V                              ; 4.61e-10 s                  ; 4.53e-10 s                  ; No                         ; Yes                        ; 2.32 V                      ; 3.6e-07 V                   ; 2.41 V             ; -0.0463 V          ; 0.201 V                             ; 0.131 V                             ; 4.61e-10 s                 ; 4.53e-10 s                 ; No                        ; Yes                       ;
-; LEDR[4] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.07e-07 V                   ; 2.36 V              ; -0.0231 V           ; 0.14 V                               ; 0.089 V                              ; 4.52e-10 s                  ; 4.35e-10 s                  ; No                         ; Yes                        ; 2.32 V                      ; 3.07e-07 V                  ; 2.36 V             ; -0.0231 V          ; 0.14 V                              ; 0.089 V                             ; 4.52e-10 s                 ; 4.35e-10 s                 ; No                        ; Yes                       ;
+; LEDR[4] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.6e-07 V                    ; 2.41 V              ; -0.0463 V           ; 0.201 V                              ; 0.131 V                              ; 4.61e-10 s                  ; 4.53e-10 s                  ; No                         ; Yes                        ; 2.32 V                      ; 3.6e-07 V                   ; 2.41 V             ; -0.0463 V          ; 0.201 V                             ; 0.131 V                             ; 4.61e-10 s                 ; 4.53e-10 s                 ; No                        ; Yes                       ;
 ; LEDR[5] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.52e-07 V                   ; 2.42 V              ; -0.0568 V           ; 0.173 V                              ; 0.113 V                              ; 4.5e-10 s                   ; 4.35e-10 s                  ; No                         ; No                         ; 2.32 V                      ; 3.52e-07 V                  ; 2.42 V             ; -0.0568 V          ; 0.173 V                             ; 0.113 V                             ; 4.5e-10 s                  ; 4.35e-10 s                 ; No                        ; No                        ;
-; LEDR[6] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.52e-07 V                   ; 2.42 V              ; -0.0557 V           ; 0.175 V                              ; 0.114 V                              ; 4.5e-10 s                   ; 4.35e-10 s                  ; No                         ; No                         ; 2.32 V                      ; 3.52e-07 V                  ; 2.42 V             ; -0.0557 V          ; 0.175 V                             ; 0.114 V                             ; 4.5e-10 s                  ; 4.35e-10 s                 ; No                        ; No                        ;
-; LEDR[7] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.6e-07 V                    ; 2.41 V              ; -0.0463 V           ; 0.201 V                              ; 0.131 V                              ; 4.61e-10 s                  ; 4.53e-10 s                  ; No                         ; Yes                        ; 2.32 V                      ; 3.6e-07 V                   ; 2.41 V             ; -0.0463 V          ; 0.201 V                             ; 0.131 V                             ; 4.61e-10 s                 ; 4.53e-10 s                 ; No                        ; Yes                       ;
+; LEDR[6] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.07e-07 V                   ; 2.36 V              ; -0.0231 V           ; 0.14 V                               ; 0.089 V                              ; 4.52e-10 s                  ; 4.35e-10 s                  ; No                         ; Yes                        ; 2.32 V                      ; 3.07e-07 V                  ; 2.36 V             ; -0.0231 V          ; 0.14 V                              ; 0.089 V                             ; 4.52e-10 s                 ; 4.35e-10 s                 ; No                        ; Yes                       ;
+; LEDR[7] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.07e-07 V                   ; 2.36 V              ; -0.0231 V           ; 0.14 V                               ; 0.089 V                              ; 4.52e-10 s                  ; 4.35e-10 s                  ; No                         ; Yes                        ; 2.32 V                      ; 3.07e-07 V                  ; 2.36 V             ; -0.0231 V          ; 0.14 V                              ; 0.089 V                             ; 4.52e-10 s                 ; 4.35e-10 s                 ; No                        ; Yes                       ;
 ; LEDR[8] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.07e-07 V                   ; 2.36 V              ; -0.0231 V           ; 0.14 V                               ; 0.089 V                              ; 4.52e-10 s                  ; 4.35e-10 s                  ; No                         ; Yes                        ; 2.32 V                      ; 3.07e-07 V                  ; 2.36 V             ; -0.0231 V          ; 0.14 V                              ; 0.089 V                             ; 4.52e-10 s                 ; 4.35e-10 s                 ; No                        ; Yes                       ;
-; LEDR[9] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.52e-07 V                   ; 2.42 V              ; -0.0568 V           ; 0.173 V                              ; 0.113 V                              ; 4.5e-10 s                   ; 4.35e-10 s                  ; No                         ; No                         ; 2.32 V                      ; 3.52e-07 V                  ; 2.42 V             ; -0.0568 V          ; 0.173 V                             ; 0.113 V                             ; 4.5e-10 s                  ; 4.35e-10 s                 ; No                        ; No                        ;
+; LEDR[9] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.07e-07 V                   ; 2.36 V              ; -0.0231 V           ; 0.14 V                               ; 0.089 V                              ; 4.52e-10 s                  ; 4.35e-10 s                  ; No                         ; Yes                        ; 2.32 V                      ; 3.07e-07 V                  ; 2.36 V             ; -0.0231 V          ; 0.14 V                              ; 0.089 V                             ; 4.52e-10 s                 ; 4.35e-10 s                 ; No                        ; Yes                       ;
 +---------+--------------+---------------------+---------------------+------------------------------+------------------------------+---------------------+---------------------+--------------------------------------+--------------------------------------+-----------------------------+-----------------------------+----------------------------+----------------------------+-----------------------------+-----------------------------+--------------------+--------------------+-------------------------------------+-------------------------------------+----------------------------+----------------------------+---------------------------+---------------------------+
 
 
@@ -439,16 +439,16 @@ Design MTBF is not calculated because the design doesn't meet its timing require
 +---------+--------------+---------------------+---------------------+------------------------------+------------------------------+---------------------+---------------------+--------------------------------------+--------------------------------------+-----------------------------+-----------------------------+----------------------------+----------------------------+-----------------------------+-----------------------------+--------------------+--------------------+-------------------------------------+-------------------------------------+----------------------------+----------------------------+---------------------------+---------------------------+
 ; Pin     ; I/O Standard ; Board Delay on Rise ; Board Delay on Fall ; Steady State Voh at FPGA Pin ; Steady State Vol at FPGA Pin ; Voh Max at FPGA Pin ; Vol Min at FPGA Pin ; Ringback Voltage on Rise at FPGA Pin ; Ringback Voltage on Fall at FPGA Pin ; 10-90 Rise Time at FPGA Pin ; 90-10 Fall Time at FPGA Pin ; Monotonic Rise at FPGA Pin ; Monotonic Fall at FPGA Pin ; Steady State Voh at Far-end ; Steady State Vol at Far-end ; Voh Max at Far-end ; Vol Min at Far-end ; Ringback Voltage on Rise at Far-end ; Ringback Voltage on Fall at Far-end ; 10-90 Rise Time at Far-end ; 90-10 Fall Time at Far-end ; Monotonic Rise at Far-end ; Monotonic Fall at Far-end ;
 +---------+--------------+---------------------+---------------------+------------------------------+------------------------------+---------------------+---------------------+--------------------------------------+--------------------------------------+-----------------------------+-----------------------------+----------------------------+----------------------------+-----------------------------+-----------------------------+--------------------+--------------------+-------------------------------------+-------------------------------------+----------------------------+----------------------------+---------------------------+---------------------------+
-; LEDR[0] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.49e-05 V                   ; 2.34 V              ; -0.0118 V           ; 0.182 V                              ; 0.051 V                              ; 4.81e-10 s                  ; 4.83e-10 s                  ; Yes                        ; Yes                        ; 2.32 V                      ; 3.49e-05 V                  ; 2.34 V             ; -0.0118 V          ; 0.182 V                             ; 0.051 V                             ; 4.81e-10 s                 ; 4.83e-10 s                 ; Yes                       ; Yes                       ;
+; LEDR[0] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.88e-05 V                   ; 2.39 V              ; -0.037 V            ; 0.188 V                              ; 0.158 V                              ; 4.67e-10 s                  ; 4.67e-10 s                  ; No                         ; Yes                        ; 2.32 V                      ; 3.88e-05 V                  ; 2.39 V             ; -0.037 V           ; 0.188 V                             ; 0.158 V                             ; 4.67e-10 s                 ; 4.67e-10 s                 ; No                        ; Yes                       ;
 ; LEDR[1] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.96e-05 V                   ; 2.38 V              ; -0.0306 V           ; 0.23 V                               ; 0.206 V                              ; 4.83e-10 s                  ; 5.01e-10 s                  ; No                         ; Yes                        ; 2.32 V                      ; 3.96e-05 V                  ; 2.38 V             ; -0.0306 V          ; 0.23 V                              ; 0.206 V                             ; 4.83e-10 s                 ; 5.01e-10 s                 ; No                        ; Yes                       ;
-; LEDR[2] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.88e-05 V                   ; 2.39 V              ; -0.037 V            ; 0.188 V                              ; 0.158 V                              ; 4.67e-10 s                  ; 4.67e-10 s                  ; No                         ; Yes                        ; 2.32 V                      ; 3.88e-05 V                  ; 2.39 V             ; -0.037 V           ; 0.188 V                             ; 0.158 V                             ; 4.67e-10 s                 ; 4.67e-10 s                 ; No                        ; Yes                       ;
+; LEDR[2] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.88e-05 V                   ; 2.39 V              ; -0.0374 V           ; 0.189 V                              ; 0.158 V                              ; 4.66e-10 s                  ; 4.67e-10 s                  ; No                         ; Yes                        ; 2.32 V                      ; 3.88e-05 V                  ; 2.39 V             ; -0.0374 V          ; 0.189 V                             ; 0.158 V                             ; 4.66e-10 s                 ; 4.67e-10 s                 ; No                        ; Yes                       ;
 ; LEDR[3] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.96e-05 V                   ; 2.38 V              ; -0.0306 V           ; 0.23 V                               ; 0.206 V                              ; 4.83e-10 s                  ; 5.01e-10 s                  ; No                         ; Yes                        ; 2.32 V                      ; 3.96e-05 V                  ; 2.38 V             ; -0.0306 V          ; 0.23 V                              ; 0.206 V                             ; 4.83e-10 s                 ; 5.01e-10 s                 ; No                        ; Yes                       ;
-; LEDR[4] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.49e-05 V                   ; 2.34 V              ; -0.0118 V           ; 0.182 V                              ; 0.051 V                              ; 4.81e-10 s                  ; 4.83e-10 s                  ; Yes                        ; Yes                        ; 2.32 V                      ; 3.49e-05 V                  ; 2.34 V             ; -0.0118 V          ; 0.182 V                             ; 0.051 V                             ; 4.81e-10 s                 ; 4.83e-10 s                 ; Yes                       ; Yes                       ;
+; LEDR[4] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.96e-05 V                   ; 2.38 V              ; -0.0306 V           ; 0.23 V                               ; 0.206 V                              ; 4.83e-10 s                  ; 5.01e-10 s                  ; No                         ; Yes                        ; 2.32 V                      ; 3.96e-05 V                  ; 2.38 V             ; -0.0306 V          ; 0.23 V                              ; 0.206 V                             ; 4.83e-10 s                 ; 5.01e-10 s                 ; No                        ; Yes                       ;
 ; LEDR[5] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.88e-05 V                   ; 2.39 V              ; -0.0374 V           ; 0.189 V                              ; 0.158 V                              ; 4.66e-10 s                  ; 4.67e-10 s                  ; No                         ; Yes                        ; 2.32 V                      ; 3.88e-05 V                  ; 2.39 V             ; -0.0374 V          ; 0.189 V                             ; 0.158 V                             ; 4.66e-10 s                 ; 4.67e-10 s                 ; No                        ; Yes                       ;
-; LEDR[6] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.88e-05 V                   ; 2.39 V              ; -0.037 V            ; 0.188 V                              ; 0.158 V                              ; 4.67e-10 s                  ; 4.67e-10 s                  ; No                         ; Yes                        ; 2.32 V                      ; 3.88e-05 V                  ; 2.39 V             ; -0.037 V           ; 0.188 V                             ; 0.158 V                             ; 4.67e-10 s                 ; 4.67e-10 s                 ; No                        ; Yes                       ;
-; LEDR[7] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.96e-05 V                   ; 2.38 V              ; -0.0306 V           ; 0.23 V                               ; 0.206 V                              ; 4.83e-10 s                  ; 5.01e-10 s                  ; No                         ; Yes                        ; 2.32 V                      ; 3.96e-05 V                  ; 2.38 V             ; -0.0306 V          ; 0.23 V                              ; 0.206 V                             ; 4.83e-10 s                 ; 5.01e-10 s                 ; No                        ; Yes                       ;
+; LEDR[6] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.49e-05 V                   ; 2.34 V              ; -0.0118 V           ; 0.182 V                              ; 0.051 V                              ; 4.81e-10 s                  ; 4.83e-10 s                  ; Yes                        ; Yes                        ; 2.32 V                      ; 3.49e-05 V                  ; 2.34 V             ; -0.0118 V          ; 0.182 V                             ; 0.051 V                             ; 4.81e-10 s                 ; 4.83e-10 s                 ; Yes                       ; Yes                       ;
+; LEDR[7] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.49e-05 V                   ; 2.34 V              ; -0.0118 V           ; 0.182 V                              ; 0.051 V                              ; 4.81e-10 s                  ; 4.83e-10 s                  ; Yes                        ; Yes                        ; 2.32 V                      ; 3.49e-05 V                  ; 2.34 V             ; -0.0118 V          ; 0.182 V                             ; 0.051 V                             ; 4.81e-10 s                 ; 4.83e-10 s                 ; Yes                       ; Yes                       ;
 ; LEDR[8] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.49e-05 V                   ; 2.34 V              ; -0.0118 V           ; 0.182 V                              ; 0.051 V                              ; 4.81e-10 s                  ; 4.83e-10 s                  ; Yes                        ; Yes                        ; 2.32 V                      ; 3.49e-05 V                  ; 2.34 V             ; -0.0118 V          ; 0.182 V                             ; 0.051 V                             ; 4.81e-10 s                 ; 4.83e-10 s                 ; Yes                       ; Yes                       ;
-; LEDR[9] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.88e-05 V                   ; 2.39 V              ; -0.0374 V           ; 0.189 V                              ; 0.158 V                              ; 4.66e-10 s                  ; 4.67e-10 s                  ; No                         ; Yes                        ; 2.32 V                      ; 3.88e-05 V                  ; 2.39 V             ; -0.0374 V          ; 0.189 V                             ; 0.158 V                             ; 4.66e-10 s                 ; 4.67e-10 s                 ; No                        ; Yes                       ;
+; LEDR[9] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.32 V                       ; 3.49e-05 V                   ; 2.34 V              ; -0.0118 V           ; 0.182 V                              ; 0.051 V                              ; 4.81e-10 s                  ; 4.83e-10 s                  ; Yes                        ; Yes                        ; 2.32 V                      ; 3.49e-05 V                  ; 2.34 V             ; -0.0118 V          ; 0.182 V                             ; 0.051 V                             ; 4.81e-10 s                 ; 4.83e-10 s                 ; Yes                       ; Yes                       ;
 +---------+--------------+---------------------+---------------------+------------------------------+------------------------------+---------------------+---------------------+--------------------------------------+--------------------------------------+-----------------------------+-----------------------------+----------------------------+----------------------------+-----------------------------+-----------------------------+--------------------+--------------------+-------------------------------------+-------------------------------------+----------------------------+----------------------------+---------------------------+---------------------------+
 
 
@@ -457,16 +457,16 @@ Design MTBF is not calculated because the design doesn't meet its timing require
 +---------+--------------+---------------------+---------------------+------------------------------+------------------------------+---------------------+---------------------+--------------------------------------+--------------------------------------+-----------------------------+-----------------------------+----------------------------+----------------------------+-----------------------------+-----------------------------+--------------------+--------------------+-------------------------------------+-------------------------------------+----------------------------+----------------------------+---------------------------+---------------------------+
 ; Pin     ; I/O Standard ; Board Delay on Rise ; Board Delay on Fall ; Steady State Voh at FPGA Pin ; Steady State Vol at FPGA Pin ; Voh Max at FPGA Pin ; Vol Min at FPGA Pin ; Ringback Voltage on Rise at FPGA Pin ; Ringback Voltage on Fall at FPGA Pin ; 10-90 Rise Time at FPGA Pin ; 90-10 Fall Time at FPGA Pin ; Monotonic Rise at FPGA Pin ; Monotonic Fall at FPGA Pin ; Steady State Voh at Far-end ; Steady State Vol at Far-end ; Voh Max at Far-end ; Vol Min at Far-end ; Ringback Voltage on Rise at Far-end ; Ringback Voltage on Fall at Far-end ; 10-90 Rise Time at Far-end ; 90-10 Fall Time at Far-end ; Monotonic Rise at Far-end ; Monotonic Fall at Far-end ;
 +---------+--------------+---------------------+---------------------+------------------------------+------------------------------+---------------------+---------------------+--------------------------------------+--------------------------------------+-----------------------------+-----------------------------+----------------------------+----------------------------+-----------------------------+-----------------------------+--------------------+--------------------+-------------------------------------+-------------------------------------+----------------------------+----------------------------+---------------------------+---------------------------+
-; LEDR[0] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 3.54e-06 V                   ; 2.81 V              ; -0.0578 V           ; 0.303 V                              ; 0.28 V                               ; 2.93e-10 s                  ; 3.01e-10 s                  ; No                         ; No                         ; 2.75 V                      ; 3.54e-06 V                  ; 2.81 V             ; -0.0578 V          ; 0.303 V                             ; 0.28 V                              ; 2.93e-10 s                 ; 3.01e-10 s                 ; No                        ; No                        ;
+; LEDR[0] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 4.14e-06 V                   ; 2.91 V              ; -0.121 V            ; 0.326 V                              ; 0.297 V                              ; 2.74e-10 s                  ; 2.8e-10 s                   ; No                         ; No                         ; 2.75 V                      ; 4.14e-06 V                  ; 2.91 V             ; -0.121 V           ; 0.326 V                             ; 0.297 V                             ; 2.74e-10 s                 ; 2.8e-10 s                  ; No                        ; No                        ;
 ; LEDR[1] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 4.25e-06 V                   ; 2.9 V               ; -0.107 V            ; 0.378 V                              ; 0.16 V                               ; 2.87e-10 s                  ; 4.28e-10 s                  ; No                         ; No                         ; 2.75 V                      ; 4.25e-06 V                  ; 2.9 V              ; -0.107 V           ; 0.378 V                             ; 0.16 V                              ; 2.87e-10 s                 ; 4.28e-10 s                 ; No                        ; No                        ;
-; LEDR[2] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 4.14e-06 V                   ; 2.91 V              ; -0.121 V            ; 0.326 V                              ; 0.297 V                              ; 2.74e-10 s                  ; 2.8e-10 s                   ; No                         ; No                         ; 2.75 V                      ; 4.14e-06 V                  ; 2.91 V             ; -0.121 V           ; 0.326 V                             ; 0.297 V                             ; 2.74e-10 s                 ; 2.8e-10 s                  ; No                        ; No                        ;
+; LEDR[2] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 4.14e-06 V                   ; 2.91 V              ; -0.119 V            ; 0.326 V                              ; 0.298 V                              ; 2.74e-10 s                  ; 2.8e-10 s                   ; No                         ; No                         ; 2.75 V                      ; 4.14e-06 V                  ; 2.91 V             ; -0.119 V           ; 0.326 V                             ; 0.298 V                             ; 2.74e-10 s                 ; 2.8e-10 s                  ; No                        ; No                        ;
 ; LEDR[3] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 4.25e-06 V                   ; 2.9 V               ; -0.107 V            ; 0.378 V                              ; 0.16 V                               ; 2.87e-10 s                  ; 4.28e-10 s                  ; No                         ; No                         ; 2.75 V                      ; 4.25e-06 V                  ; 2.9 V              ; -0.107 V           ; 0.378 V                             ; 0.16 V                              ; 2.87e-10 s                 ; 4.28e-10 s                 ; No                        ; No                        ;
-; LEDR[4] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 3.54e-06 V                   ; 2.81 V              ; -0.0578 V           ; 0.303 V                              ; 0.28 V                               ; 2.93e-10 s                  ; 3.01e-10 s                  ; No                         ; No                         ; 2.75 V                      ; 3.54e-06 V                  ; 2.81 V             ; -0.0578 V          ; 0.303 V                             ; 0.28 V                              ; 2.93e-10 s                 ; 3.01e-10 s                 ; No                        ; No                        ;
+; LEDR[4] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 4.25e-06 V                   ; 2.9 V               ; -0.107 V            ; 0.378 V                              ; 0.16 V                               ; 2.87e-10 s                  ; 4.28e-10 s                  ; No                         ; No                         ; 2.75 V                      ; 4.25e-06 V                  ; 2.9 V              ; -0.107 V           ; 0.378 V                             ; 0.16 V                              ; 2.87e-10 s                 ; 4.28e-10 s                 ; No                        ; No                        ;
 ; LEDR[5] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 4.14e-06 V                   ; 2.91 V              ; -0.119 V            ; 0.326 V                              ; 0.298 V                              ; 2.74e-10 s                  ; 2.8e-10 s                   ; No                         ; No                         ; 2.75 V                      ; 4.14e-06 V                  ; 2.91 V             ; -0.119 V           ; 0.326 V                             ; 0.298 V                             ; 2.74e-10 s                 ; 2.8e-10 s                  ; No                        ; No                        ;
-; LEDR[6] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 4.14e-06 V                   ; 2.91 V              ; -0.121 V            ; 0.326 V                              ; 0.297 V                              ; 2.74e-10 s                  ; 2.8e-10 s                   ; No                         ; No                         ; 2.75 V                      ; 4.14e-06 V                  ; 2.91 V             ; -0.121 V           ; 0.326 V                             ; 0.297 V                             ; 2.74e-10 s                 ; 2.8e-10 s                  ; No                        ; No                        ;
-; LEDR[7] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 4.25e-06 V                   ; 2.9 V               ; -0.107 V            ; 0.378 V                              ; 0.16 V                               ; 2.87e-10 s                  ; 4.28e-10 s                  ; No                         ; No                         ; 2.75 V                      ; 4.25e-06 V                  ; 2.9 V              ; -0.107 V           ; 0.378 V                             ; 0.16 V                              ; 2.87e-10 s                 ; 4.28e-10 s                 ; No                        ; No                        ;
+; LEDR[6] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 3.54e-06 V                   ; 2.81 V              ; -0.0578 V           ; 0.303 V                              ; 0.28 V                               ; 2.93e-10 s                  ; 3.01e-10 s                  ; No                         ; No                         ; 2.75 V                      ; 3.54e-06 V                  ; 2.81 V             ; -0.0578 V          ; 0.303 V                             ; 0.28 V                              ; 2.93e-10 s                 ; 3.01e-10 s                 ; No                        ; No                        ;
+; LEDR[7] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 3.54e-06 V                   ; 2.81 V              ; -0.0578 V           ; 0.303 V                              ; 0.28 V                               ; 2.93e-10 s                  ; 3.01e-10 s                  ; No                         ; No                         ; 2.75 V                      ; 3.54e-06 V                  ; 2.81 V             ; -0.0578 V          ; 0.303 V                             ; 0.28 V                              ; 2.93e-10 s                 ; 3.01e-10 s                 ; No                        ; No                        ;
 ; LEDR[8] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 3.54e-06 V                   ; 2.81 V              ; -0.0578 V           ; 0.303 V                              ; 0.28 V                               ; 2.93e-10 s                  ; 3.01e-10 s                  ; No                         ; No                         ; 2.75 V                      ; 3.54e-06 V                  ; 2.81 V             ; -0.0578 V          ; 0.303 V                             ; 0.28 V                              ; 2.93e-10 s                 ; 3.01e-10 s                 ; No                        ; No                        ;
-; LEDR[9] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 4.14e-06 V                   ; 2.91 V              ; -0.119 V            ; 0.326 V                              ; 0.298 V                              ; 2.74e-10 s                  ; 2.8e-10 s                   ; No                         ; No                         ; 2.75 V                      ; 4.14e-06 V                  ; 2.91 V             ; -0.119 V           ; 0.326 V                             ; 0.298 V                             ; 2.74e-10 s                 ; 2.8e-10 s                  ; No                        ; No                        ;
+; LEDR[9] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 3.54e-06 V                   ; 2.81 V              ; -0.0578 V           ; 0.303 V                              ; 0.28 V                               ; 2.93e-10 s                  ; 3.01e-10 s                  ; No                         ; No                         ; 2.75 V                      ; 3.54e-06 V                  ; 2.81 V             ; -0.0578 V          ; 0.303 V                             ; 0.28 V                              ; 2.93e-10 s                 ; 3.01e-10 s                 ; No                        ; No                        ;
 +---------+--------------+---------------------+---------------------+------------------------------+------------------------------+---------------------+---------------------+--------------------------------------+--------------------------------------+-----------------------------+-----------------------------+----------------------------+----------------------------+-----------------------------+-----------------------------+--------------------+--------------------+-------------------------------------+-------------------------------------+----------------------------+----------------------------+---------------------------+---------------------------+
 
 
@@ -475,16 +475,16 @@ Design MTBF is not calculated because the design doesn't meet its timing require
 +---------+--------------+---------------------+---------------------+------------------------------+------------------------------+---------------------+---------------------+--------------------------------------+--------------------------------------+-----------------------------+-----------------------------+----------------------------+----------------------------+-----------------------------+-----------------------------+--------------------+--------------------+-------------------------------------+-------------------------------------+----------------------------+----------------------------+---------------------------+---------------------------+
 ; Pin     ; I/O Standard ; Board Delay on Rise ; Board Delay on Fall ; Steady State Voh at FPGA Pin ; Steady State Vol at FPGA Pin ; Voh Max at FPGA Pin ; Vol Min at FPGA Pin ; Ringback Voltage on Rise at FPGA Pin ; Ringback Voltage on Fall at FPGA Pin ; 10-90 Rise Time at FPGA Pin ; 90-10 Fall Time at FPGA Pin ; Monotonic Rise at FPGA Pin ; Monotonic Fall at FPGA Pin ; Steady State Voh at Far-end ; Steady State Vol at Far-end ; Voh Max at Far-end ; Vol Min at Far-end ; Ringback Voltage on Rise at Far-end ; Ringback Voltage on Fall at Far-end ; 10-90 Rise Time at Far-end ; 90-10 Fall Time at Far-end ; Monotonic Rise at Far-end ; Monotonic Fall at Far-end ;
 +---------+--------------+---------------------+---------------------+------------------------------+------------------------------+---------------------+---------------------+--------------------------------------+--------------------------------------+-----------------------------+-----------------------------+----------------------------+----------------------------+-----------------------------+-----------------------------+--------------------+--------------------+-------------------------------------+-------------------------------------+----------------------------+----------------------------+---------------------------+---------------------------+
-; LEDR[0] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 0.000213 V                   ; 2.79 V              ; -0.0324 V           ; 0.139 V                              ; 0.119 V                              ; 4.42e-10 s                  ; 4.33e-10 s                  ; No                         ; Yes                        ; 2.75 V                      ; 0.000213 V                  ; 2.79 V             ; -0.0324 V          ; 0.139 V                             ; 0.119 V                             ; 4.42e-10 s                 ; 4.33e-10 s                 ; No                        ; Yes                       ;
+; LEDR[0] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 0.000242 V                   ; 2.86 V              ; -0.0814 V           ; 0.36 V                               ; 0.156 V                              ; 3e-10 s                     ; 4.34e-10 s                  ; No                         ; No                         ; 2.75 V                      ; 0.000242 V                  ; 2.86 V             ; -0.0814 V          ; 0.36 V                              ; 0.156 V                             ; 3e-10 s                    ; 4.34e-10 s                 ; No                        ; No                        ;
 ; LEDR[1] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 0.000247 V                   ; 2.85 V              ; -0.0711 V           ; 0.204 V                              ; 0.181 V                              ; 4.55e-10 s                  ; 4.49e-10 s                  ; No                         ; No                         ; 2.75 V                      ; 0.000247 V                  ; 2.85 V             ; -0.0711 V          ; 0.204 V                             ; 0.181 V                             ; 4.55e-10 s                 ; 4.49e-10 s                 ; No                        ; No                        ;
-; LEDR[2] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 0.000242 V                   ; 2.86 V              ; -0.0814 V           ; 0.36 V                               ; 0.156 V                              ; 3e-10 s                     ; 4.34e-10 s                  ; No                         ; No                         ; 2.75 V                      ; 0.000242 V                  ; 2.86 V             ; -0.0814 V          ; 0.36 V                              ; 0.156 V                             ; 3e-10 s                    ; 4.34e-10 s                 ; No                        ; No                        ;
+; LEDR[2] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 0.000242 V                   ; 2.86 V              ; -0.0805 V           ; 0.358 V                              ; 0.156 V                              ; 3.01e-10 s                  ; 4.34e-10 s                  ; No                         ; No                         ; 2.75 V                      ; 0.000242 V                  ; 2.86 V             ; -0.0805 V          ; 0.358 V                             ; 0.156 V                             ; 3.01e-10 s                 ; 4.34e-10 s                 ; No                        ; No                        ;
 ; LEDR[3] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 0.000247 V                   ; 2.85 V              ; -0.0711 V           ; 0.204 V                              ; 0.181 V                              ; 4.55e-10 s                  ; 4.49e-10 s                  ; No                         ; No                         ; 2.75 V                      ; 0.000247 V                  ; 2.85 V             ; -0.0711 V          ; 0.204 V                             ; 0.181 V                             ; 4.55e-10 s                 ; 4.49e-10 s                 ; No                        ; No                        ;
-; LEDR[4] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 0.000213 V                   ; 2.79 V              ; -0.0324 V           ; 0.139 V                              ; 0.119 V                              ; 4.42e-10 s                  ; 4.33e-10 s                  ; No                         ; Yes                        ; 2.75 V                      ; 0.000213 V                  ; 2.79 V             ; -0.0324 V          ; 0.139 V                             ; 0.119 V                             ; 4.42e-10 s                 ; 4.33e-10 s                 ; No                        ; Yes                       ;
+; LEDR[4] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 0.000247 V                   ; 2.85 V              ; -0.0711 V           ; 0.204 V                              ; 0.181 V                              ; 4.55e-10 s                  ; 4.49e-10 s                  ; No                         ; No                         ; 2.75 V                      ; 0.000247 V                  ; 2.85 V             ; -0.0711 V          ; 0.204 V                             ; 0.181 V                             ; 4.55e-10 s                 ; 4.49e-10 s                 ; No                        ; No                        ;
 ; LEDR[5] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 0.000242 V                   ; 2.86 V              ; -0.0805 V           ; 0.358 V                              ; 0.156 V                              ; 3.01e-10 s                  ; 4.34e-10 s                  ; No                         ; No                         ; 2.75 V                      ; 0.000242 V                  ; 2.86 V             ; -0.0805 V          ; 0.358 V                             ; 0.156 V                             ; 3.01e-10 s                 ; 4.34e-10 s                 ; No                        ; No                        ;
-; LEDR[6] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 0.000242 V                   ; 2.86 V              ; -0.0814 V           ; 0.36 V                               ; 0.156 V                              ; 3e-10 s                     ; 4.34e-10 s                  ; No                         ; No                         ; 2.75 V                      ; 0.000242 V                  ; 2.86 V             ; -0.0814 V          ; 0.36 V                              ; 0.156 V                             ; 3e-10 s                    ; 4.34e-10 s                 ; No                        ; No                        ;
-; LEDR[7] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 0.000247 V                   ; 2.85 V              ; -0.0711 V           ; 0.204 V                              ; 0.181 V                              ; 4.55e-10 s                  ; 4.49e-10 s                  ; No                         ; No                         ; 2.75 V                      ; 0.000247 V                  ; 2.85 V             ; -0.0711 V          ; 0.204 V                             ; 0.181 V                             ; 4.55e-10 s                 ; 4.49e-10 s                 ; No                        ; No                        ;
+; LEDR[6] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 0.000213 V                   ; 2.79 V              ; -0.0324 V           ; 0.139 V                              ; 0.119 V                              ; 4.42e-10 s                  ; 4.33e-10 s                  ; No                         ; Yes                        ; 2.75 V                      ; 0.000213 V                  ; 2.79 V             ; -0.0324 V          ; 0.139 V                             ; 0.119 V                             ; 4.42e-10 s                 ; 4.33e-10 s                 ; No                        ; Yes                       ;
+; LEDR[7] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 0.000213 V                   ; 2.79 V              ; -0.0324 V           ; 0.139 V                              ; 0.119 V                              ; 4.42e-10 s                  ; 4.33e-10 s                  ; No                         ; Yes                        ; 2.75 V                      ; 0.000213 V                  ; 2.79 V             ; -0.0324 V          ; 0.139 V                             ; 0.119 V                             ; 4.42e-10 s                 ; 4.33e-10 s                 ; No                        ; Yes                       ;
 ; LEDR[8] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 0.000213 V                   ; 2.79 V              ; -0.0324 V           ; 0.139 V                              ; 0.119 V                              ; 4.42e-10 s                  ; 4.33e-10 s                  ; No                         ; Yes                        ; 2.75 V                      ; 0.000213 V                  ; 2.79 V             ; -0.0324 V          ; 0.139 V                             ; 0.119 V                             ; 4.42e-10 s                 ; 4.33e-10 s                 ; No                        ; Yes                       ;
-; LEDR[9] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 0.000242 V                   ; 2.86 V              ; -0.0805 V           ; 0.358 V                              ; 0.156 V                              ; 3.01e-10 s                  ; 4.34e-10 s                  ; No                         ; No                         ; 2.75 V                      ; 0.000242 V                  ; 2.86 V             ; -0.0805 V          ; 0.358 V                             ; 0.156 V                             ; 3.01e-10 s                 ; 4.34e-10 s                 ; No                        ; No                        ;
+; LEDR[9] ; 2.5 V        ; 0 s                 ; 0 s                 ; 2.75 V                       ; 0.000213 V                   ; 2.79 V              ; -0.0324 V           ; 0.139 V                              ; 0.119 V                              ; 4.42e-10 s                  ; 4.33e-10 s                  ; No                         ; Yes                        ; 2.75 V                      ; 0.000213 V                  ; 2.79 V             ; -0.0324 V          ; 0.139 V                             ; 0.119 V                             ; 4.42e-10 s                 ; 4.33e-10 s                 ; No                        ; Yes                       ;
 +---------+--------------+---------------------+---------------------+------------------------------+------------------------------+---------------------+---------------------+--------------------------------------+--------------------------------------+-----------------------------+-----------------------------+----------------------------+----------------------------+-----------------------------+-----------------------------+--------------------+--------------------+-------------------------------------+-------------------------------------+----------------------------+----------------------------+---------------------------+---------------------------+
 
 
@@ -495,7 +495,7 @@ Design MTBF is not calculated because the design doesn't meet its timing require
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+----------+----------+----------+
 ; CLOCK_50                                                                                                                                                                                ; CLOCK_50                                                                                                                                                                                ; > 2147483647 ; 0        ; 0        ; 0        ;
 ; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; CLOCK_50                                                                                                                                                                                ; 34           ; 1570     ; 0        ; 0        ;
-; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; 0            ; 0        ; 0        ; 25018    ;
+; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; 0            ; 0        ; 0        ; 24659    ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+----------+----------+----------+
 Entries labeled "false path" only account for clock-to-clock false paths and not path-based false paths. As a result, actual path counts may be lower than reported.
 
@@ -507,7 +507,7 @@ Entries labeled "false path" only account for clock-to-clock false paths and not
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+----------+----------+----------+
 ; CLOCK_50                                                                                                                                                                                ; CLOCK_50                                                                                                                                                                                ; > 2147483647 ; 0        ; 0        ; 0        ;
 ; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; CLOCK_50                                                                                                                                                                                ; 34           ; 1570     ; 0        ; 0        ;
-; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; 0            ; 0        ; 0        ; 25018    ;
+; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; 0            ; 0        ; 0        ; 24659    ;
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+----------+----------+----------+
 Entries labeled "false path" only account for clock-to-clock false paths and not path-based false paths. As a result, actual path counts may be lower than reported.
 
@@ -517,7 +517,7 @@ Entries labeled "false path" only account for clock-to-clock false paths and not
 +------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------+----------+----------+----------+
 ; From Clock ; To Clock                                                                                                                                                                                ; RR Paths ; FR Paths ; RF Paths ; FF Paths ;
 +------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------+----------+----------+----------+
-; CLOCK_50   ; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; 0        ; 0        ; 2014     ; 0        ;
+; CLOCK_50   ; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; 0        ; 0        ; 2013     ; 0        ;
 +------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------+----------+----------+----------+
 Entries labeled "false path" only account for clock-to-clock false paths and not path-based false paths. As a result, actual path counts may be lower than reported.
 
@@ -527,7 +527,7 @@ Entries labeled "false path" only account for clock-to-clock false paths and not
 +------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------+----------+----------+----------+
 ; From Clock ; To Clock                                                                                                                                                                                ; RR Paths ; FR Paths ; RF Paths ; FF Paths ;
 +------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------+----------+----------+----------+
-; CLOCK_50   ; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; 0        ; 0        ; 2014     ; 0        ;
+; CLOCK_50   ; soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE ; 0        ; 0        ; 2013     ; 0        ;
 +------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------+----------+----------+----------+
 Entries labeled "false path" only account for clock-to-clock false paths and not path-based false paths. As a result, actual path counts may be lower than reported.
 
@@ -552,7 +552,7 @@ No non-DPA dedicated SERDES Receiver circuitry present in device or used in desi
 ; Illegal Clocks                  ; 0     ; 0     ;
 ; Unconstrained Clocks            ; 0     ; 0     ;
 ; Unconstrained Input Ports       ; 1     ; 1     ;
-; Unconstrained Input Port Paths  ; 17346 ; 17346 ;
+; Unconstrained Input Port Paths  ; 12745 ; 12745 ;
 ; Unconstrained Output Ports      ; 10    ; 10    ;
 ; Unconstrained Output Port Paths ; 11    ; 11    ;
 +---------------------------------+-------+-------+
@@ -628,7 +628,7 @@ No non-DPA dedicated SERDES Receiver circuitry present in device or used in desi
 Info: *******************************************************************
 Info: Running Quartus Prime Timing Analyzer
     Info: Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
-    Info: Processing started: Wed Aug 26 13:28:41 2026
+    Info: Processing started: Thu Aug 27 20:16:30 2026
 Info: Command: quartus_sta de10_standard -c de10_standard
 Info: qsta_default_script.tcl version: #1
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
@@ -641,44 +641,23 @@ Info (332105): Deriving Clocks
     Info (332105): create_clock -period 1.000 -name CLOCK_50 CLOCK_50
     Info (332105): create_clock -period 1.000 -name soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[17].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[17].u_ro|net_chain~2|datae"
-Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[25].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[25].u_ro|net_chain~2|datac"
-Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[29].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[29].u_ro|net_chain~2|datac"
-Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[21].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[21].u_ro|net_chain~2|datac"
-Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[27].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[27].u_ro|net_chain~2|dataf"
-Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[31].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[31].u_ro|net_chain~2|datab"
-Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[23].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[23].u_ro|net_chain~2|datac"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[31].u_ro|net_chain~2|datae"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[19].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[19].u_ro|net_chain~2|datad"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[19].u_ro|net_chain~2|datae"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[28].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[28].u_ro|net_chain~2|dataa"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[27].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[27].u_ro|net_chain~2|datad"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[24].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[24].u_ro|net_chain~2|datac"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[23].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[23].u_ro|net_chain~2|datae"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[16].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[16].u_ro|net_chain~2|datae"
-Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[20].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[20].u_ro|net_chain~2|dataa"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[30].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[30].u_ro|net_chain~2|datac"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[18].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[18].u_ro|net_chain~2|dataf"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[18].u_ro|net_chain~2|datac"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[26].u_ro|net_chain~2|combout"
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[26].u_ro|net_chain~2|datac"
@@ -686,181 +665,202 @@ Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Deskt
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[22].u_ro|net_chain~2|combout"
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[22].u_ro|net_chain~2|datae"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[30].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[30].u_ro|net_chain~2|datad"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[28].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[28].u_ro|net_chain~2|datae"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[60].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[60].u_ro|net_chain~2|dataa"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[24].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[24].u_ro|net_chain~2|datad"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[63].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[63].u_ro|net_chain~2|dataf"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[20].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[20].u_ro|net_chain~2|datad"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[62].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[62].u_ro|net_chain~2|datae"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[16].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[16].u_ro|net_chain~2|datae"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[61].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[61].u_ro|net_chain~2|datac"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[29].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[29].u_ro|net_chain~2|datae"
+Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[17].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[17].u_ro|net_chain~2|datae"
+Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[25].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[25].u_ro|net_chain~2|datae"
+Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[21].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[21].u_ro|net_chain~2|datae"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[54].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[54].u_ro|net_chain~2|datac"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[54].u_ro|net_chain~2|datae"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[55].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[55].u_ro|net_chain~2|dataa"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[55].u_ro|net_chain~2|datae"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[52].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[52].u_ro|net_chain~2|datac"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[52].u_ro|net_chain~2|datae"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[53].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[53].u_ro|net_chain~2|datad"
-Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[50].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[50].u_ro|net_chain~2|datac"
-Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[48].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[48].u_ro|net_chain~2|datac"
-Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[51].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[51].u_ro|net_chain~2|dataa"
-Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[49].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[49].u_ro|net_chain~2|datac"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[53].u_ro|net_chain~2|datac"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[56].u_ro|net_chain~2|combout"
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[56].u_ro|net_chain~2|datae"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[58].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[58].u_ro|net_chain~2|dataf"
-Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[59].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[59].u_ro|net_chain~2|datac"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[59].u_ro|net_chain~2|datae"
+Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[58].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[58].u_ro|net_chain~2|datac"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[57].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[57].u_ro|net_chain~2|datae"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[57].u_ro|net_chain~2|dataf"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[42].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[42].u_ro|net_chain~2|datac"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[48].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[48].u_ro|net_chain~2|datae"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[46].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[46].u_ro|net_chain~2|datad"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[50].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[50].u_ro|net_chain~2|dataf"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[34].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[34].u_ro|net_chain~2|dataa"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[49].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[49].u_ro|net_chain~2|datad"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[38].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[38].u_ro|net_chain~2|datad"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[51].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[51].u_ro|net_chain~2|datac"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[47].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[47].u_ro|net_chain~2|datac"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[62].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[62].u_ro|net_chain~2|dataf"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[43].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[43].u_ro|net_chain~2|datac"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[60].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[60].u_ro|net_chain~2|datae"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[35].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[35].u_ro|net_chain~2|dataa"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[61].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[61].u_ro|net_chain~2|datac"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[39].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[39].u_ro|net_chain~2|datac"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[63].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[63].u_ro|net_chain~2|dataf"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[32].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[32].u_ro|net_chain~2|datae"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[41].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[41].u_ro|net_chain~2|datae"
+Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[33].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[33].u_ro|net_chain~2|datae"
+Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[45].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[45].u_ro|net_chain~2|datac"
+Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[37].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[37].u_ro|net_chain~2|dataf"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[40].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[40].u_ro|net_chain~2|datad"
-Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[36].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[36].u_ro|net_chain~2|datae"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[40].u_ro|net_chain~2|datac"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[44].u_ro|net_chain~2|combout"
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[44].u_ro|net_chain~2|datad"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[33].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[33].u_ro|net_chain~2|dataf"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[36].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[36].u_ro|net_chain~2|datae"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[45].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[45].u_ro|net_chain~2|datae"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[32].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[32].u_ro|net_chain~2|datad"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[41].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[41].u_ro|net_chain~2|datad"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[46].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[46].u_ro|net_chain~2|datae"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[37].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[37].u_ro|net_chain~2|datac"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[34].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[34].u_ro|net_chain~2|datae"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[9].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[9].u_ro|net_chain~2|datab"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[38].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[38].u_ro|net_chain~2|datae"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[13].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[13].u_ro|net_chain~2|datab"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[42].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[42].u_ro|net_chain~2|datac"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[1].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[1].u_ro|net_chain~2|datad"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[43].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[43].u_ro|net_chain~2|datae"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[5].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[5].u_ro|net_chain~2|dataa"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[47].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[47].u_ro|net_chain~2|datae"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[8].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[8].u_ro|net_chain~2|datab"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[39].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[39].u_ro|net_chain~2|datac"
+Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[35].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[35].u_ro|net_chain~2|datae"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[12].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[12].u_ro|net_chain~2|datae"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[12].u_ro|net_chain~2|datab"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[4].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[4].u_ro|net_chain~2|datac"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[8].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[8].u_ro|net_chain~2|dataf"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[0].u_ro|net_chain~2|combout"
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[0].u_ro|net_chain~2|datae"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[4].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[4].u_ro|net_chain~2|datae"
+Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[1].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[1].u_ro|net_chain~2|datac"
+Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[13].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[13].u_ro|net_chain~2|datac"
+Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[9].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[9].u_ro|net_chain~2|datac"
+Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[5].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[5].u_ro|net_chain~2|datae"
+Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[15].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[15].u_ro|net_chain~2|datae"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[15].u_ro|net_chain~2|datac"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[11].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[11].u_ro|net_chain~2|datad"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[11].u_ro|net_chain~2|datae"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[3].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[3].u_ro|net_chain~2|datac"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[3].u_ro|net_chain~2|datae"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[7].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[7].u_ro|net_chain~2|datae"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[7].u_ro|net_chain~2|datac"
+Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[14].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[14].u_ro|net_chain~2|datad"
+Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[2].u_ro|net_chain~2|combout"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[2].u_ro|net_chain~2|datac"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[10].u_ro|net_chain~2|combout"
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[10].u_ro|net_chain~2|datac"
 Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[14].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[14].u_ro|net_chain~2|datae"
-Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[2].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[2].u_ro|net_chain~2|datad"
-Warning (332125): Found combinational loop of 2 nodes File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/puf/ro_cell.sv Line: 32
     Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[6].u_ro|net_chain~2|combout"
-    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[6].u_ro|net_chain~2|datad"
+    Warning (332126): Node "u_soc|crypto_accelerator|u_core|u_puf|u_ro_bank|RO_ARRAY[6].u_ro|net_chain~2|datae"
 Info (332143): No user constrained clock uncertainty found in the design. Calling "derive_clock_uncertainty"
 Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
 Info: Found TIMING_ANALYZER_REPORT_SCRIPT_INCLUDE_DEFAULT_ANALYSIS = ON
 Info: Analyzing Slow 1100mV 85C Model
 Critical Warning (332148): Timing requirements not met
     Info (11105): For recommendations on closing timing, run Report Timing Closure Recommendations in the Timing Analyzer.
-Info (332146): Worst-case setup slack is -21.406
+Info (332146): Worst-case setup slack is -26.073
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):   -21.406         -136985.485 CLOCK_50 
-    Info (332119):    -3.051           -4146.763 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
-Info (332146): Worst-case hold slack is 0.220
+    Info (332119):   -26.073         -109060.359 CLOCK_50 
+    Info (332119):    -2.879           -3907.143 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
+Info (332146): Worst-case hold slack is 0.229
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):     0.220               0.000 CLOCK_50 
-    Info (332119):     0.292               0.000 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
-Info (332146): Worst-case recovery slack is -3.733
+    Info (332119):     0.229               0.000 CLOCK_50 
+    Info (332119):     0.385               0.000 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
+Info (332146): Worst-case recovery slack is -4.039
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):    -3.733           -6434.687 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
-Info (332146): Worst-case removal slack is 1.840
+    Info (332119):    -4.039           -7255.794 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
+Info (332146): Worst-case removal slack is 2.478
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):     1.840               0.000 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
-Info (332146): Worst-case minimum pulse width slack is -0.605
+    Info (332119):     2.478               0.000 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
+Info (332146): Worst-case minimum pulse width slack is -0.495
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):    -0.605           -1166.634 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
-    Info (332119):    -0.394           -9274.409 CLOCK_50 
+    Info (332119):    -0.495           -1267.852 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
+    Info (332119):    -0.394           -6783.742 CLOCK_50 
 Info (332114): Report Metastability: Found 33 synchronizer chains.
     Info (332114): Design MTBF is not calculated because the design doesn't meet its timing requirements.
 Info: Analyzing Slow 1100mV 0C Model
@@ -869,29 +869,29 @@ Info (334004): Delay annotation completed successfully
 Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
 Critical Warning (332148): Timing requirements not met
     Info (11105): For recommendations on closing timing, run Report Timing Closure Recommendations in the Timing Analyzer.
-Info (332146): Worst-case setup slack is -21.123
+Info (332146): Worst-case setup slack is -25.473
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):   -21.123         -131534.258 CLOCK_50 
-    Info (332119):    -2.997           -4165.860 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
-Info (332146): Worst-case hold slack is 0.069
+    Info (332119):   -25.473         -104835.422 CLOCK_50 
+    Info (332119):    -2.783           -3932.544 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
+Info (332146): Worst-case hold slack is 0.156
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):     0.069               0.000 CLOCK_50 
-    Info (332119):     0.293               0.000 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
-Info (332146): Worst-case recovery slack is -3.839
+    Info (332119):     0.156               0.000 CLOCK_50 
+    Info (332119):     0.363               0.000 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
+Info (332146): Worst-case recovery slack is -4.118
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):    -3.839           -6661.467 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
-Info (332146): Worst-case removal slack is 1.998
+    Info (332119):    -4.118           -7454.427 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
+Info (332146): Worst-case removal slack is 2.611
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):     1.998               0.000 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
-Info (332146): Worst-case minimum pulse width slack is -0.621
+    Info (332119):     2.611               0.000 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
+Info (332146): Worst-case minimum pulse width slack is -0.483
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):    -0.621           -1163.223 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
-    Info (332119):    -0.394          -10045.927 CLOCK_50 
+    Info (332119):    -0.483           -1250.871 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
+    Info (332119):    -0.394           -7402.075 CLOCK_50 
 Info (332114): Report Metastability: Found 33 synchronizer chains.
     Info (332114): Design MTBF is not calculated because the design doesn't meet its timing requirements.
 Info: Analyzing Fast 1100mV 85C Model
@@ -900,66 +900,66 @@ Info (334004): Delay annotation completed successfully
 Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
 Critical Warning (332148): Timing requirements not met
     Info (11105): For recommendations on closing timing, run Report Timing Closure Recommendations in the Timing Analyzer.
-Info (332146): Worst-case setup slack is -12.448
+Info (332146): Worst-case setup slack is -15.194
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):   -12.448          -83519.562 CLOCK_50 
-    Info (332119):    -1.587           -1902.539 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
-Info (332146): Worst-case hold slack is 0.096
+    Info (332119):   -15.194          -66350.294 CLOCK_50 
+    Info (332119):    -1.520           -1740.663 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
+Info (332146): Worst-case hold slack is 0.136
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):     0.096               0.000 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
-    Info (332119):     0.130               0.000 CLOCK_50 
-Info (332146): Worst-case recovery slack is -1.995
+    Info (332119):     0.136               0.000 CLOCK_50 
+    Info (332119):     0.153               0.000 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
+Info (332146): Worst-case recovery slack is -2.169
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):    -1.995           -3283.028 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
-Info (332146): Worst-case removal slack is 0.921
+    Info (332119):    -2.169           -3764.077 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
+Info (332146): Worst-case removal slack is 1.282
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):     0.921               0.000 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
-Info (332146): Worst-case minimum pulse width slack is -0.280
+    Info (332119):     1.282               0.000 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
+Info (332146): Worst-case minimum pulse width slack is -0.200
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):    -0.280             -21.778 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
-    Info (332119):    -0.087           -1323.534 CLOCK_50 
+    Info (332119):    -0.200             -65.258 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
+    Info (332119):    -0.088            -965.324 CLOCK_50 
 Info (332114): Report Metastability: Found 33 synchronizer chains.
     Info (332114): Design MTBF is not calculated because the design doesn't meet its timing requirements.
 Info: Analyzing Fast 1100mV 0C Model
 Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
 Critical Warning (332148): Timing requirements not met
     Info (11105): For recommendations on closing timing, run Report Timing Closure Recommendations in the Timing Analyzer.
-Info (332146): Worst-case setup slack is -11.197
+Info (332146): Worst-case setup slack is -13.591
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):   -11.197          -71940.062 CLOCK_50 
-    Info (332119):    -1.375           -1665.898 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
-Info (332146): Worst-case hold slack is 0.084
+    Info (332119):   -13.591          -57306.819 CLOCK_50 
+    Info (332119):    -1.302           -1521.242 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
+Info (332146): Worst-case hold slack is 0.124
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):     0.084               0.000 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
-    Info (332119):     0.120               0.000 CLOCK_50 
-Info (332146): Worst-case recovery slack is -1.953
+    Info (332119):     0.124               0.000 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
+    Info (332119):     0.126               0.000 CLOCK_50 
+Info (332146): Worst-case recovery slack is -2.097
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):    -1.953           -3253.292 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
-Info (332146): Worst-case removal slack is 1.035
+    Info (332119):    -2.097           -3696.850 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
+Info (332146): Worst-case removal slack is 1.365
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):     1.035               0.000 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
-Info (332146): Worst-case minimum pulse width slack is -0.208
+    Info (332119):     1.365               0.000 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
+Info (332146): Worst-case minimum pulse width slack is -0.133
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):    -0.208             -10.976 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
-    Info (332119):    -0.087           -1343.933 CLOCK_50 
+    Info (332119):    -0.133             -22.873 soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE 
+    Info (332119):    -0.087            -983.605 CLOCK_50 
 Info (332114): Report Metastability: Found 33 synchronizer chains.
     Info (332114): Design MTBF is not calculated because the design doesn't meet its timing requirements.
 Info (332102): Design is not fully constrained for setup requirements
 Info (332102): Design is not fully constrained for hold requirements
 Info: Quartus Prime Timing Analyzer was successful. 0 errors, 198 warnings
-    Info: Peak virtual memory: 5650 megabytes
-    Info: Processing ended: Wed Aug 26 13:30:03 2026
-    Info: Elapsed time: 00:01:22
-    Info: Total CPU time (on all processors): 00:02:34
+    Info: Peak virtual memory: 5584 megabytes
+    Info: Processing ended: Thu Aug 27 20:17:51 2026
+    Info: Elapsed time: 00:01:21
+    Info: Total CPU time (on all processors): 00:02:22
 
 

@@ -3,131 +3,131 @@ Timing Analyzer Summary
 ------------------------------------------------------------
 
 Type  : Slow 1100mV 85C Model Setup 'CLOCK_50'
-Slack : -21.406
-TNS   : -136985.485
+Slack : -26.073
+TNS   : -109060.359
 
 Type  : Slow 1100mV 85C Model Setup 'soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE'
-Slack : -3.051
-TNS   : -4146.763
+Slack : -2.879
+TNS   : -3907.143
 
 Type  : Slow 1100mV 85C Model Hold 'CLOCK_50'
-Slack : 0.220
+Slack : 0.229
 TNS   : 0.000
 
 Type  : Slow 1100mV 85C Model Hold 'soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE'
-Slack : 0.292
+Slack : 0.385
 TNS   : 0.000
 
 Type  : Slow 1100mV 85C Model Recovery 'soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE'
-Slack : -3.733
-TNS   : -6434.687
+Slack : -4.039
+TNS   : -7255.794
 
 Type  : Slow 1100mV 85C Model Removal 'soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE'
-Slack : 1.840
+Slack : 2.478
 TNS   : 0.000
 
 Type  : Slow 1100mV 85C Model Minimum Pulse Width 'soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE'
-Slack : -0.605
-TNS   : -1166.634
+Slack : -0.495
+TNS   : -1267.852
 
 Type  : Slow 1100mV 85C Model Minimum Pulse Width 'CLOCK_50'
 Slack : -0.394
-TNS   : -9274.409
+TNS   : -6783.742
 
 Type  : Slow 1100mV 0C Model Setup 'CLOCK_50'
-Slack : -21.123
-TNS   : -131534.258
+Slack : -25.473
+TNS   : -104835.422
 
 Type  : Slow 1100mV 0C Model Setup 'soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE'
-Slack : -2.997
-TNS   : -4165.860
+Slack : -2.783
+TNS   : -3932.544
 
 Type  : Slow 1100mV 0C Model Hold 'CLOCK_50'
-Slack : 0.069
+Slack : 0.156
 TNS   : 0.000
 
 Type  : Slow 1100mV 0C Model Hold 'soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE'
-Slack : 0.293
+Slack : 0.363
 TNS   : 0.000
 
 Type  : Slow 1100mV 0C Model Recovery 'soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE'
-Slack : -3.839
-TNS   : -6661.467
+Slack : -4.118
+TNS   : -7454.427
 
 Type  : Slow 1100mV 0C Model Removal 'soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE'
-Slack : 1.998
+Slack : 2.611
 TNS   : 0.000
 
 Type  : Slow 1100mV 0C Model Minimum Pulse Width 'soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE'
-Slack : -0.621
-TNS   : -1163.223
+Slack : -0.483
+TNS   : -1250.871
 
 Type  : Slow 1100mV 0C Model Minimum Pulse Width 'CLOCK_50'
 Slack : -0.394
-TNS   : -10045.927
+TNS   : -7402.075
 
 Type  : Fast 1100mV 85C Model Setup 'CLOCK_50'
-Slack : -12.448
-TNS   : -83519.562
+Slack : -15.194
+TNS   : -66350.294
 
 Type  : Fast 1100mV 85C Model Setup 'soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE'
-Slack : -1.587
-TNS   : -1902.539
-
-Type  : Fast 1100mV 85C Model Hold 'soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE'
-Slack : 0.096
-TNS   : 0.000
+Slack : -1.520
+TNS   : -1740.663
 
 Type  : Fast 1100mV 85C Model Hold 'CLOCK_50'
-Slack : 0.130
+Slack : 0.136
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Hold 'soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE'
+Slack : 0.153
 TNS   : 0.000
 
 Type  : Fast 1100mV 85C Model Recovery 'soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE'
-Slack : -1.995
-TNS   : -3283.028
+Slack : -2.169
+TNS   : -3764.077
 
 Type  : Fast 1100mV 85C Model Removal 'soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE'
-Slack : 0.921
+Slack : 1.282
 TNS   : 0.000
 
 Type  : Fast 1100mV 85C Model Minimum Pulse Width 'soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE'
-Slack : -0.280
-TNS   : -21.778
+Slack : -0.200
+TNS   : -65.258
 
 Type  : Fast 1100mV 85C Model Minimum Pulse Width 'CLOCK_50'
-Slack : -0.087
-TNS   : -1323.534
+Slack : -0.088
+TNS   : -965.324
 
 Type  : Fast 1100mV 0C Model Setup 'CLOCK_50'
-Slack : -11.197
-TNS   : -71940.062
+Slack : -13.591
+TNS   : -57306.819
 
 Type  : Fast 1100mV 0C Model Setup 'soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE'
-Slack : -1.375
-TNS   : -1665.898
+Slack : -1.302
+TNS   : -1521.242
 
 Type  : Fast 1100mV 0C Model Hold 'soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE'
-Slack : 0.084
+Slack : 0.124
 TNS   : 0.000
 
 Type  : Fast 1100mV 0C Model Hold 'CLOCK_50'
-Slack : 0.120
+Slack : 0.126
 TNS   : 0.000
 
 Type  : Fast 1100mV 0C Model Recovery 'soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE'
-Slack : -1.953
-TNS   : -3253.292
+Slack : -2.097
+TNS   : -3696.850
 
 Type  : Fast 1100mV 0C Model Removal 'soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE'
-Slack : 1.035
+Slack : 1.365
 TNS   : 0.000
 
 Type  : Fast 1100mV 0C Model Minimum Pulse Width 'soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state.ST_MEASURE'
-Slack : -0.208
-TNS   : -10.976
+Slack : -0.133
+TNS   : -22.873
 
 Type  : Fast 1100mV 0C Model Minimum Pulse Width 'CLOCK_50'
 Slack : -0.087
-TNS   : -1343.933
+TNS   : -983.605
 
 ------------------------------------------------------------

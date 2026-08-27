@@ -1,2 +1,1 @@
-Warning (10268): Verilog HDL information at aes_key_expansion_serial.v(73): always construct contains both blocking and non-blocking assignments File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/aes_dual_rail/aes_core/aes_key_expansion_serial.v Line: 73
 Info (10281): Verilog HDL Declaration information at sha256.v(12): object "done" differs only in case from object "DONE" in the same scope File: C:/Users/ADMIN/Desktop/VI MACH BAO MAT/rtl/sha/sha256.v Line: 12

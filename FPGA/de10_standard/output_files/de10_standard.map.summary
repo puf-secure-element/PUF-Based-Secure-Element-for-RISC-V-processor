@@ -1,10 +1,10 @@
-Analysis & Synthesis Status : Successful - Wed Aug 26 13:14:31 2026
+Analysis & Synthesis Status : Successful - Thu Aug 27 19:56:37 2026
 Quartus Prime Version : 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
 Revision Name : de10_standard
 Top-level Entity Name : de10_standard
 Family : Cyclone V
 Logic utilization (in ALMs) : N/A
-Total registers : 17127
+Total registers : 13804
 Total pins : 15
 Total virtual pins : 0
 Total block memory bits : 0

@@ -17,6 +17,7 @@ Sim dir               :  simulation\questa
 
 Info: Starting NativeLink simulation with Questa Altera FPGA software
 Sourced NativeLink script c:/altera_lite/25.1std/quartus/common/tcl/internal/nativelink/modelsim.tcl
+Warning: File de10_standard_run_msim_gate_systemverilog.do already exists - backing up current file as de10_standard_run_msim_gate_systemverilog.do.bak
 Probing transcript
 Questa Altera FPGA Info: # Reading pref.tcl
 Questa Altera FPGA Info: # //  Questa Altera Starter FPGA Edition-64
@@ -47,14 +48,13 @@ Questa Altera FPGA Info: # Modifying modelsim.ini
 Questa Altera FPGA Info: # 
 Questa Altera FPGA Info: # vlog -sv -work work +incdir+. {de10_standard.svo}
 Questa Altera FPGA Info: # Questa Altera Starter FPGA Edition-64 vlog 2025.2 Compiler 2025.05 May 31 2025
-Questa Altera FPGA Info: # Start time: 13:30:31 on Aug 26,2026
+Questa Altera FPGA Info: # Start time: 20:18:18 on Aug 27,2026
 Questa Altera FPGA Info: # vlog -reportprogress 300 -sv -work work "+incdir+." de10_standard.svo 
 Questa Altera FPGA Info: # ** Note: (vlog-220) 'modelsim.ini' is used as the ini file.
 Questa Altera FPGA Info: # -- Compiling module de10_standard
 Questa Altera FPGA Info: # 
 Questa Altera FPGA Info: # Top level modules:
 Questa Altera FPGA Info: # 	de10_standard
-Questa Altera FPGA Info: # End time: 13:30:37 on Aug 26,2026, Elapsed time: 0:00:06
+Questa Altera FPGA Info: # End time: 20:18:22 on Aug 27,2026, Elapsed time: 0:00:04
 Questa Altera FPGA Info: # Errors: 0, Warnings: 0
-Questa Altera FPGA Info: # 
 Info: NativeLink simulation flow was successful

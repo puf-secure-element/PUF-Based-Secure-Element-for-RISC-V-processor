@@ -61,9 +61,7 @@ module sha256_top(
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin
             hash_out_reg     <= 256'b0;
-            hash_valid_reg   <= 1'b0;
-            tmp_rdata        <= 32'b0;
-            
+            hash_valid_reg   <= 1'b0;            
             start_reg        <= 1'b0; 
             next_reg         <= 1'b0; 
             start_pulse      <= 1'b0;

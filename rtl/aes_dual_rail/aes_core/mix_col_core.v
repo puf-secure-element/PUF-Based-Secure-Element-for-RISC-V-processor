@@ -1,6 +1,3 @@
-// mix_col_core: shared dual-rail MixColumns engine for ONE column (4 bytes in/out).
-// This is the ONLY forward-MixColumns instance in the design; the round controller
-// reuses it 4 times (once per column) instead of instantiating 4 in parallel.
 module mix_col_core(
     input  wire [7:0] a0_t, a0_f, a1_t, a1_f, a2_t, a2_f, a3_t, a3_f,
     output wire [7:0] b0_t, b0_f, b1_t, b1_f, b2_t, b2_f, b3_t, b3_f

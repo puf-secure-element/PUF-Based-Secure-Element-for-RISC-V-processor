@@ -1,0 +1,249 @@
+# vsim -c tb_soc -voptargs="+acc" -do "run -all; quit" 
+# Start time: 16:24:52 on Aug 23,2026
+# ** Note: (vsim-3812) Design is being optimized...
+# ** Note: (vopt-143) Recognized 1 FSM in module "ro_puf_core(fast)".
+# ** Note: (vopt-143) Recognized 1 FSM in module "measurement_controller(fast)".
+# ** Warning: ../rtl/puf/pair_scheduler.sv(16): (vopt-13314) Defaulting port 'snapshot_data' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Warning: ../rtl/puf/response_engine.sv(16): (vopt-13314) Defaulting port 'snapshot_data' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Warning: ../rtl/puf/snapshot_register.sv(8): (vopt-13314) Defaulting port 'count_in' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Note: (vopt-143) Recognized 1 FSM in module "sha256(fast)".
+# ** Warning: ../rtl/riscv_core/RV32I.v(268): (vopt-2685) [TFMPC] - Too few port connections for 'CU0'.  Expected 13, found 12.
+# ** Warning: ../rtl/riscv_core/RV32I.v(268): (vopt-2718) [TFMPC] - Missing connection for port 'Pcsrc'.
+# ** Warning: ../rtl/riscv_core/RV32I.v(279): (vopt-2685) [TFMPC] - Too few port connections for 'PC0'.  Expected 10, found 9.
+# ** Warning: ../rtl/riscv_core/RV32I.v(279): (vopt-2718) [TFMPC] - Missing connection for port 'Pcsrc'.
+# ** Note: (vopt-143) Recognized 1 FSM in module "control_fsm(fast)".
+# ** Note: (vopt-143) Recognized 1 FSM in module "rv32_axi_master(fast)".
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=7.
+# //  Questa Sim-64
+# //  Version 2021.2_1 linux_x86_64 May 15 2021
+# //
+# //  Copyright 1991-2021 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  QuestaSim and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# Loading sv_std.std
+# Loading work.tb_soc(fast)
+# Loading work.soc(fast)
+# Loading work.RV32I(fast)
+# Loading work.Register_file(fast)
+# Loading work.ALU(fast)
+# Loading work.Immediate_generator(fast)
+# Loading work.Sign_extend(fast)
+# Loading work.Control_unit(fast)
+# Loading work.ALU_control(fast)
+# Loading work.PC(fast)
+# Loading work.Branch_prediction(fast)
+# Loading work.Instruction_memory(fast)
+# Loading work.Forwarding_unit(fast)
+# Loading work.Hazard_detection(fast)
+# Loading work.rv32_axi_master(fast)
+# Loading work.axi_slave_top(fast)
+# Loading work.axi_reg_bank(fast)
+# Loading work.control_fsm(fast)
+# Loading work.axi_slave_core(fast)
+# Loading work.ro_puf_core(fast)
+# Loading work.ro_bank(fast)
+# Loading work.ro_cell(fast)
+# Loading work.ro_cell(fast__1)
+# Loading work.ro_cell(fast__2)
+# Loading work.ro_cell(fast__3)
+# Loading work.ro_cell(fast__4)
+# Loading work.ro_cell(fast__5)
+# Loading work.ro_cell(fast__6)
+# Loading work.ro_cell(fast__7)
+# Loading work.ro_cell(fast__8)
+# Loading work.ro_cell(fast__9)
+# Loading work.ro_cell(fast__10)
+# Loading work.ro_cell(fast__11)
+# Loading work.ro_cell(fast__12)
+# Loading work.ro_cell(fast__13)
+# Loading work.ro_cell(fast__14)
+# Loading work.ro_cell(fast__15)
+# Loading work.ro_cell(fast__16)
+# Loading work.ro_cell(fast__17)
+# Loading work.ro_cell(fast__18)
+# Loading work.ro_cell(fast__19)
+# Loading work.ro_cell(fast__20)
+# Loading work.ro_cell(fast__21)
+# Loading work.ro_cell(fast__22)
+# Loading work.ro_cell(fast__23)
+# Loading work.ro_cell(fast__24)
+# Loading work.ro_cell(fast__25)
+# Loading work.ro_cell(fast__26)
+# Loading work.ro_cell(fast__27)
+# Loading work.ro_cell(fast__28)
+# Loading work.ro_cell(fast__29)
+# Loading work.ro_cell(fast__30)
+# Loading work.ro_cell(fast__31)
+# Loading work.ro_cell(fast__32)
+# Loading work.ro_cell(fast__33)
+# Loading work.ro_cell(fast__34)
+# Loading work.ro_cell(fast__35)
+# Loading work.ro_cell(fast__36)
+# Loading work.ro_cell(fast__37)
+# Loading work.ro_cell(fast__38)
+# Loading work.ro_cell(fast__39)
+# Loading work.ro_cell(fast__40)
+# Loading work.ro_cell(fast__41)
+# Loading work.ro_cell(fast__42)
+# Loading work.ro_cell(fast__43)
+# Loading work.ro_cell(fast__44)
+# Loading work.ro_cell(fast__45)
+# Loading work.ro_cell(fast__46)
+# Loading work.ro_cell(fast__47)
+# Loading work.ro_cell(fast__48)
+# Loading work.ro_cell(fast__49)
+# Loading work.ro_cell(fast__50)
+# Loading work.ro_cell(fast__51)
+# Loading work.ro_cell(fast__52)
+# Loading work.ro_cell(fast__53)
+# Loading work.ro_cell(fast__54)
+# Loading work.ro_cell(fast__55)
+# Loading work.ro_cell(fast__56)
+# Loading work.ro_cell(fast__57)
+# Loading work.ro_cell(fast__58)
+# Loading work.ro_cell(fast__59)
+# Loading work.ro_cell(fast__60)
+# Loading work.ro_cell(fast__61)
+# Loading work.ro_cell(fast__62)
+# Loading work.ro_cell(fast__63)
+# Loading work.measurement_engine(fast)
+# Loading work.measurement_controller(fast)
+# Loading work.counter_bank(fast)
+# Loading work.snapshot_register(fast)
+# Loading work.response_engine(fast)
+# Loading work.pair_scheduler(fast)
+# Loading work.challenge_mapper(fast)
+# Loading work.comparator(fast)
+# Loading work.response_builder(fast)
+# Loading work.ecc_top(fast)
+# Loading work.hamming_encoder_32(fast)
+# Loading work.hamming_decoder_32(fast)
+# Loading work.sha256_top(fast)
+# Loading work.sha256(fast)
+# Loading work.sha256_m_schedule(fast)
+# Loading work.sha256_k_constant(fast)
+# Loading work.aes(fast)
+# Loading work.key_expansion(fast)
+# Loading work.sub_bytes(fast)
+# Loading work.GF(fast)
+# Loading work.aff_trans(fast)
+# Loading work.inv_aff(fast)
+# Loading work.aes_encrypt(fast)
+# Loading work.shift_rows(fast)
+# Loading work.mix_columns(fast)
+# Loading work.add_round_key(fast)
+# Loading work.aes_decrypt(fast)
+# Loading work.inv_shift_rows(fast)
+# Loading work.inv_mix_columns(fast)
+# Loading work.aes(fast__1)
+# ** Warning: (vsim-3015) [PCDPC] - Port size (128) does not match connection size (1) for port 'data_out'. The port definition is at: ../rtl/soc/axi_slave_top.v(26).
+#    Time: 0 ns  Iteration: 0  Instance: /tb_soc/dut/crypto_accelerator File: ../rtl/soc/soc.v Line: 143
+# run -all
+# ==============================================================
+#                 SoC Simulation Start
+# ==============================================================
+# [0] puf_valid = 0
+# [0] ecc_valid = 0
+# round=15 key_index=15 active=0 done=x data=00000000000000000000000000000000
+# [0] PUF Response
+# 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+# --------------------------------------------------------------
+# [0] ECC Response
+# 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+# --------------------------------------------------------------
+# [0] SHA256 Key
+# 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+# --------------------------------------------------------------
+# [0] AES Output
+# 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+# --------------------------------------------------------------
+# [0] key_ready = 0
+# [5] aes_done = 0
+# [6025] PUF Response
+# 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c0c00000c0c0c0c0c0c00000c0c0c0c0c0c00000c0c0c0c0c0c00000c0c0c0c080800000808080808080000080808080c0c00000c0c0c0c0c0c00000c0c0c0c0
+# --------------------------------------------------------------
+# [6025] puf_valid = 1
+# [6035] puf_valid = 0
+# [6035] ECC Response
+# 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c0c00000c0c0c0c0c0c00000c0c0c0c0c0c00000c0c0c0c0c0c00000c0c0c0c080800000808080808080000080808080c0c00000c0c0c0c0c0c00000c0c0c0c0
+# --------------------------------------------------------------
+# [6035] ecc_valid = 1
+# [6045] ecc_valid = 0
+# [6705] SHA256 Key
+# 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c5ececfd70b407d6d7487b657012675c569123b8d8e88fb5857da3cbb61c9f08
+# --------------------------------------------------------------
+# [6705] key_ready = 1
+# [6725] AES Output
+# 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000114bf36ffc8ab186ceb0d9a80b578653
+# --------------------------------------------------------------
+# round=1 key_index=1 active=1 done=0 data=114bf36ffc8ab186ceb0d9a80b578653
+# [6735] AES Output
+# 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000135d99af7de9b3962c13a59324cbd191
+# --------------------------------------------------------------
+# round=2 key_index=2 active=1 done=0 data=135d99af7de9b3962c13a59324cbd191
+# [6745] AES Output
+# 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007fd2b350dbdaece423da259861c1884
+# --------------------------------------------------------------
+# round=3 key_index=3 active=1 done=0 data=07fd2b350dbdaece423da259861c1884
+# [6755] AES Output
+# 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005f84cf581aaf7a98e5bd0698953dd375
+# --------------------------------------------------------------
+# round=4 key_index=4 active=1 done=0 data=5f84cf581aaf7a98e5bd0698953dd375
+# [6765] AES Output
+# 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007e9757457793f268599ac30cf3b02f76
+# --------------------------------------------------------------
+# round=5 key_index=5 active=1 done=0 data=7e9757457793f268599ac30cf3b02f76
+# [6775] AES Output
+# 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000e64eab02d6d72fbc569f6635d77cf030
+# --------------------------------------------------------------
+# round=6 key_index=6 active=1 done=0 data=e64eab02d6d72fbc569f6635d77cf030
+# [6785] AES Output
+# 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000056081196a46d14cfc552915abfeece34
+# --------------------------------------------------------------
+# round=7 key_index=7 active=1 done=0 data=56081196a46d14cfc552915abfeece34
+# [6795] AES Output
+# 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007ed6f3aa5e3c6ddfc740ea7e6527187
+# --------------------------------------------------------------
+# round=8 key_index=8 active=1 done=0 data=07ed6f3aa5e3c6ddfc740ea7e6527187
+# [6805] AES Output
+# 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000e30f7872a19029e5ba458315e97f0814
+# --------------------------------------------------------------
+# round=9 key_index=9 active=1 done=0 data=e30f7872a19029e5ba458315e97f0814
+# [6815] AES Output
+# 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ae1a6f33b05c1d5d367acee675f95657
+# --------------------------------------------------------------
+# round=10 key_index=10 active=1 done=0 data=ae1a6f33b05c1d5d367acee675f95657
+# [6825] AES Output
+# 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000014eb6ce738d243a61cc57a2b4d3dd8f4
+# --------------------------------------------------------------
+# round=11 key_index=11 active=1 done=0 data=14eb6ce738d243a61cc57a2b4d3dd8f4
+# [6835] AES Output
+# 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000009e1bd547cc9fca7035c9822b329c478b
+# --------------------------------------------------------------
+# round=12 key_index=12 active=1 done=0 data=9e1bd547cc9fca7035c9822b329c478b
+# [6845] AES Output
+# 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005e4b9b3e10c54508a457b7a02abf5b70
+# --------------------------------------------------------------
+# round=13 key_index=13 active=1 done=0 data=5e4b9b3e10c54508a457b7a02abf5b70
+# [6855] AES Output
+# 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001269318784aa5517c8b5b743d3434e69
+# --------------------------------------------------------------
+# round=14 key_index=14 active=1 done=0 data=1269318784aa5517c8b5b743d3434e69
+# [6865] AES Output
+# 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003e5fba4452524f595dafadc0d0f8a11d
+# --------------------------------------------------------------
+# round=15 key_index=15 active=0 done=0 data=3e5fba4452524f595dafadc0d0f8a11d
+# 
+# ========== Simulation Finished ==========
+# ** Note: $finish    : ../tb/unit_tests/tb_soc.sv(222)
+#    Time: 10045 ns  Iteration: 1  Instance: /tb_soc
+# End time: 16:24:53 on Aug 23,2026, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 8

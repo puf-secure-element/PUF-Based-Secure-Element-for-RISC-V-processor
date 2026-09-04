@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Demo xác thực thiết bị bằng PUF</title>
+<style>
+  body { font-family: -apple-system, sans-serif; max-width: 560px; margin: 40px auto; padding: 0 20px; color: #222; }
+  h1 { font-size: 20px; }
+  h2 { font-size: 15px; margin-top: 28px; color: #555; }
+  .card { border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 16px; }
+  label { display: block; margin: 10px 0 4px; font-size: 14px; }
+  select, button { font-size: 15px; padding: 8px 12px; border-radius: 6px; border: 1px solid #ccc; }
+  button { cursor: pointer; border: none; color: white; margin-top: 12px; margin-right: 8px; }
+  .btn-genuine { background: #1a7f37; }
+  .btn-fake { background: #a3242c; }
+  .btn-real { background: #0969da; }
+  .result { margin-top: 20px; padding: 16px; border-radius: 8px; font-size: 15px; }
+  .result.pass { background: #e6f4ea; border: 1px solid #1a7f37; }
+  .result.fail { background: #fbe9e9; border: 1px solid #a3242c; }
+  .result.pending { background: #fff8e6; border: 1px solid #d4a72c; }
+  .status-label { font-size: 22px; font-weight: bold; }
+  .status-label.pass { color: #1a7f37; }
+  .status-label.fail { color: #a3242c; }
+  .status-label.pending { color: #9a7b1a; }
+  .field { font-family: monospace; font-size: 12px; word-break: break-all; margin: 4px 0; color: #555; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<h1>Demo xác thực thiết bị bằng PUF</h1>
+
+<div class="card">
+  <label for="device_id">Device ID</label>
+  <select id="device_id">
+    <option value="0001">0001</option>
+  </select>
+
+  <h2>Test nhanh (mock, không cần ESP32/FPGA)</h2>
+  <button class="btn-genuine" onclick="authenticateMock(true)">Mock: Board thật</button>
+  <button class="btn-fake" onclick="authenticateMock(false)">Mock: Board giả mạo</button>
+
+  <h2>Xác thực thật (qua ESP32 + FPGA)</h2>
+  <button class="btn-real" onclick="authenticateReal()">Xác thực với board thật</button>
+</div>
+
+<div id="result-box" class="hidden"></div>
+
+<script>
+const deviceIdOf = () => document.getElementById('device_id').value;
+const box = () => document.getElementById('result-box');
+
+function renderResult(status, data) {
+  const cls = status === 'passed' || status === 'PASS' ? 'pass'
+            : status === 'failed' || status === 'FAIL' ? 'fail'
+            : 'pending';
+  const label = cls === 'pass' ? 'PASSED - Mở khóa'
+              : cls === 'fail' ? 'FAILED - Từ chối'
+              : 'Đang chờ board phản hồi...';
+
+  box().className = '';
+  box().innerHTML = `
+    <div class="result ${cls}">
+      <div class="status-label ${cls}">${label}</div>
+      ${data.nonce ? `<div class="field">Nonce: ${data.nonce}</div>` : ''}
+      ${data.cipher_from_board ? `<div class="field">Cipher từ board: ${data.cipher_from_board}</div>` : ''}
+      ${data.cipher_expected_by_server ? `<div class="field">Cipher server tự tính: ${data.cipher_expected_by_server}</div>` : ''}
+    </div>
+  `;
+}
+
+// ---- Mock: đồng bộ, có kết quả ngay ----
+async function authenticateMock(genuine) {
+  box().className = '';
+  box().innerHTML = '<p>Đang xác thực (mock)...</p>';
+  try {
+    const res = await fetch('/api/auth/start_mock', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ device_id: deviceIdOf(), genuine })
+    });
+    const data = await res.json();
+    if (!res.ok) { box().innerHTML = `<div class="result fail"><p>Lỗi: ${data.error}</p></div>`; return; }
+    renderResult(data.status, data);
+  } catch (err) {
+    box().innerHTML = `<div class="result fail"><p>Không kết nối được backend: ${err}</p></div>`;
+  }
+}
+
+// ---- Thật: bất đồng bộ, tạo phiên rồi poll kết quả ----
+async function authenticateReal() {
+  box().className = '';
+  box().innerHTML = '<div class="result pending"><div class="status-label pending">Đang gửi yêu cầu tới board...</div></div>';
+
+  let sessionId;
+  try {
+    const startRes = await fetch('/api/auth/start', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ device_id: deviceIdOf() })
+    });
+    const startData = await startRes.json();
+    if (!startRes.ok) { box().innerHTML = `<div class="result fail"><p>Lỗi: ${startData.error}</p></div>`; return; }
+    sessionId = startData.session_id;
+  } catch (err) {
+    box().innerHTML = `<div class="result fail"><p>Không kết nối được backend: ${err}</p></div>`;
+    return;
+  }
+
+  // Poll kết quả mỗi 1 giây, tối đa 30 lần (~30 giây) rồi báo timeout
+  for (let i = 0; i < 30; i++) {
+    await new Promise(r => setTimeout(r, 1000));
+    const res = await fetch(`/api/auth/result/${sessionId}`);
+    const data = await res.json();
+
+    if (data.status === 'passed' || data.status === 'failed') {
+      renderResult(data.status, data);
+      return;
+    }
+    renderResult('pending', data);
+  }
+
+  box().innerHTML = `<div class="result fail"><p>Hết thời gian chờ -- board không phản hồi. Kiểm tra ESP32/FPGA đã bật và nối đúng chưa.</p></div>`;
+}
+</script>
+
+</body>
+</html>

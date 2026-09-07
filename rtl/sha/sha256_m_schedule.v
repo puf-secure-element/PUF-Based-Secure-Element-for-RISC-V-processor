@@ -4,6 +4,7 @@ module sha256_m_schedule (
     input   wire [511:0]    block,    
     input   wire            start,
     input   wire            next,
+    input   wire            computing, // high throughout the ROUNDS phase
     input   wire [5:0]      round,    
 
     output  wire [31:0]     w_out
@@ -96,7 +97,8 @@ module sha256_m_schedule (
                 {10'b0000000000, w_reg[14][31:10]};
         //Wt ​= σ1​(Wt−2​) + Wt−7 ​+ σ0​(Wt−15​) + Wt−16​      
         w_new = d1 + w_reg[9] + d0 + w_reg[0];
-        if(start) begin
+
+        if(start || next) begin
             w_mem00_new = block[511:480];
             w_mem01_new = block[479:448];
             w_mem02_new = block[447:416];
@@ -116,7 +118,7 @@ module sha256_m_schedule (
             w_we    = 1;
         end
         
-        if(next && (round > 6'd15)) begin
+        if(computing && (round > 6'd15)) begin
             //Slide the message schedule window and compute the next word
             w_mem00_new = w_reg[01];
             w_mem01_new = w_reg[02];

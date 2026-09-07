@@ -35,7 +35,7 @@ module sha256_top(
     wire [255:0]    hash_out_tmp;
 
     reg             start_reg, next_reg, hash_valid_reg;
-    
+    reg             next_reg_d; 
     reg             start_pulse, next_pulse; 
 
     assign start = start_pulse;
@@ -61,10 +61,11 @@ module sha256_top(
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin
             hash_out_reg     <= 256'b0;
-            hash_valid_reg   <= 1'b0;    
+            hash_valid_reg   <= 1'b0;
             
             start_reg        <= 1'b0; 
             next_reg         <= 1'b0; 
+            next_reg_d       <= 1'b0;
             start_pulse      <= 1'b0;
             next_pulse       <= 1'b0;
             ecc_reg          <= 512'b0;
@@ -95,14 +96,17 @@ module sha256_top(
                 end
             end
 
-            if (next_reg) begin
-                next_reg <= 1'b0;
+            next_reg_d <= next_reg;
 
-                if (ecc_valid && (ecc_response != ecc_reg)) begin
-                    ecc_reg         <= ecc_response;
-                    next_pulse      <= 1'b1;
-                    hash_valid_reg  <= 1'b0;
-                end
+            if (next_reg && ecc_valid && (ecc_response != ecc_reg)) begin
+                next_reg        <= 1'b0;
+                ecc_reg         <= ecc_response;
+                next_pulse      <= 1'b1;
+                hash_valid_reg  <= 1'b0;
+            end
+            else if (next_reg_d) begin
+                // not serviced within the grace window -> silently drop
+                next_reg <= 1'b0;
             end
         end
     end

@@ -88,6 +88,7 @@ module sha256 (
         .block(data_in),
         .start(start),
         .next(next),
+        .computing(round_inc),
         .round(round_cnt_reg),
         .w_out(w)
     );
@@ -298,8 +299,9 @@ module sha256 (
         hash_valid_we   = 1'b0;
         case(state_reg)
             IDLE: begin
-                ready_flag      = 1'b1;
-                hash_valid_we   = 1'b0;
+                ready_flag      = 1'b0;
+                hash_valid_we   = 1'b1;
+                hash_valid_new  = 1'b0;
                 if(start) begin
                     round_rst       = 1'b1;     //Reset counter before rounds start
                     state           = ROUNDS;
@@ -325,6 +327,7 @@ module sha256 (
                 end 
             end
             DONE: begin
+                ready_flag      = 1'b1;
                 hash_valid_we   = 1'b1;
                 hash_valid_new  = 1'b1;
 

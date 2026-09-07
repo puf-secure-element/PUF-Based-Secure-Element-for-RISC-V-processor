@@ -10,7 +10,7 @@ module tb_soc;
         .clk(clk),
         .rst_n(rst_n),
         .data_out(data_out),
-        .done(done)
+        .irq(done)
     );
 
     //------------------------------------------------------
@@ -31,96 +31,186 @@ module tb_soc;
     end
 
     //------------------------------------------------------
-    // Monitor: Print only when signal changes
+    // Debug signals
+    //
+    // Hierarchy:
+    //
+    // dut
+    //  └── crypto_accelerator
+    //       └── u_core
+    //            ├── w_puf_response
+    //            ├── w_ecc_response
+    //            ├── w_sha_key
+    //            └── u_aes
+    //
     //------------------------------------------------------
+
     reg [511:0] last_puf;
     reg [511:0] last_ecc;
     reg [255:0] last_key;
-    reg [255:0] last_aes;
+    reg [127:0] last_aes;
 
     initial begin
-        last_puf = 'x;
-        last_ecc = 'x;
-        last_key = 'x;
-        last_aes = 'x;
+        last_puf = {512{1'bx}};
+        last_ecc = {512{1'bx}};
+        last_key = {256{1'bx}};
+        last_aes = {128{1'bx}};
     end
 
-    // always @(dut.puf_valid)
-    //     $display("[%0t] puf_valid = %b", $time, dut.puf_valid);
+    // //------------------------------------------------------
+    // // PUF Response
+    // //------------------------------------------------------
+    // always @(dut.crypto_accelerator.u_core.w_puf_response) begin
 
-    // always @(dut.ecc_valid)
-    //     $display("[%0t] ecc_valid = %b", $time, dut.ecc_valid);
+    //     if (dut.crypto_accelerator.u_core.w_puf_response !== last_puf) begin
 
-    // always @(dut.key_is_ready)
-    //     $display("[%0t] key_ready = %b", $time, dut.key_is_ready);
+    //         last_puf = dut.crypto_accelerator.u_core.w_puf_response;
 
-    // always @(dut.done)
-    //     $display("[%0t] aes_done = %b", $time, dut.done);
+    //         $display("");
+    //         $display("==============================================================");
+    //         $display("[%0t] PUF RESPONSE", $time);
+    //         $display("--------------------------------------------------------------");
+    //         $display("PUF Response = %0512h",
+    //                  dut.crypto_accelerator.u_core.w_puf_response);
+    //         $display("PUF Valid    = %b",
+    //                  dut.crypto_accelerator.u_core.puf_valid);
+    //         $display("==============================================================");
+    //     end
+    // end
 
-    always @(dut.puf_response or
-             dut.ecc_response or
-             dut.key or
-             dut.data_out)
-    begin
+    // //------------------------------------------------------
+    // // ECC Response
+    // //------------------------------------------------------
+    // always @(dut.crypto_accelerator.u_core.w_ecc_response) begin
 
-        if (dut.puf_response !== last_puf) begin
-            last_puf = dut.puf_response;
-            $display("[%0t] PUF Response", $time);
-            $display("%0512h", dut.puf_response);
+    //     if (dut.crypto_accelerator.u_core.w_ecc_response !== last_ecc) begin
+
+    //         last_ecc = dut.crypto_accelerator.u_core.w_ecc_response;
+
+    //         $display("");
+    //         $display("==============================================================");
+    //         $display("[%0t] ECC RESPONSE", $time);
+    //         $display("--------------------------------------------------------------");
+    //         $display("ECC Response = %0512h",
+    //                  dut.crypto_accelerator.u_core.w_ecc_response);
+    //         $display("ECC Valid    = %b",
+    //                  dut.crypto_accelerator.u_core.ecc_valid);
+    //         $display("==============================================================");
+    //     end
+    // end
+
+    //------------------------------------------------------
+    // SHA256 Key
+    //
+    // w_sha_key -> AES key_in
+    //------------------------------------------------------
+    always @(dut.crypto_accelerator.u_core.sha_start) begin
+
+
+            $display("");
+            $display("==============================================================");
+            $display("[%0t] SHA256 KEY -> AES key_in", $time);
             $display("--------------------------------------------------------------");
-        end
-
-        if (dut.ecc_response !== last_ecc) begin
-            last_ecc = dut.ecc_response;
-            $display("[%0t] ECC Response", $time);
-            $display("%0512h", dut.ecc_response);
-            $display("--------------------------------------------------------------");
-        end
-
-        if (dut.key !== last_key) begin
-            last_key = dut.key;
-            $display("[%0t] SHA256 Key", $time);
-            $display("%0256h", dut.key);
-            $display("--------------------------------------------------------------");
-        end
-
-        if (dut.data_out !== last_aes) begin
-            last_aes = dut.data_out;
-            $display("[%0t] AES Output", $time);
-            $display("%0256h", dut.data_out);
-            $display("--------------------------------------------------------------");
-        end
-
+            $display("key_in       = %0256h",
+                     dut.crypto_accelerator.u_core.w_sha_key);
+            $display("SHA Valid    = %b",
+                     dut.crypto_accelerator.u_core.sha_start);
+            $display("AES Start    = %b",
+                     dut.crypto_accelerator.u_core.aes_start);
+            $display("Key Ready    = %b",
+                     dut.crypto_accelerator.u_core.sha_valid &
+                     dut.crypto_accelerator.u_core.aes_start);
+            $display("==============================================================");
     end
 
+    // //------------------------------------------------------
+    // // AES data_out
+    // //
+    // // u_aes.data_out -> aes_dout -> Reg Bank -> SoC data_out
+    // //------------------------------------------------------
+    // always @(dut.crypto_accelerator.u_core.aes_dout) begin
 
-    // always @(dut.key_is_ready)
-    //     $display("[%0t] key_is_ready = %b", $time, dut.key_is_ready);
+    //     if (dut.crypto_accelerator.u_core.aes_dout !== last_aes) begin
 
-    // always @(dut.done)
-    //     $display("[%0t] aes_done = %b", $time, dut.done);
+    //         last_aes = dut.crypto_accelerator.u_core.aes_dout;
 
-     always @(dut.data_out) begin
-        $display("round=%0d key_index=%0d active=%0b done=%0b data=%h",
-                dut.dut.round,
-                dut.dut.key_index,
-                dut.dut.active,
-                dut.done,
-                dut.data_out);
-     end
+    //         $display("");
+    //         $display("==============================================================");
+    //         $display("[%0t] AES OUTPUT", $time);
+    //         $display("--------------------------------------------------------------");
+    //         $display("AES data_out = %032h",
+    //                  dut.crypto_accelerator.u_core.aes_dout);
+    //         $display("AES done     = %b",
+    //                  dut.crypto_accelerator.u_core.aes_done);
+    //         $display("SoC data_out = %032h",
+    //                  dut.data_out);
+    //         $display("IRQ          = %b",
+    //                  dut.irq);
+    //         $display("==============================================================");
+    //     end
+    // end
 
+    // always @(posedge clk) begin
+    //     $display("[%0t] FSM state=%0d next=%0d SHA start=%0d",
+    //              $time,
+    //              dut.crypto_accelerator.u_fsm.current_state,
+    //              dut.crypto_accelerator.u_fsm.next_state,
+    //              dut.crypto_accelerator.u_fsm.sha_start);
+    // end
 
+    // //------------------------------------------------------
+    // // Direct AES internal debug
+    // //------------------------------------------------------
+    // always @(dut.crypto_accelerator.u_core.u_aes.data_out) begin
+
+    //     $display(
+    //         "[%0t] AES INTERNAL: data_out=%032h done=%b",
+    //         $time,
+    //         dut.crypto_accelerator.u_core.u_aes.data_out,
+    //         dut.crypto_accelerator.u_core.u_aes.done
+    //     );
+
+    // end
+
+    // //------------------------------------------------------
+    // // AES control signals
+    // //------------------------------------------------------
+    // always @(dut.crypto_accelerator.u_core.aes_start or
+    //          dut.crypto_accelerator.u_core.aes_done) begin
+
+    //     $display(
+    //         "[%0t] AES CTRL: start=%b done=%b encrypt=%b decrypt=%b",
+    //         $time,
+    //         dut.crypto_accelerator.u_core.aes_start,
+    //         dut.crypto_accelerator.u_core.aes_done,
+    //         dut.crypto_accelerator.u_core.aes_encrypt_en,
+    //         dut.crypto_accelerator.u_core.aes_decrypt_en
+    //     );
+
+    // end
+
+    // //------------------------------------------------------
+    // // PUF / ECC / SHA valid signals
+    // //------------------------------------------------------
+    // always @(dut.crypto_accelerator.u_core.puf_valid or
+    //          dut.crypto_accelerator.u_core.ecc_valid or
+    //          dut.crypto_accelerator.u_core.sha_valid) begin
+
+    //     $display(
+    //         "[%0t] VALID: PUF=%b ECC=%b SHA=%b",
+    //         $time,
+    //         dut.crypto_accelerator.u_core.puf_valid,
+    //         dut.crypto_accelerator.u_core.ecc_valid,
+    //         dut.crypto_accelerator.u_core.sha_valid
+    //     );
+
+    // end
 
     //------------------------------------------------------
     // Write task
     //------------------------------------------------------
     reg [31:0] tb_addr;
     reg [31:0] tb_data;
-
-    initial begin
-        force dut.rv_address = tb_addr;
-        force dut.rv_wdata   = tb_data;
-    end
 
     task write_reg(input [31:0] addr, input [31:0] data);
     begin
@@ -135,7 +225,7 @@ module tb_soc;
     //------------------------------------------------------
     initial begin
 
-        rst_n = 0;
+        rst_n   = 0;
         tb_addr = 0;
         tb_data = 0;
 
@@ -144,22 +234,33 @@ module tb_soc;
 
         repeat(2) @(posedge clk);
 
-        // AES control = Encrypt
-        write_reg(32'h08, 32'h2);
-
-        // ECC mode = Enrollment
-        write_reg(32'h0C, 32'h0);
-
-        // SHA start
-        write_reg(32'h00, 32'h1);
-
-        // PUF start
-        write_reg(32'h10, 32'h1);
-
+        //--------------------------------------------------
         // Wait for system
+        //--------------------------------------------------
         repeat(1000) @(posedge clk);
 
-        $display("\n========== Simulation Finished ==========");
+        $display("");
+        $display("==============================================================");
+        $display("             Simulation Finished");
+        $display("==============================================================");
+
+        $display("Final PUF Response = %0512h",
+                 dut.crypto_accelerator.u_core.w_puf_response);
+
+        $display("Final ECC Response = %0512h",
+                 dut.crypto_accelerator.u_core.w_ecc_response);
+
+        $display("Final SHA Key      = %0256h",
+                 dut.crypto_accelerator.u_core.w_sha_key);
+
+        $display("Final AES Output   = %032h",
+                 dut.crypto_accelerator.u_core.aes_dout);
+
+        $display("Final AES Done     = %b",
+                 dut.crypto_accelerator.u_core.aes_done);
+
+        $display("==============================================================");
+
         $finish;
     end
 

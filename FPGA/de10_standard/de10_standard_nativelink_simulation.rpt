@@ -1,0 +1,60 @@
+Info: Start Nativelink Simulation process
+
+========= EDA Simulation Settings =====================
+
+Sim Mode              :  Gate
+Family                :  cyclonev
+Quartus root          :  c:/altera_lite/25.1std/quartus/bin64/
+Quartus sim root      :  c:/altera_lite/25.1std/quartus/eda/sim_lib
+Simulation Tool       :  questa altera fpga
+Simulation Language   :  systemverilog
+Simulation Mode       :  GUI
+Sim Output File       :  de10_standard.svo
+Sim SDF file          :  de10_standard__verilog.sdo
+Sim dir               :  simulation\questa
+
+=======================================================
+
+Info: Starting NativeLink simulation with Questa Altera FPGA software
+Sourced NativeLink script c:/altera_lite/25.1std/quartus/common/tcl/internal/nativelink/modelsim.tcl
+Warning: File de10_standard_run_msim_gate_systemverilog.do already exists - backing up current file as de10_standard_run_msim_gate_systemverilog.do.bak
+Probing transcript
+Questa Altera FPGA Info: # Reading pref.tcl
+Questa Altera FPGA Info: # //  Questa Altera Starter FPGA Edition-64
+Questa Altera FPGA Info: # //  Version 2025.2 win64 May 31 2025
+Questa Altera FPGA Info: # //
+Questa Altera FPGA Info: # // Unpublished work. Copyright 2025 Siemens
+Questa Altera FPGA Info: # //
+Questa Altera FPGA Info: # // This material contains trade secrets or otherwise confidential information
+Questa Altera FPGA Info: # // owned by Siemens Industry Software Inc. or its affiliates (collectively,
+Questa Altera FPGA Info: # // "SISW"), or its licensors. Access to and use of this information is strictly
+Questa Altera FPGA Info: # // limited as set forth in the Customer's applicable agreements with SISW.
+Questa Altera FPGA Info: # //
+Questa Altera FPGA Info: # // This material may not be copied, distributed, or otherwise disclosed outside
+Questa Altera FPGA Info: # // of the Customer's facilities without the express written permission of SISW,
+Questa Altera FPGA Info: # // and may not be used in any way not expressly authorized by SISW.
+Questa Altera FPGA Info: # //
+Questa Altera FPGA Info: # do de10_standard_run_msim_gate_systemverilog.do
+Questa Altera FPGA Info: # if {[file exists gate_work]} {
+Questa Altera FPGA Info: # 	vdel -lib gate_work -all
+Questa Altera FPGA Info: # }
+Questa Altera FPGA Info: # vlib gate_work
+Questa Altera FPGA Info: # vmap work gate_work
+Questa Altera FPGA Info: # Questa Altera Starter FPGA Edition-64 vmap 2025.2 Lib Mapping Utility 2025.05 May 31 2025
+Questa Altera FPGA Info: # vmap work gate_work 
+Questa Altera FPGA Info: # ** Note: (vmap-220) 'c:/altera_lite/25.1std/questa_fse/win64/../modelsim.ini' is used as the ini file.
+Questa Altera FPGA Info: # Copying c:/altera_lite/25.1std/questa_fse/win64/../modelsim.ini to modelsim.ini
+Questa Altera FPGA Info: # Modifying modelsim.ini
+Questa Altera FPGA Info: # 
+Questa Altera FPGA Info: # vlog -sv -work work +incdir+. {de10_standard.svo}
+Questa Altera FPGA Info: # Questa Altera Starter FPGA Edition-64 vlog 2025.2 Compiler 2025.05 May 31 2025
+Questa Altera FPGA Info: # Start time: 20:18:18 on Aug 27,2026
+Questa Altera FPGA Info: # vlog -reportprogress 300 -sv -work work "+incdir+." de10_standard.svo 
+Questa Altera FPGA Info: # ** Note: (vlog-220) 'modelsim.ini' is used as the ini file.
+Questa Altera FPGA Info: # -- Compiling module de10_standard
+Questa Altera FPGA Info: # 
+Questa Altera FPGA Info: # Top level modules:
+Questa Altera FPGA Info: # 	de10_standard
+Questa Altera FPGA Info: # End time: 20:18:22 on Aug 27,2026, Elapsed time: 0:00:04
+Questa Altera FPGA Info: # Errors: 0, Warnings: 0
+Info: NativeLink simulation flow was successful

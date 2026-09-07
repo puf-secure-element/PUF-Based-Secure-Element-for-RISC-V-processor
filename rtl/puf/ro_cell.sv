@@ -5,7 +5,8 @@ module ro_cell #(
     output logic ro_out
 );
 
-`ifndef SYNTHESIS
+//`ifndef SYNTHESIS
+`ifdef SIM_RO_CELL
     real  delay_ns;
     logic clk_sim;
 

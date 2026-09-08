@@ -5,7 +5,9 @@ module aes(
     input   wire            decrypt,
     input   wire            encrypt,
     input   wire    [127:0] plaintext,
-    input   wire            key_is_ready,
+
+    input   wire            plaintext_valid,
+    input   wire            key_ready,
     input   wire    [255:0] key_in,
 
     output  wire    [127:0] data_out,
@@ -72,9 +74,16 @@ module aes(
     reg [31:0] w_f [0:59];
 
     reg [3:0] round;            // 0..14 during an op, 15 = idle/done sentinel (as original)
-    reg       active, has_run, mode, encrypt_reg, decrypt_reg, key_ready_d;
+    reg       active, has_run, mode, encrypt_reg, decrypt_reg;
 
-    wire      key_start = key_is_ready & ~key_ready_d;
+    // Sticky "key schedule already computed" flag. key_ready is a level that
+    // asserts once and never toggles again, so we cannot rely on catching a
+    // same-cycle edge against plaintext_valid (which may pulse many cycles
+    // later, once key_ready_d has already caught up). Instead: expand the
+    // key schedule the first time we start a block with key_expanded==0, and
+    // latch key_expanded so every later block skips straight to the rounds.
+    reg       key_expanded;
+
     wire      is_initial_round = (round == 4'd0);
     wire      is_final_round   = (round == 4'd14);
     wire [3:0] key_index = mode ? (4'd14 - round) : round;
@@ -184,7 +193,7 @@ module aes(
             mode        <= 1'b0;
             encrypt_reg <= 1'b0;
             decrypt_reg <= 1'b0;
-            key_ready_d <= 1'b0;
+            key_expanded <= 1'b0;
             phase       <= PH_IDLE;
             cnt         <= 5'd0;
             grp         <= 2'd0;
@@ -197,8 +206,6 @@ module aes(
                 pt_t[ii]    <= 8'b0; pt_f[ii]    <= 8'b0;
             end
         end else begin
-            key_ready_d <= key_is_ready;
-
             if (encrypt) encrypt_reg <= 1'b1;
             else if (decrypt) decrypt_reg <= 1'b1;
             else if (done) begin
@@ -209,7 +216,10 @@ module aes(
             case (phase)
             // ---------------------------------------------------------
             PH_IDLE: begin
-                if (!active && key_start && (encrypt || decrypt)) begin
+                // AES only ever starts a block when a fresh plaintext block
+                // has arrived (plaintext_valid) AND the derived key is ready
+                // (key_ready), together with a mode selected.
+                if (!active && plaintext_valid && key_ready && (encrypt || decrypt)) begin
                     active  <= 1'b1;
                     has_run <= 1'b1;
                     mode    <= decrypt;
@@ -217,11 +227,18 @@ module aes(
                         pt_t[ii] <= plaintext[127-8*ii -: 8];
                         pt_f[ii] <= ~plaintext[127-8*ii -: 8];
                     end
-                    phase  <= PH_KEXP_LOAD;
+                    if (key_expanded) begin
+                        // Round keys already cached from a previous block --
+                        // skip key expansion entirely and go straight in.
+                        round <= 4'd0;
+                        phase <= PH_RND_ENTRY;
+                    end else begin
+                        phase <= PH_KEXP_LOAD;
+                    end
                 end
             end
 
-            // ---------------- Key expansion (runs once per key_start) ---
+            // ---------------- Key expansion (runs once, guarded by key_expanded) ---
             PH_KEXP_LOAD: begin
                 for (ii = 0; ii < 8; ii = ii + 1) begin
                     w_t[ii] <= key_in[255-ii*32 -: 32];
@@ -266,6 +283,7 @@ module aes(
 
             PH_KEXP_STEP: begin
                 if (kexp_i == 7'd59) begin
+                    key_expanded <= 1'b1;
                     round <= 4'd0;
                     phase <= PH_RND_ENTRY;
                 end else begin

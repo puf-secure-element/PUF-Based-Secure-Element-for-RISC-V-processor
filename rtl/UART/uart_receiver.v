@@ -19,7 +19,7 @@ module uart_receiver ( // CLK&RST
                        output reg s_parrity_error,
                        
                        // UART IF
-                       input reg uart_rxd
+                       input wire uart_rxd
                      );
 `protect
   parameter IDLE    = 3'b000; 

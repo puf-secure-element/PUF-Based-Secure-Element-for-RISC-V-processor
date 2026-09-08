@@ -49,10 +49,24 @@ module uart_top (//AHB interface
   wire en_tx_fifo_empty;
   wire en_rx_fifo_full;
   wire en_rx_fifo_empty;
+  wire en_parrity_error;
+  wire tx_fifo_full;
+  wire tx_fifo_empty;
+  wire rx_fifo_full;
+  wire rx_fifo_empty;
+  wire parrity_error;
+  wire s_parrity_error;
+  wire parrity_error_status;
   
   wire[9:0]   paddr;
   wire[31:0]  pwdata;
   wire[31:0]  prdata;
+  wire        psel;
+  wire        penable;
+  wire        pwrite;
+  wire        pready;
+  wire        pslverr;  
+
 
   cmsdk_ahb_to_apb #(.ADDRWIDTH(10)) 
   u_bridge(.HCLK(HCLK),      

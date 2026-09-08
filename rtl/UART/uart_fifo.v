@@ -9,6 +9,10 @@ module uart_fifo (input wire pclk,
 
   reg[4:0] wptr,rptr;   
   reg[7:0] mem[15:0];
+  reg      fifo_we;
+  reg      fifo_rd;
+  wire     fbit_comp;
+  wire     pointer_equal;
 
   assign fifo_we = (~fifo_full)  & wr;
   assign fifo_rd = (~fifo_empty) & rd;

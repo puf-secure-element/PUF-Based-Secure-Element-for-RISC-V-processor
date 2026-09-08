@@ -23,13 +23,19 @@ module axi_slave_top (
 
     // System Signals
     output wire         irq,
-    output wire [127:0] data_out
+    output wire [127:0] data_out,
+
+    // NEW: UART <-> AES streaming interface
+    input  wire [127:0] uart_plaintext,       // from uart_rx_buffer
+    input  wire         uart_plaintext_valid, // from uart_rx_buffer (1-cycle pulse)
+    output wire         aes_block_valid       // to uart_tx_buffer (1-cycle pulse, data_out is valid)
 );
 
     wire reg_start, soft_reset;
     wire hw_busy, hw_done_pulse, hw_error_pulse;
     wire puf_start, ecc_start, sha_start, aes_start;
     wire puf_valid, ecc_valid, sha_valid, sha_error, aes_done;
+    wire key_ready;
 
     wire [15:0]  reg_puf_challenge;
     wire [31:0]  reg_puf_window;
@@ -76,7 +82,10 @@ module axi_slave_top (
         .reg_aes_encrypt_en (reg_aes_encrypt_en),
         .reg_aes_plaintext  (reg_aes_plaintext),
         .reg_aes_ciphertext (reg_aes_ciphertext),
-        .hw_aes_dout        (hw_aes_dout)
+        .hw_aes_dout        (hw_aes_dout),
+
+        .hw_pt_load_valid   (uart_plaintext_valid),
+        .hw_pt_load_data    (uart_plaintext)
     );
 
     control_fsm u_fsm (
@@ -95,7 +104,11 @@ module axi_slave_top (
         .sha_valid          (sha_valid),
         .sha_error          (sha_error),
         .aes_start          (aes_start),
-        .aes_done           (aes_done)
+        .aes_done           (aes_done),
+
+        .key_ready          (key_ready),
+        .plaintext_ready    (uart_plaintext_valid),
+        .uart_tx_valid      (aes_block_valid)
     );
 
     axi_slave_core u_core (
@@ -119,6 +132,7 @@ module axi_slave_top (
         .sha_valid          (sha_valid),
         .sha_error          (sha_error),
         .aes_start          (aes_start),
+        .key_ready          (key_ready),
         .aes_done           (aes_done),
         .aes_dout           (hw_aes_dout)
     );

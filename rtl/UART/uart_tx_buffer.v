@@ -15,9 +15,9 @@ module uart_tx_buffer (
     reg [3:0]   tx_count;
     reg         tx_active;
     
-    always @(posedge pclk or negedge presetn)
+    always @(posedge clk or negedge rst_n)
         begin
-        if (~presetn)
+        if (~rst_n)
             begin
             tx_shift  <= 128'h0;
             tx_count  <= 4'h0;

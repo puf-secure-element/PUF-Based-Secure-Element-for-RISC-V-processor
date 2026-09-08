@@ -5,8 +5,8 @@ module uart_rx_buffer (
     input wire          rx_wr,
     input wire  [7:0]   rx_data,
 
-    output wire         plaintext_valid,
-    output wire [127:0] plaintext
+    output reg          plaintext_valid,
+    output reg  [127:0] plaintext
 );
 
   reg [127:0] rx_shift;

@@ -21,6 +21,7 @@ module axi_slave_core (
     output wire         sha_valid,
     output wire         sha_error,
     input  wire         aes_start,
+    input  wire         key_ready,
     output wire         aes_done,
 
     // Dữ liệu trả về Reg Bank
@@ -31,6 +32,7 @@ module axi_slave_core (
     wire [511:0]    w_ecc_response;
     wire [255:0]    w_sha_key;
     wire [31:0]     sha_wdata;
+    reg  [255:0]    key_reg;
 
     reg             ecc_valid_reg;
 
@@ -91,15 +93,36 @@ module axi_slave_core (
     // MUX dữ liệu đầu vào cho AES: Nếu giải mã thì feed Ciphertext, ngược lại feed Plaintext
     wire [127:0] actual_aes_din = aes_decrypt_en ? aes_ciphertext : aes_plaintext;
 
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            key_reg <= 256'h0;
+        end else begin
+            // Additional logic if needed
+            if(sha_valid) begin
+                key_reg <= w_sha_key[255:0]; // Capture the lower 128 bits of the SHA key
+            end
+        end
+    end
+
     // 4. AES
+    // plaintext_valid = aes_start: control_fsm only pulses aes_start once it
+    // has already qualified (key_ready && plaintext_pending), so this is a
+    // clean 1-cycle "new block ready" strobe.
+    // key_ready is the real, level-held signal from control_fsm (asserted
+    // once after PUF->ECC->SHA completes and held for the device's life).
+    // NOTE: the previous `sha_valid & aes_start` wiring was broken -- those
+    // two pulses occur at completely different points in time and almost
+    // never coincide, so AES's key-ready input never actually asserted and
+    // AES never ran.
     aes u_aes (
         .clk             (clk),
         .rst_n           (rst_n),
         .decrypt         (aes_decrypt_en),  
         .encrypt         (aes_encrypt_en),
         .plaintext       (actual_aes_din), 
-        .key_is_ready    (sha_valid & aes_start), 
-        .key_in          (w_sha_key),
+        .plaintext_valid (aes_start),
+        .key_ready       (key_ready),
+        .key_in          (key_reg),
         .data_out        (aes_dout),
         .done            (aes_done)
     );

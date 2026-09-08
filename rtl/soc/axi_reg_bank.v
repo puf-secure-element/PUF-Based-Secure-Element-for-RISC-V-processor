@@ -40,7 +40,11 @@ module axi_reg_bank (
     output wire         reg_aes_encrypt_en,
     output wire [127:0] reg_aes_plaintext,
     output wire [127:0] reg_aes_ciphertext,
-    input  wire [127:0] hw_aes_dout
+    input  wire [127:0] hw_aes_dout,
+
+    // NEW: hardware-side plaintext load from UART RX (bypasses AXI writes)
+    input  wire         hw_pt_load_valid,
+    input  wire [127:0] hw_pt_load_data
 );
 
     // =========================================================================
@@ -196,6 +200,12 @@ module axi_reg_bank (
                         if (axi_wdata_reg[2]) status_error_reg <= 1'b0; 
                     end
                 end
+            end
+
+            // NEW: hardware load of plaintext from UART RX buffer (128-bit block
+            // complete). Given priority over a same-cycle CPU write to AES_PT_*.
+            if (hw_pt_load_valid) begin
+                {aes_pt_reg[3], aes_pt_reg[2], aes_pt_reg[1], aes_pt_reg[0]} <= hw_pt_load_data;
             end
 
             // Xử lý Write từ CPU

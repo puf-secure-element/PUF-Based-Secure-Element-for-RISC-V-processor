@@ -22,7 +22,11 @@ module uart_top (//AHB interface
 
                  //Plaintext output
                  output wire         plaintext_valid,
-                 output wire [127:0] plaintext
+                 output wire [127:0] plaintext,
+
+                 //Ciphertext input (AES block ready to transmit)
+                 input wire          aes_block_valid,
+                 input wire [127:0]  aes_data_out
                 );
   
   wire       bclk;
@@ -35,12 +39,24 @@ module uart_top (//AHB interface
   wire       stb;
   wire [1:0] wls;
  
-  wire tx_wr;
+  wire cpu_tx_wr;
   wire tx_rd;
-  wire [7:0] tx_data_in;
+  wire [7:0] cpu_tx_data;
   wire [7:0] tx_data_out;
   wire tx_full_status; 
   wire tx_empty_status;
+
+  // Hardware (AES) auto-transmit path
+  wire       hw_tx_wr;
+  wire [7:0] hw_tx_data;
+  wire       hw_tx_busy;
+
+  // Arbitration: while the AES->UART auto-send is walking out a 16-byte
+  // block, it owns the TX FIFO write port; CPU byte writes are held off
+  // (apb_decoder's tx_wr is simply not forwarded to the FIFO those cycles -
+  // software should poll tx_full_status/tx_busy before writing anyway).
+  wire       tx_wr      = hw_tx_busy ? hw_tx_wr   : cpu_tx_wr;
+  wire [7:0] tx_data_in = hw_tx_busy ? hw_tx_data : cpu_tx_data;
 
   wire rx_rd;
   wire rx_wr;
@@ -112,8 +128,8 @@ module uart_top (//AHB interface
                   .parrity_error_status(parrity_error_status),
                   .tx_full_status(tx_full_status),
                   .tx_empty_status(tx_empty_status),
-                  .tx_wr(tx_wr),
-                  .tx_data(tx_data_in),
+                  .tx_wr(cpu_tx_wr),
+                  .tx_data(cpu_tx_data),
                   .rx_full_status(rx_full_status),
                   .rx_empty_status(rx_empty_status),
                   .rx_rd(rx_rd),
@@ -125,6 +141,15 @@ module uart_top (//AHB interface
                             .rx_data(rx_data_in),
                             .plaintext_valid(plaintext_valid),
                             .plaintext(plaintext));
+
+  uart_tx_buffer u_tx_buffer (.clk(HCLK),
+                             .rst_n(HRESETN),
+                             .encrypted_plaintext(aes_data_out),
+                             .encrypted_plaintext_valid(aes_block_valid),
+                             .tx_full_status(tx_full_status),
+                             .tx_data(hw_tx_data),
+                             .tx_wr(hw_tx_wr),
+                             .tx_busy(hw_tx_busy));
 
   uart_fifo u_tx_fifo (.pclk(HCLK),
                        .presetn(HRESETN),
@@ -194,6 +219,4 @@ module uart_top (//AHB interface
                             .bclk(bclk));
 
   assign interrupt = tx_fifo_full | tx_fifo_empty | rx_fifo_full | rx_fifo_empty | parrity_error;
-endmodule                          
-
-
+endmodule

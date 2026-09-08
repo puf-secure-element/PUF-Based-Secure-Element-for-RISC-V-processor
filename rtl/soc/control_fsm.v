@@ -3,7 +3,7 @@ module control_fsm (
     input  wire rst_n,
 
     // Giao tiếp AXI Reg Bank
-    input  wire reg_start,          
+    input  wire reg_start,          // Trigger chạy PUF->ECC->SHA (chỉ có tác dụng LẦN ĐẦU, khi key_ready = 0)
     input  wire soft_reset,         // Tín hiệu Soft Reset
     output reg  hw_busy,
     output reg  hw_done_pulse,
@@ -17,6 +17,20 @@ module control_fsm (
     output reg  sha_start,          
     input  wire sha_valid,          
     input  wire sha_error,
+
+    // NEW: Key-derivation-once handshake
+    // key_ready = 1 sau khi PUF->ECC->SHA chạy xong LẦN ĐẦU TIÊN.
+    // Chỉ bị xoá về 0 khi có reset phần cứng (rst_n), soft_reset KHÔNG xoá
+    // tín hiệu này -> đảm bảo PUF/ECC/SHA không bao giờ chạy lại lần 2.
+    output reg  key_ready,
+
+    // NEW: Bắt tay với khối UART/CPU cho luồng AES lặp lại nhiều lần
+    // plaintext_ready: xung 1 chu kỳ báo đã nhận đủ 128-bit plaintext từ UART
+    input  wire plaintext_ready,
+    // uart_tx_valid: xung 1 chu kỳ báo data_out (AES done) đã sẵn sàng để
+    // truyền ra UART/software
+    output reg  uart_tx_valid,
+
     output reg  aes_start,
     input  wire aes_done
 );
@@ -28,10 +42,11 @@ module control_fsm (
     localparam WAIT_ECC  = 4'd4;
     localparam RUN_SHA   = 4'd5;
     localparam WAIT_SHA  = 4'd6;
-    localparam RUN_AES   = 4'd7;
-    localparam WAIT_AES  = 4'd8;
-    localparam DONE      = 4'd9;
-    localparam ERROR     = 4'd10;
+    localparam DONE_KEY  = 4'd7;   // Kết thúc chuỗi derive key (PUF->ECC->SHA)
+    localparam RUN_AES   = 4'd8;
+    localparam WAIT_AES  = 4'd9;
+    localparam DONE_AES  = 4'd10;  // Kết thúc 1 lượt AES -> báo UART lấy data_out
+    localparam ERROR     = 4'd11;
 
     // Timeout (Tính năng 1) - Treo quá 65535 cycles sẽ báo lỗi
     localparam TIMEOUT_MAX = 16'hFFFF; 
@@ -39,6 +54,10 @@ module control_fsm (
     reg [3:0] current_state, next_state;
     reg [15:0] timeout_cnt;
     wire timeout_tick = (timeout_cnt == TIMEOUT_MAX);
+
+    // NEW: Latch yêu cầu plaintext_ready cho tới khi FSM thực sự tiêu thụ nó
+    // (tránh mất xung nếu plaintext_ready tới đúng lúc FSM chưa rảnh).
+    reg plaintext_pending;
 
     // Timeout Counter Logic
     always @(posedge clk) begin
@@ -56,11 +75,36 @@ module control_fsm (
         else                      current_state <= next_state;
     end
 
+    // 1b. Key-ready latch - CHỈ reset bằng rst_n, soft_reset không được đụng vào
+    // để đảm bảo PUF/ECC/SHA chỉ chạy đúng 1 lần trong suốt vòng đời sau reset.
+    always @(posedge clk) begin
+        if (!rst_n) key_ready <= 1'b0;
+        else if (next_state == DONE_KEY) key_ready <= 1'b1;
+    end
+
+    // 1c. Plaintext-pending latch - soft_reset được phép xoá (giống các cờ tạm khác)
+    always @(posedge clk) begin
+        if (!rst_n || soft_reset) begin
+            plaintext_pending <= 1'b0;
+        end else begin
+            if (plaintext_ready) begin
+                plaintext_pending <= 1'b1;
+            end else if (current_state == IDLE && next_state == RUN_AES) begin
+                plaintext_pending <= 1'b0; // đã được FSM tiêu thụ
+            end
+        end
+    end
+
     // 2. Next State Logic
     always @(*) begin
         next_state = current_state;
         case (current_state)
-            IDLE:     if (reg_start) next_state = RUN_PUF;
+            IDLE: begin
+                      if (!key_ready && reg_start) 
+                          next_state = RUN_PUF;              // Chỉ chạy derive key khi CHƯA có key
+                      else if (key_ready && plaintext_pending) 
+                          next_state = RUN_AES;              // Có key + có plaintext -> chạy AES
+                  end
             RUN_PUF:  next_state = WAIT_PUF; 
             WAIT_PUF: begin
                       if (timeout_tick) next_state = ERROR;
@@ -74,14 +118,15 @@ module control_fsm (
             RUN_SHA:  next_state = WAIT_SHA;
             WAIT_SHA: begin
                       if (timeout_tick || sha_error) next_state = ERROR;
-                      else if (sha_valid) next_state = RUN_AES;
+                      else if (sha_valid) next_state = DONE_KEY;
             end
+            DONE_KEY: next_state = IDLE;
             RUN_AES:  next_state = WAIT_AES;
             WAIT_AES: begin
                       if (timeout_tick) next_state = ERROR;
-                      else if (aes_done) next_state = DONE;
+                      else if (aes_done) next_state = DONE_AES;
             end
-            DONE:     next_state = IDLE; 
+            DONE_AES: next_state = IDLE;
             ERROR:    next_state = IDLE;
             default:  next_state = IDLE;
         endcase
@@ -97,6 +142,7 @@ module control_fsm (
             ecc_start      <= 1'b0;
             sha_start      <= 1'b0;
             aes_start      <= 1'b0;
+            uart_tx_valid  <= 1'b0;
         end else begin
             hw_done_pulse  <= 1'b0;
             hw_error_pulse <= 1'b0;
@@ -104,15 +150,17 @@ module control_fsm (
             ecc_start      <= 1'b0;
             sha_start      <= 1'b0;
             aes_start      <= 1'b0;
+            uart_tx_valid  <= 1'b0;
 
             case (next_state)
-                IDLE:    hw_busy <= 1'b0;
-                RUN_PUF: begin hw_busy <= 1'b1; puf_start <= 1'b1; end
-                RUN_ECC: ecc_start <= 1'b1;
-                RUN_SHA: sha_start <= 1'b1;
-                RUN_AES: aes_start <= 1'b1;
-                DONE:    begin hw_done_pulse <= 1'b1; hw_busy <= 1'b0; end // Sửa bug busy drop
-                ERROR:   begin hw_error_pulse <= 1'b1; hw_busy <= 1'b0; end
+                IDLE:     hw_busy <= 1'b0;
+                RUN_PUF:  begin hw_busy <= 1'b1; puf_start <= 1'b1; end
+                RUN_ECC:  ecc_start <= 1'b1;
+                RUN_SHA:  sha_start <= 1'b1;
+                DONE_KEY: begin hw_done_pulse <= 1'b1; hw_busy <= 1'b0; end
+                RUN_AES:  begin hw_busy <= 1'b1; aes_start <= 1'b1; end
+                DONE_AES: begin hw_done_pulse <= 1'b1; uart_tx_valid <= 1'b1; hw_busy <= 1'b0; end
+                ERROR:    begin hw_error_pulse <= 1'b1; hw_busy <= 1'b0; end
                 default: ; 
             endcase
         end

@@ -23,6 +23,7 @@ module RV32I(
     wire [6:0] opcode;
     wire [2:0] ALUOp;
     wire [3:0] ALUControl;
+    wire Pcsrc;             // from Control_unit; distinguishes JALR from JAL/Branch at EX time
 
     wire [31:0] immediate_raw, immediate;
     wire [31:0] ALU_result;
@@ -47,7 +48,10 @@ module RV32I(
 
     // THÊM MỚI: Tín hiệu Stall khi chờ Bus AXI
     // Nếu CPU có yêu cầu Load/Store (mem_req=1) nhưng Bus chưa ready (mem_ready=0) => Phải đóng băng CPU
-    wire bus_stall = mem_req && !mem_ready; 
+    // Nếu Bus báo lỗi (mem_error) trong lúc đang có request => hủy transaction thay vì
+    // treo pipeline mãi mãi chờ mem_ready (vốn sẽ không bao giờ tới sau 1 lỗi thật).
+    wire mem_abort = mem_req && mem_error;
+    wire bus_stall = mem_req && !mem_ready && !mem_abort;
     
     // Tín hiệu Stall tổng hợp cho PC (dừng lại nếu có Data Hazard HOẶC Bus đang bận)
     wire global_stall = hazard_stall || bus_stall;
@@ -69,6 +73,7 @@ module RV32I(
     reg [2:0] ID_EX_funct3, ID_EX_ALUOp;
     reg ID_EX_Mem_Read, ID_EX_Mem_Write, ID_EX_Mem_To_Reg;
     reg ID_EX_Branch, ID_EX_Jump, ID_EX_ALUSrc1, ID_EX_ALUSrc2, ID_EX_LUI;
+    reg ID_EX_Pcsrc;
 
     //================= EX/MEM =================//
     reg [31:0] EX_MEM_imm;
@@ -162,7 +167,7 @@ module RV32I(
             ID_EX_Mem_Read <= 0; ID_EX_Mem_Write <= 0; ID_EX_Mem_To_Reg <= 0;
             ID_EX_Branch <= 0; ID_EX_Jump <= 0; ID_EX_ALUSrc1 <= 0;
             ID_EX_ALUSrc2 <= 0; ID_EX_LUI <= 0; ID_EX_funct7 <= 7'b0;
-            ID_EX_RegWrite <= 0;
+            ID_EX_RegWrite <= 0; ID_EX_Pcsrc <= 0;
         end
         else if (bus_stall) begin
             // Đóng băng toàn bộ pipeline, cấm nhảy vào Flush
@@ -171,6 +176,7 @@ module RV32I(
             ID_EX_RegWrite <= 0; ID_EX_Mem_Read <= 0; ID_EX_Mem_Write <= 0;
             ID_EX_Branch <= 0; ID_EX_Jump <= 0; ID_EX_ALUSrc1 <= 0;
             ID_EX_ALUSrc2 <= 0; ID_EX_LUI <= 0; ID_EX_ALUOp <= 3'b000;
+            ID_EX_Pcsrc <= 0;
         end
         else begin
             ID_EX_rs1 <= IF_ID_Instruction[19:15];
@@ -192,6 +198,7 @@ module RV32I(
             ID_EX_LUI <= LUI;
             ID_EX_funct7 <= IF_ID_Instruction[31:25];
             ID_EX_RegWrite <= RegWrite;
+            ID_EX_Pcsrc <= Pcsrc;
         end
     end
 
@@ -235,8 +242,10 @@ module RV32I(
             MEM_WB_rd <= EX_MEM_rd;
             MEM_WB_Mem_To_Reg <= EX_MEM_Mem_To_Reg;
             MEM_WB_ALU_result <= EX_MEM_ALU_result;
-            MEM_WB_mem_data <= EX_MEM_Mem_Read ? mem_data : 32'b0;
-            MEM_WB_RegWrite <= EX_MEM_RegWrite;
+            // Nếu bus báo lỗi cho request này, không latch dữ liệu rác và không cho ghi
+            // vào Register file (kết quả Load/Store coi như bị hủy).
+            MEM_WB_mem_data <= (EX_MEM_Mem_Read && !mem_abort) ? mem_data : 32'b0;
+            MEM_WB_RegWrite <= EX_MEM_RegWrite && !mem_abort;
             MEM_WB_pc_plus <= EX_MEM_pc_plus;
             MEM_WB_imm <= EX_MEM_imm;
             MEM_WB_Jump <= EX_MEM_Jump;
@@ -268,7 +277,7 @@ module RV32I(
     Control_unit CU0 (
         .opcode(opcode), .ALUOp(ALUOp), .RegWrite(RegWrite), .MemRead(MemRead),
         .MemWrite(MemWrite), .Branch(Branch), .Jump(Jump), .MemToReg(MemToReg),
-        .ALUSrc1(ALUSrc1), .ALUSrc2(ALUSrc2), .LUI(LUI), .imm_type(imm_type)
+        .ALUSrc1(ALUSrc1), .ALUSrc2(ALUSrc2), .LUI(LUI), .Pcsrc(Pcsrc), .imm_type(imm_type)
     );
 
     ALU_control AC0 (
@@ -279,8 +288,8 @@ module RV32I(
     PC PC0 (
         .clk(clk), .rst_n(rst_n), 
         .Stall(global_stall), // Cập nhật tín hiệu Stall ở đây
-        .Branch(ID_EX_Branch), .Jump(ID_EX_Jump), .Branch_taken(Branch_taken),
-        .offset(ID_EX_imm), .rs1_data(forwardA_data), .pc(pc)
+        .Branch(ID_EX_Branch), .Pcsrc(ID_EX_Pcsrc), .Jump(ID_EX_Jump), .Branch_taken(Branch_taken),
+        .offset(ID_EX_imm), .rs1_data(forwardA_data), .EX_pc(ID_EX_pc), .pc(pc)
     );
 
     Branch_prediction BE0 (

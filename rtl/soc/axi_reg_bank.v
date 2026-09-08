@@ -46,41 +46,41 @@ module axi_reg_bank (
     // =========================================================================
     // PARAMETER HÓA ĐỊA CHỈ 
     // =========================================================================
-    localparam SHA_ADDR_CTRL   = 8'h00; // Dùng làm thanh ghi Master Start/Reset
-    localparam SHA_ADDR_STATUS = 8'h04; // Chứa cờ Busy, Done, Error
-    localparam AES_ADDR_CTRL   = 8'h08; // Bit 0: Decrypt, Bit 1: Encrypt
-    localparam ECC_ADDR_CTRL   = 8'h0C; // Bit 0: Mode (0: Enroll, 1: Recon)
-    localparam PUF_ADDR_CTRL   = 8'h10; // Giữ lại theo spec
+    localparam SHA_ADDR_CTRL   = 10'h000; // Dùng làm thanh ghi Master Start/Reset
+    localparam SHA_ADDR_STATUS = 10'h004; // Chứa cờ Busy, Done, Error
+    localparam AES_ADDR_CTRL   = 10'h008; // Bit 0: Decrypt, Bit 1: Encrypt
+    localparam ECC_ADDR_CTRL   = 10'h00C; // Bit 0: Mode (0: Enroll, 1: Recon)
+    localparam PUF_ADDR_CTRL   = 10'h010; // Giữ lại theo spec
     
     // Các thanh ghi phụ trợ cho PUF
-    localparam PUF_CHLG        = 8'h14;
-    localparam PUF_WIND        = 8'h18;
+    localparam PUF_CHLG        = 10'h014;
+    localparam PUF_WIND        = 10'h018;
 
     // Vùng nhớ 128-bit cho Plaintext
-    localparam AES_PT_0        = 8'h20;
-    localparam AES_PT_1        = 8'h24;
-    localparam AES_PT_2        = 8'h28;
-    localparam AES_PT_3        = 8'h2C;
+    localparam AES_PT_0        = 10'h020;
+    localparam AES_PT_1        = 10'h024;
+    localparam AES_PT_2        = 10'h028;
+    localparam AES_PT_3        = 10'h02C;
 
     // Vùng nhớ 128-bit cho Ciphertext
-    localparam AES_CT_0        = 8'h30;
-    localparam AES_CT_1        = 8'h34;
-    localparam AES_CT_2        = 8'h38;
-    localparam AES_CT_3        = 8'h3C;
+    localparam AES_CT_0        = 10'h030;
+    localparam AES_CT_1        = 10'h034;
+    localparam AES_CT_2        = 10'h038;
+    localparam AES_CT_3        = 10'h03C;
 
     // Vùng nhớ 128-bit cho Output
-    localparam AES_OUT_0       = 8'h40;
-    localparam AES_OUT_1       = 8'h44;
-    localparam AES_OUT_2       = 8'h48;
-    localparam AES_OUT_3       = 8'h4C;
-    
-    // Vùng nhớ 96-bit cho ECC Helper Data
-    localparam ECC_HELPER_0    = 8'h50;
-    localparam ECC_HELPER_1    = 8'h54;
-    localparam ECC_HELPER_2    = 8'h58;
+    localparam AES_OUT_0       = 10'h040;
+    localparam AES_OUT_1       = 10'h044;
+    localparam AES_OUT_2       = 10'h048;
+    localparam AES_OUT_3       = 10'h04C;
 
-    localparam ADDR_ID         = 8'hF8;
-    localparam ADDR_VERSION    = 8'hFC;
+    // Vùng nhớ 96-bit cho ECC Helper Data
+    localparam ECC_HELPER_0    = 10'h050;
+    localparam ECC_HELPER_1    = 10'h054;
+    localparam ECC_HELPER_2    = 10'h058;
+
+    localparam ADDR_ID         = 10'h0F8;
+    localparam ADDR_VERSION    = 10'h0FC;
 
     // =========================================================================
     // 1. AXI WRITE CHANNEL HANDSHAKE 

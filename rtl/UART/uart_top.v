@@ -18,7 +18,11 @@ module uart_top (//AHB interface
                  output wire uart_txd,
                  
                  //Interrupt
-                 output wire interrupt
+                 output wire interrupt,
+
+                 //Plaintext output
+                 output wire         plaintext_valid,
+                 output wire [127:0] plaintext
                 );
   
   wire       bclk;
@@ -114,6 +118,13 @@ module uart_top (//AHB interface
                   .rx_empty_status(rx_empty_status),
                   .rx_rd(rx_rd),
                   .rx_data(rx_data_out));
+
+  uart_rx_buffer u_rx_buffer(.clk(HCLK),
+                            .rst_n(HRESETN),
+                            .rx_wr(rx_wr),
+                            .rx_data(rx_data_in),
+                            .plaintext_valid(plaintext_valid),
+                            .plaintext(plaintext));
 
   uart_fifo u_tx_fifo (.pclk(HCLK),
                        .presetn(HRESETN),

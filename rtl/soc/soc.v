@@ -7,14 +7,14 @@ module soc (
     output  wire            irq
 );
 
-    parameter   SHA_ADDR_CTRL       = 8'h00;
-    parameter   SHA_ADDR_STATUS     = 8'h04;
+    parameter   SHA_ADDR_CTRL       = 10'h00;
+    parameter   SHA_ADDR_STATUS     = 10'h04;
     // //Hash addresses
-    // parameter   SHA_ADDR_HASH0      = 8'h20;
-    // parameter   SHA_ADDR_HASH7      = 8'h27;
-    parameter   AES_ADDR_CTRL       = 8'h08;    //Bit 0 to control decryption, bit 1 to control encryption
-    parameter   ECC_ADDR_CTRL       = 8'hC;     //Bit 0 to control mode, 0: Enrollment, 1: Reconstruction
-    parameter   PUF_ADDR_CTRL       = 8'h10;    //Control PUF, write 1 to bit 0 to start transfer challenges
+    // parameter   SHA_ADDR_HASH0      = 10'h20;
+    // parameter   SHA_ADDR_HASH7      = 10'h27;
+    parameter   AES_ADDR_CTRL       = 10'h08;    //Bit 0 to control decryption, bit 1 to control encryption
+    parameter   ECC_ADDR_CTRL       = 10'h0C;     //Bit 0 to control mode, 0: Enrollment, 1: Reconstruction
+    parameter   PUF_ADDR_CTRL       = 10'h10;    //Control PUF, write 1 to bit 0 to start transfer challenges
 
     // =========================================================================
     // DÂY BUS AXI4-LITE NỘI BỘ

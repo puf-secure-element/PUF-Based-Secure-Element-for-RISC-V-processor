@@ -192,14 +192,14 @@ module apb_decoder (// APB interface
     begin
       if(apb_rd_en && pready)
         case(paddr)
-          10'h000: prdata = reg_mdr;        // MDR
-          10'h004: prdata = reg_dll;        // DLL
-          10'h008: prdata = reg_dlh;        // DLH
-          10'h00C: prdata = reg_lcr;        // LCR 
-          10'h010: prdata = reg_ier;        // IER
-          10'h014: prdata = {27'h0,parrity_error_status,rx_empty_status,rx_full_status,tx_empty_status,tx_full_status}; // FSR
-          10'h018: prdata = 32'h0000_0000;  // TBR
-          10'h01C: prdata = rx_data;        // RBR
+          10'h100: prdata = reg_mdr;        // MDR
+          10'h104: prdata = reg_dll;        // DLL
+          10'h108: prdata = reg_dlh;        // DLH
+          10'h10C: prdata = reg_lcr;        // LCR
+          10'h110: prdata = reg_ier;        // IER
+          10'h114: prdata = {27'h0,parrity_error_status,rx_empty_status,rx_full_status,tx_empty_status,tx_full_status}; // FSR
+          10'h118: prdata = 32'h0000_0000;  // TBR
+          10'h11C: prdata = rx_data;        // RBR
           default: prdata = 32'hFFFF_FFFF;  // rsvd
         endcase
       else 
@@ -244,5 +244,4 @@ module apb_decoder (// APB interface
     end
 
 endmodule
-
 

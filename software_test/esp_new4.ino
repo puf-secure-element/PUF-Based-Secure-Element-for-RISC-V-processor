@@ -23,7 +23,7 @@ const char* ESP32_SECRET  = "demo-secret-change-me";
 const unsigned long POLL_INTERVAL_MS = 1500;
 
 SoftwareSerial fpgaSerial(D5, D6);  // RX, TX
-const long FPGA_BAUD = 9600;
+const long FPGA_BAUD = 115200;
 
 // Các định nghĩa Byte điều khiển và Mã lệnh
 const uint8_t STX = 0x02;

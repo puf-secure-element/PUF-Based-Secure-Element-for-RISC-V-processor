@@ -4,7 +4,7 @@ module soc (
 
     // Giao diện quan sát cho Testbench
     output  wire    [127:0] data_out,
-    output  wire            irq,
+    output  wire            aes_done,
 
     // UART serial pins
     input   wire             uart_rxd,
@@ -195,6 +195,7 @@ module soc (
         
         // Cắm dây xuất ra SoC ngoài cùng
         .irq            (irq),
+        .aes_done       (aes_done),
         .data_out       (data_out),
 
         .uart_plaintext         (w_uart_plaintext),

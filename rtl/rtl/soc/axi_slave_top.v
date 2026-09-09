@@ -24,6 +24,7 @@ module axi_slave_top (
     // System Signals
     output wire         irq,
     output wire [127:0] data_out,
+    output wire         aes_done,
 
     // NEW: UART <-> AES streaming interface
     input  wire [127:0] uart_plaintext,       // from uart_rx_buffer
@@ -34,7 +35,7 @@ module axi_slave_top (
     wire reg_start, soft_reset;
     wire hw_busy, hw_done_pulse, hw_error_pulse;
     wire puf_start, ecc_start, sha_start, aes_start;
-    wire puf_valid, ecc_valid, sha_valid, sha_error, aes_done;
+    wire puf_valid, ecc_valid, sha_valid, sha_error;
     wire key_ready;
 
     wire [15:0]  reg_puf_challenge;

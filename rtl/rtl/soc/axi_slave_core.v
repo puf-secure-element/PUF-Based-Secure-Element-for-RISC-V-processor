@@ -36,6 +36,31 @@ module axi_slave_core (
 
     reg             ecc_valid_reg;
 
+    // NEW: aes_dout latch. aes.v's own data_out/done are only valid for the
+    // single cycle that done is high -- the AES core clears its internal
+    // state (and hence data_out) on the very next cycle, by design (see
+    // aes.v PH_DONE). But control_fsm's uart_tx_valid/hw_done_pulse are
+    // *registered* outputs derived from aes_done, so they only actually
+    // assert one cycle AFTER aes_done was seen -- by which point aes.v's
+    // raw data_out has already gone back to 0. Anything gated on those FSM
+    // pulses (UART auto-TX, and axi_reg_bank's AES_OUT_* capture) was
+    // therefore always latching zero instead of the real ciphertext.
+    // Fix: capture the raw AES output into a holding register on the same
+    // cycle aes_done is high, and keep it stable until the next block
+    // completes. Downstream consumers now read this snapshot instead of
+    // racing the AES core's self-clear.
+    wire [127:0]    aes_dout_raw;
+    reg  [127:0]    aes_dout_latched;
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n)
+            aes_dout_latched <= 128'h0;
+        else if (aes_done)
+            aes_dout_latched <= aes_dout_raw;
+    end
+
+    assign aes_dout = aes_dout_latched;
+
     assign sha_wdata = sha_start ? 32'h1 : 32'h0;
 
     always @(posedge clk or negedge rst_n) begin
@@ -123,7 +148,7 @@ module axi_slave_core (
         .plaintext_valid (aes_start),
         .key_ready       (key_ready),
         .key_in          (key_reg),
-        .data_out        (aes_dout),
+        .data_out        (aes_dout_raw),
         .done            (aes_done)
     );
 

@@ -7,6 +7,14 @@ module uart_receiver ( // CLK&RST
                        output wire[7:0] rx_data,
                        input wire       rx_full_status,
                        output wire      rx_wr,
+                       // Ungated byte-received strobe for the AES streaming
+                       // path (uart_rx_buffer). Unlike rx_wr, this is NOT
+                       // gated by rx_full_status: the classic RBR/FIFO path
+                       // and the hardware streaming path are independent
+                       // consumers of the same received byte, and a full,
+                       // undrained classic RX FIFO must never block new
+                       // plaintext blocks from reaching AES.
+                       output wire      rx_wr_stream,
 
                        //UART setting
                        input wire        osm_sel,
@@ -19,7 +27,7 @@ module uart_receiver ( // CLK&RST
                        output reg s_parrity_error,
                        
                        // UART IF
-                       input wire uart_rxd
+                       input reg uart_rxd
                      );
 `protect
   parameter IDLE    = 3'b000; 
@@ -53,7 +61,8 @@ module uart_receiver ( // CLK&RST
                    (wls==2'b01) ? data_in[7:2] :
                    (wls==2'b10) ? data_in[7:1] :
                    data_in;
-  assign rx_wr = (stop_complete) & ~rx_full_status & stop_end;
+  assign rx_wr        = (stop_complete) & ~rx_full_status & stop_end;
+  assign rx_wr_stream = (stop_complete) & stop_end;
   assign start_detect = (current_state == IDLE) & (uart_rxd == 1'b0);
   assign jump_state = count_detect & (count == 4'h0);
   assign data_sample_en   = (osm_cnt == 4'hf)? sample_detect & (count == 4'h8) & current_state == RX_DATA:

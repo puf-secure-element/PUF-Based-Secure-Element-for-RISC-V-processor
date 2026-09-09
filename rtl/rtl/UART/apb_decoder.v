@@ -85,7 +85,7 @@ module apb_decoder (// APB interface
   assign pready  = 1'b1;
 
   // Decode address
-  always @(*) 
+  always @(psel or paddr) 
     begin
       if(psel)
         case(paddr)
@@ -188,7 +188,7 @@ module apb_decoder (// APB interface
     end 
 
   // Return PRDATA
-  always @(*) 
+  always @(psel or paddr or pready or penable) 
     begin
       if(apb_rd_en && pready)
         case(paddr)

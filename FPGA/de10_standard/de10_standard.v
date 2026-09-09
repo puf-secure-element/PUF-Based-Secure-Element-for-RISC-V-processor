@@ -2,8 +2,13 @@ module de10_standard (
     input  wire        CLOCK_50,
     input  wire [3:0]  KEY,
     output wire [9:0]  LEDR,
+<<<<<<< HEAD
     input  wire        UART_RXD,
     output wire        UART_TXD
+=======
+    input  wire        GPIO_D3,
+    output wire        GPIO_D2
+>>>>>>> 3e321e1 (Add FPGA UART GPIO debug output)
 );
 
     wire [127:0] data_out;

@@ -14,16 +14,16 @@
 #include <SoftwareSerial.h>
 #include <ArduinoJson.h>
 
-const char* WIFI_SSID     = "Hehe";
-const char* WIFI_PASSWORD = "123456789";
-const char* BACKEND_URL   = "http://192.168.1.20:5000";
+const char* WIFI_SSID     = "Nhi";
+const char* WIFI_PASSWORD = "0909794900";
+const char* BACKEND_URL = "http://192.168.1.105:5000";
 const char* DEVICE_ID     = "0001";
 const char* ESP32_SECRET  = "demo-secret-change-me"; 
 
 const unsigned long POLL_INTERVAL_MS = 1500;
 
 SoftwareSerial fpgaSerial(D5, D6);  // RX, TX
-const long FPGA_BAUD = 115200;
+const long FPGA_BAUD = 57600;
 
 // Các định nghĩa Byte điều khiển và Mã lệnh
 const uint8_t STX = 0x02;
@@ -43,6 +43,7 @@ bool isHttps(const String& url) {
 void setup() {
   Serial.begin(115200);
   fpgaSerial.begin(FPGA_BAUD);
+  Serial.println("\n[BOOT] Reset reason: " + ESP.getResetReason());
 
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   Serial.print("Đang kết nối WiFi");
@@ -75,9 +76,13 @@ void checkPendingAndProcess() {
   HTTPClient http;
   String url = String(BACKEND_URL) + "/api/auth/pending?device_id=" + DEVICE_ID;
   bool ok = isHttps(url) ? http.begin(secureClient, url) : http.begin(plainClient, url);
-  if (!ok) return;
+  if (!ok) {
+    Serial.println("[AUTH] Không mở được kết nối tới backend: " + url);
+    return;
+  }
 
   int code = http.GET();
+  if (code < 0) Serial.printf("[AUTH] HTTP lỗi: %s\n", http.errorToString(code).c_str());
   if (code == 204) { http.end(); return; }
   if (code != 200) { http.end(); return; }
 
@@ -176,7 +181,7 @@ void postBoardResponse(const String& sessionId, const String& cipherHex) {
   serializeJson(doc, body);
 
   int code = http.POST(body);
-  Serial.printf("[AUTH] Đã gửi board_response lên server (Code: %d)\n", code);
+  Serial.printf("[AUTH] Đã gửi ciphertext lên server (Code: %d)\n", code);
   http.end();
 }
 
@@ -188,11 +193,19 @@ void checkPendingEnroll() {
   HTTPClient http;
   String url = String(BACKEND_URL) + "/api/enroll/pending?device_id=" + DEVICE_ID;
   bool ok = isHttps(url) ? http.begin(secureClient, url) : http.begin(plainClient, url);
-  if (!ok) return;
+  if (!ok) {
+    Serial.println("[ENROLL] Không mở được kết nối tới backend: " + url);
+    return;
+  }
 
   int code = http.GET();
+  if (code < 0) Serial.printf("[ENROLL] HTTP lỗi: %s\n", http.errorToString(code).c_str());
   if (code == 204) { http.end(); return; }
-  if (code != 200) { http.end(); return; }
+  if (code != 200) {
+    Serial.printf("[ENROLL] Backend trả HTTP %d\n", code);
+    http.end();
+    return;
+  }
 
   String body = http.getString();
   http.end();
@@ -222,12 +235,21 @@ bool sendEnrollRequestAndGetResult(String& helperHexOut, String& keyHexOut) {
   fpgaSerial.write((uint8_t)0);
   fpgaSerial.write(crc);
   fpgaSerial.write(ETX);
-  Serial.println("[ENROLL] -> Đã gửi Frame Enroll Request sang FPGA");
+  fpgaSerial.flush();
+  Serial.printf("[ENROLL] -> Đã gửi 5 byte: 02 01 00 00 03, FPGA baud=%ld\n", FPGA_BAUD);
+  Serial.printf("[ENROLL] RX buffer ngay sau gửi: %d byte\n", fpgaSerial.available());
 
-  // Chờ 3 byte Header (STX, CMD, LEN) - Timeout 10s vì PUF đo phần cứng mất thời gian
+  // PUF hardware measurement may take time, but report progress instead of
+  // hiding whether the UART receives anything.
   unsigned long startWait = millis();
+  unsigned long lastReport = startWait;
   while (fpgaSerial.available() < 3) {
-    if (millis() - startWait > 10000) {
+    if (millis() - lastReport >= 1000) {
+      Serial.printf("[ENROLL] Đang chờ header: %lu ms, RX buffer=%d byte\n",
+                    millis() - startWait, fpgaSerial.available());
+      lastReport = millis();
+    }
+    if (millis() - startWait > 30000) {
       Serial.printf("[ENROLL] Timeout chờ phản hồi (Chỉ nhận được %d byte trong đệm)\n", fpgaSerial.available());
       return false;
     }
@@ -240,39 +262,52 @@ bool sendEnrollRequestAndGetResult(String& helperHexOut, String& keyHexOut) {
 
   Serial.printf("[ENROLL] Header nhận được: STX=0x%02X, CMD=0x%02X, LEN=%d\n", stx, cmd, len);
 
-  if (stx != STX || cmd != CMD_ENROLL_RESPONSE || len != 28) {
+  if (stx != STX || cmd != CMD_ENROLL_RESPONSE || len != 44) {
     Serial.println("[ENROLL] Lỗi: Frame phản hồi sai định dạng chuẩn!");
     return false;
   }
 
-  // Đọc đủ 28 byte payload (12 byte Helper Data + 16 byte Key)
-  uint8_t payload[28];
+  // Đọc đủ 44 byte payload (12 byte Helper Data + 32 byte AES-256 key)
+  uint8_t payload[44];
   int received = 0;
   startWait = millis();
-  while (received < 28) {
+  while (received < 44) {
     if (fpgaSerial.available()) {
       payload[received++] = fpgaSerial.read();
     }
     if (millis() - startWait > 5000) {
-      Serial.printf("[ENROLL] Lỗi: Bị nghẽn, chỉ nhận được %d/28 byte payload\n", received);
+      Serial.printf("[ENROLL] Lỗi: Bị nghẽn, chỉ nhận được %d/44 byte payload\n", received);
       return false;
     }
   }
 
-  // Đọc nốt 2 byte cuối (CRC, ETX)
+  // Đọc nốt 2 byte cuối (CRC, ETX), with explicit diagnostics.
   startWait = millis();
   while (fpgaSerial.available() < 2) {
-    if (millis() - startWait > 1000) break;
+    if (millis() - startWait > 5000) {
+      Serial.printf("[ENROLL] Timeout CRC/ETX, còn %d byte trong đệm\n",
+                    fpgaSerial.available());
+      return false;
+    }
+    delay(2);
   }
-  fpgaSerial.read(); // CRC
-  fpgaSerial.read(); // ETX
+  uint8_t receivedCrc = fpgaSerial.read();
+  uint8_t receivedEtx = fpgaSerial.read();
+  uint8_t calculatedCrc = 0;
+  for (int i = 0; i < 44; ++i) calculatedCrc ^= payload[i];
+  Serial.printf("[ENROLL] CRC nhận=0x%02X tính=0x%02X ETX=0x%02X\n",
+                receivedCrc, calculatedCrc, receivedEtx);
+  if (receivedCrc != calculatedCrc || receivedEtx != ETX) {
+    Serial.println("[ENROLL] Lỗi CRC hoặc ETX");
+    return false;
+  }
 
   helperHexOut = bytesToHexString(payload, 12);
-  keyHexOut    = bytesToHexString(payload + 12, 16);
+  keyHexOut    = bytesToHexString(payload + 12, 32);
 
   Serial.println("[ENROLL] <- Nhận thành công dữ liệu từ FPGA:");
   Serial.println("         Helper Data (12B): " + helperHexOut);
-  Serial.println("         Key (16B)        : " + keyHexOut);
+  Serial.println("         Key (32B)        : " + keyHexOut);
 
   return true;
 }

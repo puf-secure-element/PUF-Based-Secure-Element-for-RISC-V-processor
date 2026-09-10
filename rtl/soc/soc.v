@@ -113,7 +113,11 @@ module soc (
     // UART <-> AES streaming bridge
     wire    [127:0] w_uart_plaintext;
     wire            w_uart_plaintext_valid;
-    wire            w_aes_block_valid;
+    wire    w_uart_enroll_valid;
+    wire    w_aes_block_valid;
+    wire    w_enroll_block_valid;
+    wire    [95:0] w_enroll_helper;
+    wire    [255:0] w_enroll_key;
 
     // =========================================================================
     // 1. KHỐI CPU RISC-V (Bản đã nâng cấp có mem_req, mem_ready)
@@ -199,7 +203,11 @@ module soc (
 
         .uart_plaintext         (w_uart_plaintext),
         .uart_plaintext_valid   (w_uart_plaintext_valid),
+        .uart_enroll_valid      (w_uart_enroll_valid),
         .aes_block_valid        (w_aes_block_valid)
+        ,.enroll_block_valid    (w_enroll_block_valid)
+        ,.enroll_helper         (w_enroll_helper)
+        ,.enroll_key            (w_enroll_key)
     );
 
     // =========================================================================
@@ -264,9 +272,13 @@ module soc (
 
         .plaintext_valid    (w_uart_plaintext_valid),
         .plaintext          (w_uart_plaintext),
+        .enroll_valid       (w_uart_enroll_valid),
 
         .aes_block_valid    (w_aes_block_valid),
-        .aes_data_out       (data_out)
+        .aes_data_out       (data_out),
+        .enroll_block_valid (w_enroll_block_valid),
+        .enroll_helper      (w_enroll_helper),
+        .enroll_key         (w_enroll_key)
     );
 
 endmodule

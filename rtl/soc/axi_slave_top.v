@@ -28,7 +28,11 @@ module axi_slave_top (
     // NEW: UART <-> AES streaming interface
     input  wire [127:0] uart_plaintext,       // from uart_rx_buffer
     input  wire         uart_plaintext_valid, // from uart_rx_buffer (1-cycle pulse)
-    output wire         aes_block_valid       // to uart_tx_buffer (1-cycle pulse, data_out is valid)
+    input  wire         uart_enroll_valid,
+    output wire         aes_block_valid,       // to uart_tx_buffer (1-cycle pulse, data_out is valid)
+    output wire         enroll_block_valid,
+    output wire [95:0]  enroll_helper,
+    output wire [255:0] enroll_key
 );
 
     wire reg_start, soft_reset;
@@ -36,6 +40,7 @@ module axi_slave_top (
     wire puf_start, ecc_start, sha_start, aes_start;
     wire puf_valid, ecc_valid, sha_valid, sha_error, aes_done;
     wire key_ready;
+    wire enroll_mode;
 
     wire [15:0]  reg_puf_challenge;
     wire [31:0]  reg_puf_window;
@@ -108,7 +113,10 @@ module axi_slave_top (
 
         .key_ready          (key_ready),
         .plaintext_ready    (uart_plaintext_valid),
-        .uart_tx_valid      (aes_block_valid)
+        .enroll_request     (uart_enroll_valid),
+        .uart_tx_valid      (aes_block_valid),
+        .enroll_tx_valid    (enroll_block_valid),
+        .enroll_mode        (enroll_mode)
     );
 
     axi_slave_core u_core (
@@ -117,7 +125,7 @@ module axi_slave_top (
         
         .puf_challenge      (reg_puf_challenge),
         .puf_window         (reg_puf_window),
-        .ecc_mode           (reg_ecc_mode),
+        .ecc_mode           (enroll_mode ? 1'b0 : reg_ecc_mode),
         .ecc_helper_in      (reg_ecc_helper),
         .aes_decrypt_en     (reg_aes_decrypt_en),
         .aes_encrypt_en     (reg_aes_encrypt_en),
@@ -135,6 +143,8 @@ module axi_slave_top (
         .key_ready          (key_ready),
         .aes_done           (aes_done),
         .aes_dout           (hw_aes_dout)
+        ,.helper_out        (enroll_helper)
+        ,.key_out           (enroll_key)
     );
 
     assign data_out = hw_aes_dout;

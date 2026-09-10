@@ -27,9 +27,12 @@ module control_fsm (
     // NEW: Bắt tay với khối UART/CPU cho luồng AES lặp lại nhiều lần
     // plaintext_ready: xung 1 chu kỳ báo đã nhận đủ 128-bit plaintext từ UART
     input  wire plaintext_ready,
+    input wire enroll_request,
     // uart_tx_valid: xung 1 chu kỳ báo data_out (AES done) đã sẵn sàng để
     // truyền ra UART/software
     output reg  uart_tx_valid,
+    output reg enroll_tx_valid,
+    output reg enroll_mode,
 
     output reg  aes_start,
     input  wire aes_done
@@ -58,6 +61,8 @@ module control_fsm (
     // NEW: Latch yêu cầu plaintext_ready cho tới khi FSM thực sự tiêu thụ nó
     // (tránh mất xung nếu plaintext_ready tới đúng lúc FSM chưa rảnh).
     reg plaintext_pending;
+    reg enroll_pending;
+    reg enroll_active;
 
     // Timeout Counter Logic
     always @(posedge clk) begin
@@ -86,12 +91,32 @@ module control_fsm (
     always @(posedge clk) begin
         if (!rst_n || soft_reset) begin
             plaintext_pending <= 1'b0;
+            enroll_pending <= 1'b0;
         end else begin
             if (plaintext_ready) begin
                 plaintext_pending <= 1'b1;
             end else if (current_state == IDLE && next_state == RUN_AES) begin
                 plaintext_pending <= 1'b0; // đã được FSM tiêu thụ
             end
+            if (enroll_request)
+                enroll_pending <= 1'b1;
+            else if (current_state == IDLE &&
+                     (next_state == RUN_PUF || next_state == DONE_KEY))
+                enroll_pending <= 1'b0;
+        end
+    end
+
+    always @(posedge clk) begin
+        if (!rst_n || soft_reset) begin
+            enroll_active <= 1'b0;
+            enroll_mode <= 1'b0;
+        end else if (current_state == IDLE &&
+                     (next_state == RUN_PUF || next_state == DONE_KEY)) begin
+            enroll_active <= enroll_pending;
+            enroll_mode <= enroll_pending ? 1'b0 : 1'b1;
+        end else if (current_state == DONE_KEY || current_state == ERROR) begin
+            enroll_active <= 1'b0;
+            enroll_mode <= 1'b0;
         end
     end
 
@@ -100,8 +125,12 @@ module control_fsm (
         next_state = current_state;
         case (current_state)
             IDLE: begin
-                      if (!key_ready && reg_start) 
-                          next_state = RUN_PUF;              // Chỉ chạy derive key khi CHƯA có key
+                  if (enroll_pending && !key_ready)
+                      next_state = RUN_PUF;
+                  else if (enroll_pending && key_ready)
+                      next_state = DONE_KEY;
+                  else if (!key_ready && reg_start)
+                      next_state = RUN_PUF;              // Chỉ chạy derive key khi CHƯA có key
                       else if (key_ready && plaintext_pending) 
                           next_state = RUN_AES;              // Có key + có plaintext -> chạy AES
                   end
@@ -143,6 +172,7 @@ module control_fsm (
             sha_start      <= 1'b0;
             aes_start      <= 1'b0;
             uart_tx_valid  <= 1'b0;
+            enroll_tx_valid <= 1'b0;
         end else begin
             hw_done_pulse  <= 1'b0;
             hw_error_pulse <= 1'b0;
@@ -151,13 +181,22 @@ module control_fsm (
             sha_start      <= 1'b0;
             aes_start      <= 1'b0;
             uart_tx_valid  <= 1'b0;
+            enroll_tx_valid <= 1'b0;
 
             case (next_state)
                 IDLE:     hw_busy <= 1'b0;
-                RUN_PUF:  begin hw_busy <= 1'b1; puf_start <= 1'b1; end
+                RUN_PUF:  begin
+                    hw_busy <= 1'b1;
+                    puf_start <= 1'b1;
+                end
                 RUN_ECC:  ecc_start <= 1'b1;
                 RUN_SHA:  sha_start <= 1'b1;
-                DONE_KEY: begin hw_done_pulse <= 1'b1; hw_busy <= 1'b0; end
+                DONE_KEY: begin
+                    hw_done_pulse <= 1'b1;
+                    hw_busy <= 1'b0;
+                    if (enroll_active || enroll_pending)
+                        enroll_tx_valid <= 1'b1;
+                end
                 RUN_AES:  begin hw_busy <= 1'b1; aes_start <= 1'b1; end
                 DONE_AES: begin hw_done_pulse <= 1'b1; uart_tx_valid <= 1'b1; hw_busy <= 1'b0; end
                 ERROR:    begin hw_error_pulse <= 1'b1; hw_busy <= 1'b0; end

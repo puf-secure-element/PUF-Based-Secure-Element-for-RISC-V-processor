@@ -18,7 +18,8 @@ initial begin
     mem[2] = 32'h00000313;     // addi x6,x0,0
     mem[3] = 32'h0062A023;     // sw x6,0(x5)
 
-    // Write: UART address 0x1104 – data 0x0000001B (50 MHz / 16 / 115200)
+    // Write: UART address 0x1104 – data 0x0000001B
+    // (25 MHz / 16 / 57600, matching the SoC clock)
     mem[4] = 32'h00428293;     // addi x5,x5,0x004
     mem[5] = 32'h01B00313;     // addi x6,x0,0x1B
     mem[6] = 32'h0062A023;     // sw x6,0(x5)

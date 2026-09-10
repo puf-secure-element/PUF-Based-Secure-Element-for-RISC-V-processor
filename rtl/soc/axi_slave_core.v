@@ -25,7 +25,9 @@ module axi_slave_core (
     output wire         aes_done,
 
     // Dữ liệu trả về Reg Bank
-    output wire [127:0] aes_dout
+    output wire [127:0] aes_dout,
+    output wire [95:0] helper_out,
+    output wire [255:0] key_out
 );
 
     wire [511:0]    w_puf_response;
@@ -46,7 +48,10 @@ module axi_slave_core (
             if(ecc_valid)
                 ecc_valid_reg <= 1'b1; // Capture ECC response when valid
         end
+
     end
+
+    assign key_out = key_reg;
 
     // 1. PUF
     ro_puf_core u_puf (
@@ -69,7 +74,7 @@ module axi_slave_core (
         .raw_resp_i      (w_puf_response),
         .helper_in_i     (ecc_helper_in), 
         .helper_val_i    (1'b1),         
-        .helper_out_o    (),         
+        .helper_out_o    (helper_out),
         .corr_resp_o     (w_ecc_response),
         .corr_resp_val_o (ecc_valid)
     );

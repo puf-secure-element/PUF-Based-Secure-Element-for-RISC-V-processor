@@ -23,10 +23,14 @@ module uart_top (//AHB interface
                  //Plaintext output
                  output wire         plaintext_valid,
                  output wire [127:0] plaintext,
+                 output wire         enroll_valid,
 
                  //Ciphertext input (AES block ready to transmit)
                  input wire          aes_block_valid,
-                 input wire [127:0]  aes_data_out
+                 input wire [127:0]  aes_data_out,
+                 input wire          enroll_block_valid,
+                 input wire [95:0]   enroll_helper,
+                 input wire [255:0]  enroll_key
                 );
   
   wire       bclk;
@@ -154,12 +158,16 @@ module uart_top (//AHB interface
                             .rx_wr(rx_wr),
                             .rx_data(rx_data_in),
                             .plaintext_valid(plaintext_valid),
-                            .plaintext(plaintext));
+                            .plaintext(plaintext),
+                            .enroll_valid(enroll_valid));
 
   uart_tx_buffer u_tx_buffer (.clk(HCLK),
                              .rst_n(HRESETN),
                              .encrypted_plaintext(aes_data_out),
                              .encrypted_plaintext_valid(aes_block_valid),
+                             .enroll_helper(enroll_helper),
+                             .enroll_key(enroll_key),
+                             .enroll_response_valid(enroll_block_valid),
                              .tx_full_status(tx_full_status),
                              .tx_data(hw_tx_data),
                              .tx_wr(hw_tx_wr),

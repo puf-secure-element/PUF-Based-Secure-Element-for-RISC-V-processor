@@ -5,7 +5,9 @@ module ro_cell #(
     output logic ro_out
 );
 
-`ifndef SYNTHESIS
+// Define RO_CELL_SIMULATION only for RTL simulation. The FPGA build must use
+// the synthesizable ring-oscillator chain below.
+`ifdef RO_CELL_SIMULATION
     real  delay_ns;
     logic clk_sim;
 

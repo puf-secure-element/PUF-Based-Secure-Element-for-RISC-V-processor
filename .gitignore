@@ -1,0 +1,17 @@
+# ==========================================
+# Quartus Prime generated folders & files
+# ==========================================
+**/db/
+**/incremental_db/
+**/output_files/
+**/simulation/
+**/greybox_tmp/
+**/hps_isw_handoff/
+**/.qsys_edit/
+
+# Temporary and backup files
+**/*.bak
+**/*.orig
+**/*.qws
+**/*.done
+**/*.chg

@@ -22,10 +22,12 @@ module de10_standard (
 
     // *** TEMP DIAGNOSTIC -- REVERT BEFORE REAL USE ***
     // Free-running counter wired straight to CLOCK_50/KEY[0], with zero
-    // dependency on `soc` (no PUF, UART, CPU, or AES involved at all).
-    // If LEDR[9] does not visibly blink (~0.7s period) on real hardware,
-    // the problem is at the board / programming / clock / JTAG level --
-    // not anywhere inside the SoC design, since this path never touches it.
+    // dependency on `soc`. Confirmed already: this blinks fine on real
+    // hardware, proving board/clock/JTAG/programming are all healthy.
+    // Kept on LEDR[8] now as a "board is alive" reference while LEDR[9]
+    // goes back to the real irq signal -- with ro_puf_core's hardware
+    // removed from synthesis entirely (see axi_slave_core.v), does the
+    // actual SoC come alive this time?
     reg [25:0] diag_counter;
     always @(posedge CLOCK_50 or negedge KEY[0]) begin
         if (!KEY[0])
@@ -34,7 +36,8 @@ module de10_standard (
             diag_counter <= diag_counter + 26'd1;
     end
 
-    assign LEDR[8:0] = data_out[8:0];
-    assign LEDR[9]   = diag_counter[25];
+    assign LEDR[7:0] = data_out[7:0];
+    assign LEDR[8]   = diag_counter[25];
+    assign LEDR[9]   = irq;
 
 endmodule

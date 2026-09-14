@@ -227,10 +227,17 @@ initial begin
 
 
     // =========================================================
-    // ERROR LOOP
+    // ERROR LOOP -> RETRY
+    // PUF is a physical, occasionally-noisy measurement; a single
+    // PUF->ECC->SHA attempt is not guaranteed to succeed (timeout or
+    // sha_error sends control_fsm to ERROR, which never sets key_ready).
+    // Dead-ending here left key_ready stuck at 0 forever -- the whole
+    // UART auto-encrypt path needs key_ready, so one bad measurement
+    // permanently silenced the board until the next full reconfigure.
+    // Jump back to re-issue START=1 and retry the whole chain instead.
     // =========================================================
 
-    mem[61] = 32'h0000006F;
+    mem[61] = 32'hFB9FF06F;    // jal x0,-72  -> mem[43] (re-issue START=1)
 
 end
 

@@ -84,10 +84,9 @@ void loop() {
     return;
   }
 
-  checkPendingAndProcess(); // Xử lý Auth
-  // checkPendingEnroll();  // TẠM TẮT: RTL hiện chưa có command dispatcher
-  // STX/CMD/LEN nào cho Enroll, gọi hàm này sẽ luôn timeout 30s mỗi 1.5s.
-  // Bật lại khi phần cứng hỗ trợ Enroll thật.
+  checkForBootEnrollFrame(); // Âm thầm bắt khung Enroll nếu FPGA vừa reset
+  checkPendingAndProcess();  // Xử lý Auth
+  checkPendingEnroll();      // Gửi lên backend nếu đã có job + đã bắt được khung
   delay(POLL_INTERVAL_MS);
 }
 
@@ -186,6 +185,72 @@ void postBoardResponse(const String& sessionId, const String& cipherHex) {
 // ========================================================
 // 2. TÁC VỤ ENROLL (ĐĂNG KÝ HELPER DATA & KHÓA)
 // ========================================================
+//
+// RTL không có bộ phân giải lệnh STX/CMD/LEN cho Enroll -- FPGA tự động
+// phát ra đúng 1 khung Enroll response duy nhất ngay sau khi PUF->ECC->SHA
+// chạy xong lúc mới boot/reset (không chờ ESP gửi yêu cầu). Vì vậy ESP
+// không "hỏi rồi đợi" nữa, mà âm thầm lắng nghe khung này xuất hiện bất cứ
+// lúc nào (thường là ngay sau khi người dùng bấm KEY0 reset board), cache
+// lại, rồi khi backend báo có job Enroll đang chờ thì gửi cache đó lên.
+//
+// Khung nhận về (căn chỉnh 4-byte, khớp firmware Instruction_memory.v):
+//   byte 0-3:   STX(0x02) CMD(0x81) LEN(0x2C) RESERVED
+//   byte 4-15:  12 byte Helper Data
+//   byte 16-47: 32 byte Key
+//   byte 48-51: CRC ETX(0x03) RESERVED RESERVED
+
+bool   enrollFrameCaptured = false;
+String cachedHelperHex, cachedKeyHex;
+
+void checkForBootEnrollFrame() {
+  if (enrollFrameCaptured) return;   // đã bắt được rồi, không cần nghe nữa
+  if (!Serial.available()) return;
+
+  uint8_t stx = Serial.read();
+  if (stx != STX) return;            // byte rác/không liên quan, bỏ qua
+
+  // Còn 51 byte nữa sau STX (CMD,LEN,RESERVED + 44 payload + CRC,ETX,x2 RESERVED).
+  // Nếu đúng là khung Enroll thật, cả 51 byte này tới gần như ngay lập tức
+  // (52 byte @ 115200 baud ~ 4.5ms) -- timeout ngắn là đủ, không chặn Auth lâu.
+  uint8_t rest[51];
+  int received = 0;
+  unsigned long startWait = millis();
+  while (received < 51) {
+    if (Serial.available()) {
+      rest[received++] = Serial.read();
+    }
+    if (millis() - startWait > 200) {
+      return; // STX rơi lẻ, không có gì theo sau -- không phải khung Enroll thật
+    }
+  }
+
+  uint8_t cmd = rest[0];
+  uint8_t len = rest[1];
+  if (cmd != CMD_ENROLL_RESPONSE || len != 44) {
+    return; // trùng STX ngẫu nhiên, không phải khung Enroll -- bỏ qua
+  }
+
+  uint8_t* payload      = rest + 3;   // 44 byte: rest[3..46]
+  uint8_t  receivedCrc  = rest[47];
+  uint8_t  receivedEtx  = rest[48];
+
+  uint8_t calculatedCrc = 0;
+  for (int i = 0; i < 44; ++i) calculatedCrc ^= payload[i];
+
+  if (receivedEtx != ETX || receivedCrc != calculatedCrc) {
+    Serial1.printf("[ENROLL] Bắt được khung nhưng CRC/ETX sai (crc nhận=0x%02X tính=0x%02X etx=0x%02X) -- bỏ qua\n",
+                  receivedCrc, calculatedCrc, receivedEtx);
+    return;
+  }
+
+  cachedHelperHex = bytesToHexString(payload, 12);
+  cachedKeyHex    = bytesToHexString(payload + 12, 32);
+  enrollFrameCaptured = true;
+
+  Serial1.println("\n--- [ENROLL] Bắt được khung Enroll tự động từ FPGA:");
+  Serial1.println("         Helper Data (12B): " + cachedHelperHex);
+  Serial1.println("         Key (32B)        : " + cachedKeyHex);
+}
 
 void checkPendingEnroll() {
   HTTPClient http;
@@ -211,103 +276,15 @@ void checkPendingEnroll() {
   StaticJsonDocument<128> doc;
   if (deserializeJson(doc, body)) return;
   String jobId = doc["job_id"].as<String>();
-  Serial1.println("\n--- [ENROLL] Phát hiện Job mới: " + jobId);
 
-  String helperHex, keyHex;
-  if (!sendEnrollRequestAndGetResult(helperHex, keyHex)) {
-    Serial1.println("[ENROLL] Thất bại khi lấy dữ liệu từ FPGA");
+  if (!enrollFrameCaptured) {
+    Serial1.println("\n--- [ENROLL] Job " + jobId + " đang chờ, nhưng chưa bắt được khung Enroll từ FPGA.");
+    Serial1.println("    Bấm KEY0 reset board FPGA -- nó sẽ tự phát khung Enroll, ESP sẽ tự bắt ở loop() kế tiếp.");
     return;
   }
-  postEnrollResponse(jobId, helperHex, keyHex);
-}
 
-bool sendEnrollRequestAndGetResult(String& helperHexOut, String& keyHexOut) {
-  // Xóa sạch rác trong buffer nhận trước khi gửi yêu cầu mới
-  while (Serial.available()) Serial.read();
-
-  uint8_t crc = 0; // Payload rỗng -> CRC = 0
-
-  // Gửi đúng khung yêu cầu: [STX][0x01][LEN=0][CRC=0][ETX]
-  Serial.write(STX);
-  Serial.write(CMD_ENROLL_REQUEST);
-  Serial.write((uint8_t)0);
-  Serial.write(crc);
-  Serial.write(ETX);
-  Serial.flush();
-  Serial1.printf("[ENROLL] -> Đã gửi 5 byte: 02 01 00 00 03, FPGA baud=%ld\n", FPGA_BAUD);
-  Serial1.printf("[ENROLL] RX buffer ngay sau gửi: %d byte\n", Serial.available());
-
-  // PUF hardware measurement may take time, but report progress instead of
-  // hiding whether the UART receives anything.
-  unsigned long startWait = millis();
-  unsigned long lastReport = startWait;
-  while (Serial.available() < 3) {
-    if (millis() - lastReport >= 1000) {
-      Serial1.printf("[ENROLL] Đang chờ header: %lu ms, RX buffer=%d byte\n",
-                    millis() - startWait, Serial.available());
-      lastReport = millis();
-    }
-    if (millis() - startWait > 30000) {
-      Serial1.printf("[ENROLL] Timeout chờ phản hồi (Chỉ nhận được %d byte trong đệm)\n", Serial.available());
-      return false;
-    }
-    delay(10);
-  }
-
-  uint8_t stx = Serial.read();
-  uint8_t cmd = Serial.read();
-  uint8_t len = Serial.read();
-
-  Serial1.printf("[ENROLL] Header nhận được: STX=0x%02X, CMD=0x%02X, LEN=%d\n", stx, cmd, len);
-
-  if (stx != STX || cmd != CMD_ENROLL_RESPONSE || len != 44) {
-    Serial1.println("[ENROLL] Lỗi: Frame phản hồi sai định dạng chuẩn!");
-    return false;
-  }
-
-  // Đọc đủ 44 byte payload (12 byte Helper Data + 32 byte AES-256 key)
-  uint8_t payload[44];
-  int received = 0;
-  startWait = millis();
-  while (received < 44) {
-    if (Serial.available()) {
-      payload[received++] = Serial.read();
-    }
-    if (millis() - startWait > 5000) {
-      Serial1.printf("[ENROLL] Lỗi: Bị nghẽn, chỉ nhận được %d/44 byte payload\n", received);
-      return false;
-    }
-  }
-
-  // Đọc nốt 2 byte cuối (CRC, ETX), with explicit diagnostics.
-  startWait = millis();
-  while (Serial.available() < 2) {
-    if (millis() - startWait > 5000) {
-      Serial1.printf("[ENROLL] Timeout CRC/ETX, còn %d byte trong đệm\n",
-                    Serial.available());
-      return false;
-    }
-    delay(2);
-  }
-  uint8_t receivedCrc = Serial.read();
-  uint8_t receivedEtx = Serial.read();
-  uint8_t calculatedCrc = 0;
-  for (int i = 0; i < 44; ++i) calculatedCrc ^= payload[i];
-  Serial1.printf("[ENROLL] CRC nhận=0x%02X tính=0x%02X ETX=0x%02X\n",
-                receivedCrc, calculatedCrc, receivedEtx);
-  if (receivedCrc != calculatedCrc || receivedEtx != ETX) {
-    Serial1.println("[ENROLL] Lỗi CRC hoặc ETX");
-    return false;
-  }
-
-  helperHexOut = bytesToHexString(payload, 12);
-  keyHexOut    = bytesToHexString(payload + 12, 32);
-
-  Serial1.println("[ENROLL] <- Nhận thành công dữ liệu từ FPGA:");
-  Serial1.println("         Helper Data (12B): " + helperHexOut);
-  Serial1.println("         Key (32B)        : " + keyHexOut);
-
-  return true;
+  Serial1.println("\n--- [ENROLL] Gửi dữ liệu đã cache cho Job: " + jobId);
+  postEnrollResponse(jobId, cachedHelperHex, cachedKeyHex);
 }
 
 void postEnrollResponse(const String& jobId, const String& helperHex, const String& keyHex) {

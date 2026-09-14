@@ -220,10 +220,12 @@ initial begin
 
 
     // =========================================================
-    // SUCCESS LOOP
+    // SUCCESS LOOP -> jump forward to the Enroll-response sender at
+    // mem[62] (skipping over mem[61]'s error-retry jal, which must stay
+    // reachable at its original index for the WAIT_SHA poll loop above).
     // =========================================================
 
-    mem[60] = 32'h0000006F;
+    mem[60] = 32'h0080006F;    // jal x0,8  -> mem[62]
 
 
     // =========================================================
@@ -238,6 +240,147 @@ initial begin
     // =========================================================
 
     mem[61] = 32'hFB9FF06F;    // jal x0,-72  -> mem[43] (re-issue START=1)
+
+
+    // =========================================================
+    // ENROLL RESPONSE SENDER (runs once, right after key_ready)
+    //
+    // Reads the ECC helper data + SHA-derived key that were just computed
+    // during the boot-time PUF->ECC->SHA sequence above (ECC_MODE was
+    // configured as Enrollment at mem[17-19]), and sends them to the host
+    // over UART as one 64-byte transmission (4 x 16-byte MANUAL_TX
+    // blocks), framed for esp_new4.ino's Enroll parser:
+    //
+    //   Word0  (bytes 0-3):   STX(0x02) CMD(0x81) LEN(0x2C) RESERVED(0x00)
+    //   Word1-3:              HELPER_OUT_0,1,2        (12 bytes)
+    //   Word4-11:              KEY_OUT_0..7            (32 bytes)
+    //   Word12 (bytes 48-51):  CRC ETX(0x03) RESERVED RESERVED
+    //   Word13-15:             padding (never read by the host)
+    //
+    // The frame is deliberately byte-aligned to 32-bit register boundaries
+    // (1 reserved byte after LEN, 2 after ETX) so this firmware only ever
+    // needs straight register copies into MANUAL_TX_0..3 -- no bit-level
+    // byte-shifting/realignment. CRC is read pre-computed from the
+    // ENROLL_CRC hardware register (XOR-fold of the 44 payload bytes is
+    // order-independent, so straight register copies here still line up
+    // with whatever byte order the ESP receives and re-XORs).
+    //
+    // Generated + verified against a Python RV32I simulator exercising
+    // this exact instruction sequence with synthetic register values
+    // before being hand-placed here (see PR description).
+    // =========================================================
+
+    // -- Read HELPER_OUT_0..2 into x10,x11,x12 --
+    mem[62]  = 32'h06000293;    // addi x5,x0,0x60        (HELPER_OUT_0)
+    mem[63]  = 32'h0002A503;    // lw   x10,0(x5)
+    mem[64]  = 32'h06400293;    // addi x5,x0,0x64        (HELPER_OUT_1)
+    mem[65]  = 32'h0002A583;    // lw   x11,0(x5)
+    mem[66]  = 32'h06800293;    // addi x5,x0,0x68        (HELPER_OUT_2)
+    mem[67]  = 32'h0002A603;    // lw   x12,0(x5)
+
+    // -- Read KEY_OUT_0..7 into x13..x20 --
+    mem[68]  = 32'h09000293;    // addi x5,x0,0x90        (KEY_OUT_0)
+    mem[69]  = 32'h0002A683;    // lw   x13,0(x5)
+    mem[70]  = 32'h09400293;    // addi x5,x0,0x94        (KEY_OUT_1)
+    mem[71]  = 32'h0002A703;    // lw   x14,0(x5)
+    mem[72]  = 32'h09800293;    // addi x5,x0,0x98        (KEY_OUT_2)
+    mem[73]  = 32'h0002A783;    // lw   x15,0(x5)
+    mem[74]  = 32'h09C00293;    // addi x5,x0,0x9C        (KEY_OUT_3)
+    mem[75]  = 32'h0002A803;    // lw   x16,0(x5)
+    mem[76]  = 32'h0A000293;    // addi x5,x0,0xA0        (KEY_OUT_4)
+    mem[77]  = 32'h0002A883;    // lw   x17,0(x5)
+    mem[78]  = 32'h0A400293;    // addi x5,x0,0xA4        (KEY_OUT_5)
+    mem[79]  = 32'h0002A903;    // lw   x18,0(x5)
+    mem[80]  = 32'h0A800293;    // addi x5,x0,0xA8        (KEY_OUT_6)
+    mem[81]  = 32'h0002A983;    // lw   x19,0(x5)
+    mem[82]  = 32'h0AC00293;    // addi x5,x0,0xAC        (KEY_OUT_7)
+    mem[83]  = 32'h0002AA03;    // lw   x20,0(x5)
+
+    // -- Read ENROLL_CRC into x21 --
+    mem[84]  = 32'h0B000293;    // addi x5,x0,0xB0        (ENROLL_CRC)
+    mem[85]  = 32'h0002AA83;    // lw   x21,0(x5)
+
+    // -- Build header_word = {STX,CMD,LEN,0x00} = 0x02812C00 into x22 --
+    mem[86]  = 32'h02813B37;    // lui  x22,0x02813
+    mem[87]  = 32'hC00B0B13;    // addi x22,x22,-1024     (0x02813000-0x400=0x02812C00)
+
+    // -- Build tail_word = {CRC,ETX,0x00,0x00} into x23, from x21 --
+    mem[88]  = 32'h018A9B93;    // slli x23,x21,24               (x23 = CRC<<24)
+    mem[89]  = 32'h00030337;    // lui  x6,0x30                  (x6 = 0x00030000 = ETX<<16)
+    mem[90]  = 32'h006BEBB3;    // or   x23,x23,x6               (x23 = tail_word)
+
+    // -- Chunk 1: header, helper0, helper1, helper2 --
+    mem[91]  = 32'h07C00293;    // addi x5,x0,0x7C        (MANUAL_TX_3)
+    mem[92]  = 32'h0162A023;    // sw   x22,0(x5)
+    mem[93]  = 32'h07800293;    // addi x5,x0,0x78        (MANUAL_TX_2)
+    mem[94]  = 32'h00A2A023;    // sw   x10,0(x5)
+    mem[95]  = 32'h07400293;    // addi x5,x0,0x74        (MANUAL_TX_1)
+    mem[96]  = 32'h00B2A023;    // sw   x11,0(x5)
+    mem[97]  = 32'h07000293;    // addi x5,x0,0x70        (MANUAL_TX_0)
+    mem[98]  = 32'h00C2A023;    // sw   x12,0(x5)
+    mem[99]  = 32'h08000293;    // addi x5,x0,0x80        (MANUAL_TX_CTRL)
+    mem[100] = 32'h00100313;    // addi x6,x0,1
+    mem[101] = 32'h0062A023;    // sw   x6,0(x5)                 (trigger send)
+    mem[102] = 32'h08400293;    // addi x5,x0,0x84        (MANUAL_TX_STAT)
+    mem[103] = 32'h0002AC03;    // poll1: lw x24,0(x5)
+    mem[104] = 32'h001C7C13;    // andi x24,x24,1
+    mem[105] = 32'hFE0C1CE3;    // bne  x24,x0,-8 -> mem[103]
+
+    // -- Chunk 2: key0, key1, key2, key3 --
+    mem[106] = 32'h07C00293;    // addi x5,x0,0x7C        (MANUAL_TX_3)
+    mem[107] = 32'h00D2A023;    // sw   x13,0(x5)
+    mem[108] = 32'h07800293;    // addi x5,x0,0x78        (MANUAL_TX_2)
+    mem[109] = 32'h00E2A023;    // sw   x14,0(x5)
+    mem[110] = 32'h07400293;    // addi x5,x0,0x74        (MANUAL_TX_1)
+    mem[111] = 32'h00F2A023;    // sw   x15,0(x5)
+    mem[112] = 32'h07000293;    // addi x5,x0,0x70        (MANUAL_TX_0)
+    mem[113] = 32'h0102A023;    // sw   x16,0(x5)
+    mem[114] = 32'h08000293;    // addi x5,x0,0x80        (MANUAL_TX_CTRL)
+    mem[115] = 32'h00100313;    // addi x6,x0,1
+    mem[116] = 32'h0062A023;    // sw   x6,0(x5)                 (trigger send)
+    mem[117] = 32'h08400293;    // addi x5,x0,0x84        (MANUAL_TX_STAT)
+    mem[118] = 32'h0002AC03;    // poll2: lw x24,0(x5)
+    mem[119] = 32'h001C7C13;    // andi x24,x24,1
+    mem[120] = 32'hFE0C1CE3;    // bne  x24,x0,-8 -> mem[118]
+
+    // -- Chunk 3: key4, key5, key6, key7 --
+    mem[121] = 32'h07C00293;    // addi x5,x0,0x7C        (MANUAL_TX_3)
+    mem[122] = 32'h0112A023;    // sw   x17,0(x5)
+    mem[123] = 32'h07800293;    // addi x5,x0,0x78        (MANUAL_TX_2)
+    mem[124] = 32'h0122A023;    // sw   x18,0(x5)
+    mem[125] = 32'h07400293;    // addi x5,x0,0x74        (MANUAL_TX_1)
+    mem[126] = 32'h0132A023;    // sw   x19,0(x5)
+    mem[127] = 32'h07000293;    // addi x5,x0,0x70        (MANUAL_TX_0)
+    mem[128] = 32'h0142A023;    // sw   x20,0(x5)
+    mem[129] = 32'h08000293;    // addi x5,x0,0x80        (MANUAL_TX_CTRL)
+    mem[130] = 32'h00100313;    // addi x6,x0,1
+    mem[131] = 32'h0062A023;    // sw   x6,0(x5)                 (trigger send)
+    mem[132] = 32'h08400293;    // addi x5,x0,0x84        (MANUAL_TX_STAT)
+    mem[133] = 32'h0002AC03;    // poll3: lw x24,0(x5)
+    mem[134] = 32'h001C7C13;    // andi x24,x24,1
+    mem[135] = 32'hFE0C1CE3;    // bne  x24,x0,-8 -> mem[133]
+
+    // -- Chunk 4: tail (CRC,ETX,..), then 3 don't-care padding words --
+    mem[136] = 32'h07C00293;    // addi x5,x0,0x7C        (MANUAL_TX_3)
+    mem[137] = 32'h0172A023;    // sw   x23,0(x5)
+    mem[138] = 32'h07800293;    // addi x5,x0,0x78        (MANUAL_TX_2)
+    mem[139] = 32'h0002A023;    // sw   x0,0(x5)                 (padding)
+    mem[140] = 32'h07400293;    // addi x5,x0,0x74        (MANUAL_TX_1)
+    mem[141] = 32'h0002A023;    // sw   x0,0(x5)                 (padding)
+    mem[142] = 32'h07000293;    // addi x5,x0,0x70        (MANUAL_TX_0)
+    mem[143] = 32'h0002A023;    // sw   x0,0(x5)                 (padding)
+    mem[144] = 32'h08000293;    // addi x5,x0,0x80        (MANUAL_TX_CTRL)
+    mem[145] = 32'h00100313;    // addi x6,x0,1
+    mem[146] = 32'h0062A023;    // sw   x6,0(x5)                 (trigger send)
+    mem[147] = 32'h08400293;    // addi x5,x0,0x84        (MANUAL_TX_STAT)
+    mem[148] = 32'h0002AC03;    // poll4: lw x24,0(x5)
+    mem[149] = 32'h001C7C13;    // andi x24,x24,1
+    mem[150] = 32'hFE0C1CE3;    // bne  x24,x0,-8 -> mem[148]
+
+    // -- Done: halt forever (hardware AES/UART auto-path continues to
+    //    handle Auth traffic autonomously without any further CPU work,
+    //    exactly as it already did before this Enroll code existed) --
+    mem[151] = 32'h0000006F;    // jal x0,0
 
 end
 

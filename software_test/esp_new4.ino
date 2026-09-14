@@ -3,8 +3,8 @@
   Chuẩn giao thức Khung: [STX][CMD][LEN][PAYLOAD][CRC][ETX]
 
   Nối dây:
-    D5 (GPIO14) --> RX của mạch UART-TTL/FPGA
-    D6 (GPIO12) <-- TX của mạch UART-TTL/FPGA
+    D5 (GPIO14) --> TX của mạch UART-TTL/FPGA
+    D6 (GPIO12) <-- RX của mạch UART-TTL/FPGA
     GND         --- GND chung
 */
 
@@ -16,7 +16,7 @@
 
 const char* WIFI_SSID     = "Nhu Ngoc";
 const char* WIFI_PASSWORD = "nn7677032022";
-const char* BACKEND_URL = "http:// 192.168.1.52:5000";
+const char* BACKEND_URL = "http://192.168.1.52:5000";
 //const char* WIFI_SSID     = "Hehe";
 //const char* WIFI_PASSWORD = "123456789";
 //const char* BACKEND_URL = "http://10.152.89.151:5000";
@@ -112,64 +112,39 @@ void checkPendingAndProcess() {
 }
 
 String sendNonceToBoardAndGetCipher(const String& nonceHex) {
-  // Xóa sạch rác trong buffer nhận trước khi gửi
   while (fpgaSerial.available()) fpgaSerial.read();
 
   uint8_t nonce[16];
   hexStringToBytes(nonceHex, nonce, 16);
 
-  // Tính CRC cho 16 byte Payload
-  uint8_t crc = 0;
-  for (int i = 0; i < 16; i++) crc ^= nonce[i];
-
-  // Gửi khung: [STX][CMD][LEN][PAYLOAD][CRC][ETX]
-  fpgaSerial.write(STX);
-  fpgaSerial.write(CMD_AUTH_CHALLENGE);
-  fpgaSerial.write((uint8_t)16);
   fpgaSerial.write(nonce, 16);
-  fpgaSerial.write(crc);
-  fpgaSerial.write(ETX);
-  Serial.println("[AUTH] -> Đã gửi Frame Challenge sang FPGA");
+  fpgaSerial.flush();
+  Serial.println("[AUTH] -> Đã gửi 16 byte nonce thô sang FPGA");
 
-  // Chờ tối thiểu 3 byte Header (STX, CMD, LEN)
-  unsigned long startWait = millis();
-  while (fpgaSerial.available() < 3) {
-    if (millis() - startWait > 5000) {
-      Serial.println("[AUTH] Timeout chờ Header phản hồi từ FPGA");
+  uint8_t cipher[16];
+  int received = 0;
+  unsigned long lastByte = millis();
+  unsigned long lastReport = lastByte;
+
+  while (received < 16) {
+    if (fpgaSerial.available()) {
+      cipher[received++] = fpgaSerial.read();
+      lastByte = millis();
+    }
+    if (millis() - lastReport >= 1000) {
+      Serial.printf("[AUTH] Chờ cipher: %d/16 byte\n", received);
+      lastReport = millis();
+    }
+    if (millis() - lastByte > 5000) {
+      Serial.printf("[AUTH] Timeout, chỉ nhận %d/16 byte\n", received);
       return "";
     }
-    delay(5);
+    yield();
   }
 
-  uint8_t stx = fpgaSerial.read();
-  uint8_t cmd = fpgaSerial.read();
-  uint8_t len = fpgaSerial.read();
-
-  if (stx != STX || cmd != CMD_AUTH_RESPONSE) {
-    Serial.printf("[AUTH] Frame sai header! STX: 0x%02X, CMD: 0x%02X\n", stx, cmd);
-    return "";
-  }
-
-  // Đọc Payload (16 byte Cipher)
-  uint8_t payload[64];
-  int received = 0;
-  startWait = millis();
-  while (received < len) {
-    if (fpgaSerial.available()) payload[received++] = fpgaSerial.read();
-    if (millis() - startWait > 3000) return "";
-  }
-
-  // Đọc 2 byte cuối (CRC và ETX)
-  startWait = millis();
-  while (fpgaSerial.available() < 2) {
-    if (millis() - startWait > 1000) break;
-  }
-  fpgaSerial.read(); // CRC
-  fpgaSerial.read(); // ETX
-
-  String cipher = bytesToHexString(payload, len);
-  Serial.println("[AUTH] <- Nhận thành công Cipher: " + cipher);
-  return cipher;
+  String cipherHex = bytesToHexString(cipher, 16);
+  Serial.println("[AUTH] <- Cipher: " + cipherHex);
+  return cipherHex;
 }
 
 void postBoardResponse(const String& sessionId, const String& cipherHex) {

@@ -11,7 +11,7 @@ initial begin
     // INITIAL CONFIGURATION WRITES
     // =========================================================
 
-    // Write: address 0x100 – data 0x00000000
+/*   // Write: address 0x100 – data 0x00000000
     mem[0] = 32'h10000293;     // addi x5,x0,0x100
     mem[1] = 32'h00000313;     // addi x6,x0,0
     mem[2] = 32'h0062A023;     // sw x6,0(x5)
@@ -39,7 +39,25 @@ initial begin
     mem[12] = 32'h00000013;    // NOP
 
     mem[13] = 32'h0062A023;    // sw x6,0(x5)
+*/
+    mem[0]  = 32'h000013B7;    // lui  x7,0x1          -> x7 = 0x1000
+    mem[1]  = 32'h00000313;    // addi x6,x0,0         -> x6  = 0x00
+    mem[2]  = 32'h01B00E13;    // addi x28,x0,0x1B     -> x28 = 0x1B
+    mem[3]  = 32'h02300E93;    // addi x29,x0,0x23     -> x29 = 0x23
 
+    mem[4]  = 32'h1063A023;    // sw   x6,0x100(x7)    MDR = 0x00
+    mem[5]  = 32'h00000013;    // NOP
+    mem[6]  = 32'h00000013;    // NOP
+
+    mem[7]  = 32'h11C3A223;    // sw   x28,0x104(x7)   DLL = 0x1B
+    mem[8]  = 32'h00000013;    // NOP
+    mem[9]  = 32'h00000013;    // NOP
+
+    mem[10] = 32'h1063A423;    // sw   x6,0x108(x7)    DLH = 0x00
+    mem[11] = 32'h00000013;    // NOP
+    mem[12] = 32'h00000013;    // NOP
+
+    mem[13] = 32'h11D3A623;    // sw   x29,0x10C(x7)   LCR = 0x23
 
     // =========================================================
     // AES CONTROL = ENCRYPT

@@ -95,6 +95,11 @@ module RV32I(
     reg MEM_WB_Mem_To_Reg;
     reg [31:0] MEM_WB_mem_data;
     reg [31:0] MEM_WB_ALU_result;
+
+    wire [31:0] ex_mem_fwd_data =
+        (EX_MEM_Jump) ? EX_MEM_pc_plus :
+        (EX_MEM_LUI)  ? EX_MEM_imm     :
+                        EX_MEM_ALU_result;
   
     //================= GÁN TÍN HIỆU RA BUS =================//
     assign mem_req   = EX_MEM_Mem_Read || EX_MEM_Mem_Write;
@@ -109,14 +114,14 @@ module RV32I(
     
 
     //================= Assign =================//
-    assign Flush = Branch_taken || ID_EX_Jump;
+    assign Flush = (ID_EX_Branch && Branch_taken) || ID_EX_Jump;
 
     assign opcode = IF_ID_Instruction[6:0];
     assign funct3 = IF_ID_Instruction[14:12];
 
     assign forwardA_data =
         (ForwardA == 2'b00) ? ID_EX_rv1 :
-        (ForwardA == 2'b10) ? EX_MEM_ALU_result :
+        (ForwardA == 2'b10) ? ex_mem_fwd_data :
         (ForwardA == 2'b01) ? write_data :
                              ID_EX_rv1;
 

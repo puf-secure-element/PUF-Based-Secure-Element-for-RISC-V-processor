@@ -71,7 +71,9 @@ void loop() {
   }
   
   checkPendingAndProcess(); // Xử lý Auth
-  checkPendingEnroll();     // Xử lý Enroll
+  // checkPendingEnroll();  // TẠM TẮT: RTL hiện chưa có command dispatcher
+  // STX/CMD/LEN nào cho Enroll, gọi hàm này sẽ luôn timeout 30s mỗi 1.5s.
+  // Bật lại khi phần cứng hỗ trợ Enroll thật.
   delay(POLL_INTERVAL_MS);
 }
 

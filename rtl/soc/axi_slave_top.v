@@ -56,6 +56,7 @@ module axi_slave_top (
     wire [127:0] reg_aes_ciphertext;
     wire [127:0] hw_aes_dout;
     wire [95:0]  hw_ecc_helper_out;
+    wire [255:0] hw_sha_key_out;
 
     axi_reg_bank u_reg_bank (
         .clk                (clk),
@@ -94,6 +95,7 @@ module axi_slave_top (
         .reg_aes_ciphertext (reg_aes_ciphertext),
         .hw_aes_dout        (hw_aes_dout),
         .hw_ecc_helper_out  (hw_ecc_helper_out),
+        .hw_sha_key_out     (hw_sha_key_out),
 
         .hw_pt_load_valid   (uart_plaintext_valid),
         .hw_pt_load_data    (uart_plaintext),
@@ -150,7 +152,8 @@ module axi_slave_top (
         .key_ready          (key_ready),
         .aes_done           (aes_done),
         .aes_dout           (hw_aes_dout),
-        .ecc_helper_out     (hw_ecc_helper_out)
+        .ecc_helper_out     (hw_ecc_helper_out),
+        .sha_key_out        (hw_sha_key_out)
     );
 
     assign data_out = hw_aes_dout;

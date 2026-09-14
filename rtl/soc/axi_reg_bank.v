@@ -49,6 +49,10 @@ module axi_reg_bank (
     // NEW: ECC helper data (generated during Enrollment) -- read-only for CPU
     input  wire [95:0]  hw_ecc_helper_out,
 
+    // NEW: SHA-256 derived key -- read-only for CPU, reported as the
+    // Enroll "key" field
+    input  wire [255:0] hw_sha_key_out,
+
     // NEW: manual 16-byte UART TX trigger, for sending the Enroll response
     // frame. Bypasses AES entirely -- reuses the same uart_tx_buffer
     // hardware path already proven reliable for the AES auto-TX block (same
@@ -110,6 +114,21 @@ module axi_reg_bank (
     localparam MANUAL_TX_3     = 10'h07C;
     localparam MANUAL_TX_CTRL  = 10'h080; // Ghi bit0=1 -> xung 1 chu kỳ "gửi ngay"
     localparam MANUAL_TX_STAT  = 10'h084; // Đọc bit0 = đang bận gửi (tx_busy)
+
+    // Vùng nhớ 256-bit ĐỌC khóa SHA-256 dùng làm "key" báo cáo trong Enroll
+    localparam KEY_OUT_0       = 10'h090;
+    localparam KEY_OUT_1       = 10'h094;
+    localparam KEY_OUT_2       = 10'h098;
+    localparam KEY_OUT_3       = 10'h09C;
+    localparam KEY_OUT_4       = 10'h0A0;
+    localparam KEY_OUT_5       = 10'h0A4;
+    localparam KEY_OUT_6       = 10'h0A8;
+    localparam KEY_OUT_7       = 10'h0AC;
+
+    // Byte CRC (XOR-fold phần cứng của toàn bộ 44 byte payload Enroll:
+    // 12 byte helper + 32 byte key) -- tính sẵn bằng tổ hợp logic để
+    // firmware không cần viết vòng lặp XOR bằng tay.
+    localparam ENROLL_CRC      = 10'h0B0;
 
     localparam ADDR_ID         = 10'h0F8;
     localparam ADDR_VERSION    = 10'h0FC;
@@ -191,6 +210,19 @@ module axi_reg_bank (
 
     assign manual_tx_start = slv_reg_wren && (axi_awaddr[7:0] == MANUAL_TX_CTRL) && axi_wstrb_reg[0] && axi_wdata_reg[0];
     assign manual_tx_data  = {manual_tx_reg[3], manual_tx_reg[2], manual_tx_reg[1], manual_tx_reg[0]};
+
+    // NEW: CRC = XOR-fold 44 byte payload Enroll (12 byte helper + 32 byte
+    // key). Thuần tổ hợp, luôn "sẵn sàng" ngay khi helper/key có giá trị --
+    // XOR có tính giao hoán/kết hợp nên thứ tự gộp byte không quan trọng,
+    // miễn firmware gửi đúng tập 44 byte này đi (thứ tự gửi tùy ý).
+    wire [351:0] enroll_payload_bits = {hw_sha_key_out, hw_ecc_helper_out};
+    reg  [7:0]   enroll_crc;
+    integer      crc_i;
+    always @(*) begin
+        enroll_crc = 8'h00;
+        for (crc_i = 0; crc_i < 44; crc_i = crc_i + 1)
+            enroll_crc = enroll_crc ^ enroll_payload_bits[crc_i*8 +: 8];
+    end
 
     reg status_done_reg;
     reg status_error_reg;
@@ -338,6 +370,15 @@ module axi_reg_bank (
                     MANUAL_TX_2:     axi_rdata <= manual_tx_reg[2];
                     MANUAL_TX_3:     axi_rdata <= manual_tx_reg[3];
                     MANUAL_TX_STAT:  axi_rdata <= {31'h0, hw_uart_tx_busy};
+                    KEY_OUT_0:       axi_rdata <= hw_sha_key_out[31:0];
+                    KEY_OUT_1:       axi_rdata <= hw_sha_key_out[63:32];
+                    KEY_OUT_2:       axi_rdata <= hw_sha_key_out[95:64];
+                    KEY_OUT_3:       axi_rdata <= hw_sha_key_out[127:96];
+                    KEY_OUT_4:       axi_rdata <= hw_sha_key_out[159:128];
+                    KEY_OUT_5:       axi_rdata <= hw_sha_key_out[191:160];
+                    KEY_OUT_6:       axi_rdata <= hw_sha_key_out[223:192];
+                    KEY_OUT_7:       axi_rdata <= hw_sha_key_out[255:224];
+                    ENROLL_CRC:      axi_rdata <= {24'h0, enroll_crc};
                     ADDR_ID:         axi_rdata <= 32'h43525950; // "CRYP"
                     ADDR_VERSION:    axi_rdata <= 32'h00010000;
                     default: begin

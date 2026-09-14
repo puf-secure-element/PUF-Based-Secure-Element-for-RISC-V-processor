@@ -31,7 +31,12 @@ module axi_slave_core (
     // ecc_top.helper_out_o tự giữ nguyên giá trị (không tự xóa) sau khi
     // ecc_start pulse đi qua, nên không cần latch thêm ở đây -- chỉ cần
     // đưa thẳng dây ra ngoài để axi_reg_bank cho CPU đọc được.
-    output wire [95:0]  ecc_helper_out
+    output wire [95:0]  ecc_helper_out,
+
+    // NEW: khóa SHA-256 (256-bit) dùng làm "key" báo cáo trong Enroll.
+    // key_reg đã là thanh ghi giữ ổn định (chỉ cập nhật khi sha_valid),
+    // nên đưa thẳng ra ngoài, không cần latch thêm.
+    output wire [255:0] sha_key_out
 );
 
     wire [511:0]    w_puf_response;
@@ -66,6 +71,7 @@ module axi_slave_core (
     end
 
     assign aes_dout = aes_dout_latched;
+    assign sha_key_out = key_reg;
 
     assign sha_wdata = sha_start ? 32'h1 : 32'h0;
 

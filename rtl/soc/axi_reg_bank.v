@@ -44,7 +44,10 @@ module axi_reg_bank (
 
     // NEW: hardware-side plaintext load from UART RX (bypasses AXI writes)
     input  wire         hw_pt_load_valid,
-    input  wire [127:0] hw_pt_load_data
+    input  wire [127:0] hw_pt_load_data,
+
+    // NEW: ECC helper data (generated during Enrollment) -- read-only for CPU
+    input  wire [95:0]  hw_ecc_helper_out
 );
 
     // =========================================================================
@@ -82,6 +85,13 @@ module axi_reg_bank (
     localparam ECC_HELPER_0    = 10'h050;
     localparam ECC_HELPER_1    = 10'h054;
     localparam ECC_HELPER_2    = 10'h058;
+
+    // Vùng nhớ 96-bit ĐỌC helper data thật do ECC tính ra lúc Enrollment
+    // (khác với ECC_HELPER_0..2 ở trên vốn là đầu vào helper_in_i cho chế
+    // độ Reconstruction, do CPU/host ghi xuống).
+    localparam HELPER_OUT_0    = 10'h060;
+    localparam HELPER_OUT_1    = 10'h064;
+    localparam HELPER_OUT_2    = 10'h068;
 
     localparam ADDR_ID         = 10'h0F8;
     localparam ADDR_VERSION    = 10'h0FC;
@@ -292,6 +302,9 @@ module axi_reg_bank (
                     AES_OUT_1:       axi_rdata <= aes_dout_reg[63:32];
                     AES_OUT_2:       axi_rdata <= aes_dout_reg[95:64];
                     AES_OUT_3:       axi_rdata <= aes_dout_reg[127:96];
+                    HELPER_OUT_0:    axi_rdata <= hw_ecc_helper_out[31:0];
+                    HELPER_OUT_1:    axi_rdata <= hw_ecc_helper_out[63:32];
+                    HELPER_OUT_2:    axi_rdata <= hw_ecc_helper_out[95:64];
                     ADDR_ID:         axi_rdata <= 32'h43525950; // "CRYP"
                     ADDR_VERSION:    axi_rdata <= 32'h00010000;
                     default: begin

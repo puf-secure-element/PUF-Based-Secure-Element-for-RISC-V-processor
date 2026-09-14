@@ -25,7 +25,13 @@ module axi_slave_core (
     output wire         aes_done,
 
     // Dữ liệu trả về Reg Bank
-    output wire [127:0] aes_dout
+    output wire [127:0] aes_dout,
+
+    // NEW: Helper data (Hamming parity) do ECC tính ra lúc Enrollment.
+    // ecc_top.helper_out_o tự giữ nguyên giá trị (không tự xóa) sau khi
+    // ecc_start pulse đi qua, nên không cần latch thêm ở đây -- chỉ cần
+    // đưa thẳng dây ra ngoài để axi_reg_bank cho CPU đọc được.
+    output wire [95:0]  ecc_helper_out
 );
 
     wire [511:0]    w_puf_response;
@@ -92,9 +98,9 @@ module axi_slave_core (
         .mode_i          (ecc_mode),
         .start_i         (ecc_start),
         .raw_resp_i      (w_puf_response),
-        .helper_in_i     (ecc_helper_in), 
-        .helper_val_i    (1'b1),         
-        .helper_out_o    (),         
+        .helper_in_i     (ecc_helper_in),
+        .helper_val_i    (1'b1),
+        .helper_out_o    (ecc_helper_out),
         .corr_resp_o     (w_ecc_response),
         .corr_resp_val_o (ecc_valid)
     );

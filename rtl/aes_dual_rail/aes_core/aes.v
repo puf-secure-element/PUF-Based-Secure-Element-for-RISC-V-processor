@@ -74,7 +74,7 @@ module aes(
     reg [31:0] w_f [0:59];
 
     reg [3:0] round;            // 0..14 during an op, 15 = idle/done sentinel (as original)
-    reg       active, has_run, mode, encrypt_reg, decrypt_reg;
+    reg       active, mode, encrypt_reg, decrypt_reg;
 
     // Sticky "key schedule already computed" flag. key_ready is a level that
     // asserts once and never toggles again, so we cannot rely on catching a
@@ -173,6 +173,7 @@ module aes(
     localparam PH_ARK        = 5'd9;
     localparam PH_IMC        = 5'd10;
     localparam PH_ROUND_END  = 5'd11;
+    localparam PH_DONE       = 5'd12;
 
     reg [4:0] phase;
     reg [4:0] cnt;     // generic byte counter (0..15)
@@ -189,7 +190,6 @@ module aes(
         if (!rst_n) begin
             round       <= 4'd15;
             active      <= 1'b0;
-            has_run     <= 1'b0;
             mode        <= 1'b0;
             encrypt_reg <= 1'b0;
             decrypt_reg <= 1'b0;
@@ -221,7 +221,6 @@ module aes(
                 // (key_ready), together with a mode selected.
                 if (!active && plaintext_valid && key_ready && (encrypt || decrypt)) begin
                     active  <= 1'b1;
-                    has_run <= 1'b1;
                     mode    <= decrypt;
                     for (ii = 0; ii < 16; ii = ii + 1) begin
                         pt_t[ii] <= plaintext[127-8*ii -: 8];
@@ -358,11 +357,24 @@ module aes(
                 if (round == 4'd14) begin
                     round  <= 4'd15;
                     active <= 1'b0;
-                    phase  <= PH_IDLE;
+                    phase  <= PH_DONE;
                 end else begin
                     round <= round + 1'b1;
                     phase <= PH_RND_ENTRY;
                 end
+            end
+
+            PH_DONE: begin
+                // done/data_out are valid for exactly this one cycle (state_t/f
+                // still hold the finished block). On the next edge we clear the
+                // state -- which clears data_out along with it, since data_out
+                // is driven straight off state_t -- drop back to PH_IDLE, and
+                // sit there until a new plaintext_valid (+ key_ready) arrives.
+                for (ii = 0; ii < 16; ii = ii + 1) begin
+                    state_t[ii] <= 8'b0;
+                    state_f[ii] <= 8'b0;
+                end
+                phase <= PH_IDLE;
             end
 
             default: phase <= PH_IDLE;
@@ -443,7 +455,7 @@ module aes(
         endcase
     end
 
-    assign done = (round == 4'd15) && !active && has_run;
+    assign done = (phase == PH_DONE);
     assign data_out = { state_t[0], state_t[1], state_t[2],  state_t[3],
                          state_t[4], state_t[5], state_t[6],  state_t[7],
                          state_t[8], state_t[9], state_t[10], state_t[11],

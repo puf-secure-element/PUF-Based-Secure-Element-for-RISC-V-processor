@@ -1,0 +1,10 @@
+# Quartus resaves its own project files with Windows line endings (CRLF)
+# every time it opens/compiles the project, regardless of host OS. Without
+# this, every local Quartus save shows up as a full-file diff and blocks
+# `git pull` with a "local changes would be overwritten" conflict even
+# though nothing meaningful changed. Force these to CRLF so git normalizes
+# storage but always checks out/compares CRLF, matching what Quartus writes.
+*.qsf text eol=crlf
+*.qpf text eol=crlf
+*.sdc text eol=crlf
+*.qws text eol=crlf

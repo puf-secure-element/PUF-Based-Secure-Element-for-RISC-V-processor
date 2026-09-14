@@ -1,0 +1,97 @@
+
+State Machine - |de10_standard|soc:u_soc|axi_slave_top:crypto_accelerator|axi_reg_bank:u_reg_bank|axi_bresp
+Name axi_bresp.10 
+axi_bresp.00 0 
+axi_bresp.10 1 
+
+State Machine - |de10_standard|soc:u_soc|axi_slave_top:crypto_accelerator|control_fsm:u_fsm|current_state
+Name current_state.ERROR current_state.DONE_AES current_state.WAIT_AES current_state.RUN_AES current_state.DONE_KEY current_state.WAIT_SHA current_state.RUN_SHA current_state.WAIT_ECC current_state.RUN_ECC current_state.WAIT_PUF current_state.RUN_PUF current_state.IDLE 
+current_state.IDLE 0 0 0 0 0 0 0 0 0 0 0 0 
+current_state.RUN_PUF 0 0 0 0 0 0 0 0 0 0 1 1 
+current_state.WAIT_PUF 0 0 0 0 0 0 0 0 0 1 0 1 
+current_state.RUN_ECC 0 0 0 0 0 0 0 0 1 0 0 1 
+current_state.WAIT_ECC 0 0 0 0 0 0 0 1 0 0 0 1 
+current_state.RUN_SHA 0 0 0 0 0 0 1 0 0 0 0 1 
+current_state.WAIT_SHA 0 0 0 0 0 1 0 0 0 0 0 1 
+current_state.DONE_KEY 0 0 0 0 1 0 0 0 0 0 0 1 
+current_state.RUN_AES 0 0 0 1 0 0 0 0 0 0 0 1 
+current_state.WAIT_AES 0 0 1 0 0 0 0 0 0 0 0 1 
+current_state.DONE_AES 0 1 0 0 0 0 0 0 0 0 0 1 
+current_state.ERROR 1 0 0 0 0 0 0 0 0 0 0 1 
+
+State Machine - |de10_standard|soc:u_soc|rv32_axi_master:axi_master_inst|state
+Name state.RD_ADDR state.WR_RESP state.WR_WAIT state.IDLE state.RD_DATA 
+state.IDLE 0 0 0 0 0 
+state.WR_WAIT 0 0 1 1 0 
+state.WR_RESP 0 1 0 1 0 
+state.RD_ADDR 1 0 0 1 0 
+state.RD_DATA 0 0 0 1 1 
+
+State Machine - |de10_standard|soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|aes:u_aes|phase
+Name phase.PH_ROUND_END phase.PH_IMC phase.PH_ARK phase.PH_MC phase.PH_SB phase.PH_RND_ENTRY phase.PH_KEXP_STEP phase.PH_KEXP_XOR phase.PH_KEXP_SBOX phase.PH_KEXP_PREP phase.PH_KEXP_LOAD phase.PH_IDLE 
+phase.PH_IDLE 0 0 0 0 0 0 0 0 0 0 0 0 
+phase.PH_KEXP_LOAD 0 0 0 0 0 0 0 0 0 0 1 1 
+phase.PH_KEXP_PREP 0 0 0 0 0 0 0 0 0 1 0 1 
+phase.PH_KEXP_SBOX 0 0 0 0 0 0 0 0 1 0 0 1 
+phase.PH_KEXP_XOR 0 0 0 0 0 0 0 1 0 0 0 1 
+phase.PH_KEXP_STEP 0 0 0 0 0 0 1 0 0 0 0 1 
+phase.PH_RND_ENTRY 0 0 0 0 0 1 0 0 0 0 0 1 
+phase.PH_SB 0 0 0 0 1 0 0 0 0 0 0 1 
+phase.PH_MC 0 0 0 1 0 0 0 0 0 0 0 1 
+phase.PH_ARK 0 0 1 0 0 0 0 0 0 0 0 1 
+phase.PH_IMC 0 1 0 0 0 0 0 0 0 0 0 1 
+phase.PH_ROUND_END 1 0 0 0 0 0 0 0 0 0 0 1 
+
+State Machine - |de10_standard|soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|current_state
+Name current_state.ST_IDLE current_state.ST_PROCESS current_state.ST_MEASURE 
+current_state.ST_IDLE 0 0 0 
+current_state.ST_MEASURE 1 0 1 
+current_state.ST_PROCESS 1 1 0 
+
+State Machine - |de10_standard|soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|ro_puf_core:u_puf|measurement_engine:u_measurement_engine|measurement_controller:u_controller|current_state
+Name current_state.ST_DONE current_state.ST_SNAPSHOT current_state.ST_FREEZE current_state.ST_MEASURE current_state.ST_RESET current_state.ST_IDLE 
+current_state.ST_IDLE 0 0 0 0 0 0 
+current_state.ST_RESET 0 0 0 0 1 1 
+current_state.ST_MEASURE 0 0 0 1 0 1 
+current_state.ST_FREEZE 0 0 1 0 0 1 
+current_state.ST_SNAPSHOT 0 1 0 0 0 1 
+current_state.ST_DONE 1 0 0 0 0 1 
+
+State Machine - |de10_standard|soc:u_soc|axi_slave_top:crypto_accelerator|axi_slave_core:u_core|sha256_top:u_sha256|sha256:sha256_core|state_reg
+Name state_reg.IDLE state_reg.DONE state_reg.ROUNDS 
+state_reg.IDLE 0 0 0 
+state_reg.ROUNDS 1 0 1 
+state_reg.DONE 1 1 0 
+
+State Machine - |de10_standard|soc:u_soc|uart_top:u_uart|uart_transmitter:u_uart_tx|current_state
+Name current_state.PARITY current_state.TX_DATA current_state.START current_state.IDLE current_state.STOP 
+current_state.IDLE 0 0 0 0 0 
+current_state.START 0 0 1 1 0 
+current_state.TX_DATA 0 1 0 1 0 
+current_state.PARITY 1 0 0 1 0 
+current_state.STOP 0 0 0 1 1 
+
+State Machine - |de10_standard|soc:u_soc|uart_top:u_uart|uart_receiver:u_uart_rx|current_state
+Name current_state.PARITY current_state.RX_DATA current_state.START current_state.IDLE current_state.STOP 
+current_state.IDLE 0 0 0 0 0 
+current_state.START 0 0 1 1 0 
+current_state.RX_DATA 0 1 0 1 0 
+current_state.PARITY 1 0 0 1 0 
+current_state.STOP 0 0 0 1 1 
+
+State Machine - |de10_standard|soc:u_soc|uart_top:u_uart|uart_rx_buffer:u_rx_buffer|state
+Name state.READ_ETX state.READ_CRC state.READ_PAYLOAD state.READ_LEN state.READ_CMD state.WAIT_STX 
+state.WAIT_STX 0 0 0 0 0 0 
+state.READ_CMD 0 0 0 0 1 1 
+state.READ_LEN 0 0 0 1 0 1 
+state.READ_PAYLOAD 0 0 1 0 0 1 
+state.READ_CRC 0 1 0 0 0 1 
+state.READ_ETX 1 0 0 0 0 1 
+
+State Machine - |de10_standard|soc:u_soc|axi_to_ahb:u_axi2ahb|state
+Name state.S_W_WAIT state.S_W_DATA state.S_W_ADDR state.S_IDLE state.S_W_RESP 
+state.S_IDLE 0 0 0 0 0 
+state.S_W_ADDR 0 0 1 1 0 
+state.S_W_DATA 0 1 0 1 0 
+state.S_W_WAIT 1 0 0 1 0 
+state.S_W_RESP 0 0 0 1 1 

@@ -115,6 +115,14 @@ module soc (
     wire            w_uart_plaintext_valid;
     wire            w_aes_block_valid;
 
+    // NEW: manual 16-byte UART TX trigger (Enroll response), merged with the
+    // AES auto-TX path right before feeding uart_top -- see axi_slave_top.v.
+    wire            w_uart_tx_busy;
+    wire            w_manual_tx_valid;
+    wire    [127:0] w_manual_tx_data;
+    wire            w_final_aes_block_valid = w_aes_block_valid | w_manual_tx_valid;
+    wire    [127:0] w_final_aes_data        = w_manual_tx_valid ? w_manual_tx_data : data_out;
+
     // *** TEMP DIAGNOSTIC -- REVERT BEFORE REAL USE ***
     // ro_puf_core removal alone did not bring LEDR9/irq alive, so the
     // problem is somewhere else in soc -- possibly in the CPU/AXI/crypto
@@ -136,6 +144,10 @@ module soc (
     wire        ahb_HWRITE_tied   = 1'b0;
     wire        ahb_HSEL_tied     = 1'b0;
     wire [31:0] ahb_HWDATA_tied   = 32'h0;
+    // axi_slave_top isn't instantiated in this diagnostic build, so tie its
+    // manual-TX outputs off instead of leaving them undriven.
+    assign w_manual_tx_valid = 1'b0;
+    assign w_manual_tx_data  = 128'h0;
 `else
     // =========================================================================
     // 1. KHỐI CPU RISC-V (Bản đã nâng cấp có mem_req, mem_ready)
@@ -222,7 +234,11 @@ module soc (
 
         .uart_plaintext         (w_uart_plaintext),
         .uart_plaintext_valid   (w_uart_plaintext_valid),
-        .aes_block_valid        (w_aes_block_valid)
+        .aes_block_valid        (w_aes_block_valid),
+
+        .uart_tx_busy           (w_uart_tx_busy),
+        .manual_tx_valid        (w_manual_tx_valid),
+        .manual_tx_data         (w_manual_tx_data)
     );
 
     // =========================================================================
@@ -291,7 +307,8 @@ module soc (
         .plaintext          (),
 
         .aes_block_valid    (1'b0),
-        .aes_data_out       (128'h0)
+        .aes_data_out       (128'h0),
+        .tx_busy            (w_uart_tx_busy)
     );
 `else
     uart_top u_uart (
@@ -316,8 +333,9 @@ module soc (
         .plaintext_valid    (w_uart_plaintext_valid),
         .plaintext          (w_uart_plaintext),
 
-        .aes_block_valid    (w_aes_block_valid),
-        .aes_data_out       (data_out)
+        .aes_block_valid    (w_final_aes_block_valid),
+        .aes_data_out       (w_final_aes_data),
+        .tx_busy            (w_uart_tx_busy)
     );
 `endif
 

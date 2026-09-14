@@ -29,7 +29,15 @@ module axi_slave_top (
     // NEW: UART <-> AES streaming interface
     input  wire [127:0] uart_plaintext,       // from uart_rx_buffer
     input  wire         uart_plaintext_valid, // from uart_rx_buffer (1-cycle pulse)
-    output wire         aes_block_valid       // to uart_tx_buffer (1-cycle pulse, data_out is valid)
+    output wire         aes_block_valid,      // to uart_tx_buffer (1-cycle pulse, data_out is valid)
+
+    // NEW: manual 16-byte UART TX trigger (Enroll response), bypasses AES.
+    // Merged with aes_block_valid/data_out at the soc.v level, right before
+    // feeding uart_top -- kept separate here so data_out/aes_block_valid
+    // above stay pure AES-only signals for existing testbenches.
+    input  wire          uart_tx_busy,        // from uart_top (hw_tx_busy)
+    output wire          manual_tx_valid,
+    output wire [127:0]  manual_tx_data
 );
 
     wire reg_start, soft_reset;
@@ -88,7 +96,11 @@ module axi_slave_top (
         .hw_ecc_helper_out  (hw_ecc_helper_out),
 
         .hw_pt_load_valid   (uart_plaintext_valid),
-        .hw_pt_load_data    (uart_plaintext)
+        .hw_pt_load_data    (uart_plaintext),
+
+        .hw_uart_tx_busy    (uart_tx_busy),
+        .manual_tx_start    (manual_tx_valid),
+        .manual_tx_data     (manual_tx_data)
     );
 
     control_fsm u_fsm (

@@ -26,7 +26,12 @@ module uart_top (//AHB interface
 
                  //Ciphertext input (AES block ready to transmit)
                  input wire          aes_block_valid,
-                 input wire [127:0]  aes_data_out
+                 input wire [127:0]  aes_data_out,
+
+                 //NEW: exposes the auto-TX walk-out status so the CPU can
+                 //poll it before triggering another manual 16-byte send
+                 //(Enroll response) through the same path.
+                 output wire         tx_busy
                 );
   
   wire       bclk;
@@ -221,4 +226,5 @@ module uart_top (//AHB interface
                             .bclk(bclk));
 
   assign interrupt = tx_fifo_full | tx_fifo_empty | rx_fifo_full | rx_fifo_empty | parrity_error;
+  assign tx_busy   = hw_tx_busy;
 endmodule

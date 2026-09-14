@@ -2,10 +2,12 @@ create_clock -name CLOCK_50 -period 20.000 [get_ports {CLOCK_50}]
 
 # Ring oscillators are intentional asynchronous measurement clocks. They are
 # counted in their own clock domains and must not be timed as CLOCK_50 logic.
-# NOTE: plain get_nets only searches the current (top-level) scope; ro_clk
-# only exists as a net deep inside ro_puf_core/ro_bank's hierarchy, so
-# without -hierarchical these filters silently matched nothing ("Ignored
-# filter ... could not be matched with a net") and never actually took
-# effect.
-set_false_path -from [get_nets -hierarchical *ro_clk*]
-set_false_path -to [get_nets -hierarchical *ro_clk*]
+# NOTE: get_nets has no -hierarchical option in Quartus (it already searches
+# the whole design by default) -- the real problem was the pattern itself:
+# "ro_clk" is only a port/wire name pre-synthesis. Post-synthesis the actual
+# oscillator net is named net_chain (see the "Found combinational loop"
+# fitter warnings, e.g. RO_ARRAY[N].u_ro|net_chain~2|combout), so *ro_clk*
+# matched nothing ("Ignored filter ... could not be matched with a net") and
+# this exception never actually applied.
+set_false_path -from [get_nets *net_chain*]
+set_false_path -to [get_nets *net_chain*]

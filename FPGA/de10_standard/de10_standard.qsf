@@ -41,6 +41,12 @@ set_global_assignment -name FAMILY "Cyclone V"
 set_global_assignment -name DEVICE 5CSXFC6D6F31C6
 set_global_assignment -name TOP_LEVEL_ENTITY de10_standard
 set_global_assignment -name SDC_FILE de10_standard.sdc
+# rtl/puf/ro_cell.sv picks its synthesizable ring-oscillator chain vs. its
+# simulation-only `real`-delay model via `ifndef SYNTHESIS. Quartus does not
+# define SYNTHESIS on its own (unlike some other toolchains), so without
+# this the simulation branch gets fed to Analysis & Synthesis and fails with
+# "real variable data type values are not supported".
+set_global_assignment -name VERILOG_MACRO "SYNTHESIS=1"
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to UART_TXD
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to UART_RXD
 # ---- Clock (was wrong: AA26 is HSMC_CLKIN_P1, not the 50 MHz oscillator) ----

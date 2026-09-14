@@ -43,38 +43,47 @@ set_global_assignment -name TOP_LEVEL_ENTITY de10_standard
 set_global_assignment -name SDC_FILE de10_standard.sdc
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to UART_TXD
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to UART_RXD
-set_location_assignment PIN_Y16 -to UART_TXD
-set_location_assignment PIN_AK3 -to UART_RXD
-set_location_assignment PIN_AA26 -to CLOCK_50
-set_location_assignment PIN_Y27 -to KEY[0]
-set_location_assignment PIN_AA18 -to KEY[1]
-set_location_assignment PIN_B11 -to KEY[2]
-set_location_assignment PIN_AB17 -to KEY[3]
-set_location_assignment PIN_K8 -to LEDR[0]
-set_location_assignment PIN_C2 -to LEDR[1]
-set_location_assignment PIN_K7 -to LEDR[2]
-set_location_assignment PIN_D2 -to LEDR[3]
-set_location_assignment PIN_E4 -to LEDR[4]
-set_location_assignment PIN_G10 -to LEDR[5]
-set_location_assignment PIN_F10 -to LEDR[6]
-set_location_assignment PIN_D1 -to LEDR[7]
-set_location_assignment PIN_J12 -to LEDR[8]
-set_location_assignment PIN_E3 -to LEDR[9]
-set_instance_assignment -name IO_STANDARD "2.5 V" -to CLOCK_50
-set_instance_assignment -name IO_STANDARD "2.5 V" -to KEY[0]
-set_instance_assignment -name IO_STANDARD "2.5 V" -to KEY[1]
-set_instance_assignment -name IO_STANDARD "2.5 V" -to KEY[2]
-set_instance_assignment -name IO_STANDARD "2.5 V" -to KEY[3]
-set_instance_assignment -name IO_STANDARD "2.5 V" -to LEDR[0]
-set_instance_assignment -name IO_STANDARD "2.5 V" -to LEDR[1]
-set_instance_assignment -name IO_STANDARD "2.5 V" -to LEDR[2]
-set_instance_assignment -name IO_STANDARD "2.5 V" -to LEDR[3]
-set_instance_assignment -name IO_STANDARD "2.5 V" -to LEDR[4]
-set_instance_assignment -name IO_STANDARD "2.5 V" -to LEDR[5]
-set_instance_assignment -name IO_STANDARD "2.5 V" -to LEDR[6]
-set_instance_assignment -name IO_STANDARD "2.5 V" -to LEDR[7]
-set_instance_assignment -name IO_STANDARD "2.5 V" -to LEDR[8]
-set_instance_assignment -name IO_STANDARD "2.5 V" -to LEDR[9]
+# ---- Clock (was wrong: AA26 is HSMC_CLKIN_P1, not the 50 MHz oscillator) ----
+set_location_assignment PIN_AF14 -to CLOCK_50
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to CLOCK_50
+
+# ---- UART on GPIO header (header pin 1 = TXD, pin 2 = RXD, pin 12 = GND) ----
+set_location_assignment PIN_W15 -to UART_TXD
+set_location_assignment PIN_AK2 -to UART_RXD
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to UART_TXD
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to UART_RXD
+
+# ---- Push-buttons ----
+set_location_assignment PIN_AJ4  -to KEY[0]
+set_location_assignment PIN_AK4  -to KEY[1]
+set_location_assignment PIN_AA14 -to KEY[2]
+set_location_assignment PIN_AA15 -to KEY[3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to KEY[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to KEY[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to KEY[2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to KEY[3]
+
+# ---- LEDs ----
+set_location_assignment PIN_AA24 -to LEDR[0]
+set_location_assignment PIN_AB23 -to LEDR[1]
+set_location_assignment PIN_AC23 -to LEDR[2]
+set_location_assignment PIN_AD24 -to LEDR[3]
+set_location_assignment PIN_AG25 -to LEDR[4]
+set_location_assignment PIN_AF25 -to LEDR[5]
+set_location_assignment PIN_AE24 -to LEDR[6]
+set_location_assignment PIN_AF24 -to LEDR[7]
+set_location_assignment PIN_AB22 -to LEDR[8]
+set_location_assignment PIN_AC22 -to LEDR[9]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LEDR[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LEDR[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LEDR[2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LEDR[3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LEDR[4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LEDR[5]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LEDR[6]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LEDR[7]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LEDR[8]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LEDR[9]
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 25.1STD.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "10:26:22  AUGUST 25, 2026"
 set_global_assignment -name LAST_QUARTUS_VERSION "25.1std.0 Lite Edition"

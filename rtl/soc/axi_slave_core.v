@@ -74,28 +74,16 @@ module axi_slave_core (
     end
 
     // 1. PUF
-    // *** TEMP DIAGNOSTIC -- REVERT BEFORE REAL USE ***
-    // ro_puf_core (64 ring-oscillator combinational loops + a 1536-FF
-    // counter_bank) is NOT instantiated at all here. control_fsm.v's
-    // key_ready is already forced to 1 separately so puf_valid is never
-    // polled, but that bypass only changes runtime behavior -- the PUF
-    // hardware was still physically synthesized and could still be
-    // starving global clock/reset routing chip-wide regardless of whether
-    // it's ever "used" (recall Worst-case setup slack -4.796ns and KEY[0]
-    // being pushed onto non-dedicated clock routing in that build). This
-    // removes it from the netlist entirely to test that theory directly.
-    assign w_puf_response = 512'h0;
-    assign puf_valid      = 1'b0;
-    // ro_puf_core u_puf (
-    //     .clk             (clk),
-    //     .rst_n           (rst_n),
-    //     .start           (puf_start),
-    //     .measure_window  (puf_window),
-    //     .challenge       (puf_challenge),
-    //     .response        (w_puf_response),
-    //     .response_ready  (puf_valid),
-    //     .core_busy       ()
-    // );
+    ro_puf_core u_puf (
+        .clk             (clk),
+        .rst_n           (rst_n),
+        .start           (puf_start),
+        .measure_window  (puf_window),
+        .challenge       (puf_challenge),
+        .response        (w_puf_response),
+        .response_ready  (puf_valid),
+        .core_busy       ()
+    );
 
     // 2. ECC
     ecc_top u_ecc (

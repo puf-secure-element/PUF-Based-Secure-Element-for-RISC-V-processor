@@ -47,11 +47,6 @@ set_global_assignment -name SDC_FILE de10_standard.sdc
 # this the simulation branch gets fed to Analysis & Synthesis and fails with
 # "real variable data type values are not supported".
 set_global_assignment -name VERILOG_MACRO "SYNTHESIS=1"
-# *** TEMP DIAGNOSTIC -- REMOVE BEFORE REAL USE ***
-# Strips soc.v down to just uart_top (no CPU/AXI/crypto at all) to test
-# whether UART comes alive fully standalone. See soc.v's `ifdef
-# SOC_DIAG_UART_ONLY block.
-set_global_assignment -name VERILOG_MACRO "SOC_DIAG_UART_ONLY=1"
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to UART_TXD
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to UART_RXD
 # ---- Clock (was wrong: AA26 is HSMC_CLKIN_P1, not the 50 MHz oscillator) ----

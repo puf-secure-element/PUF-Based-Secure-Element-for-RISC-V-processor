@@ -52,6 +52,12 @@ void setup() {
   fpgaSerial.begin(FPGA_BAUD);
   Serial.println("\n[BOOT] Reset reason: " + ESP.getResetReason());
 
+  // Force clean station mode before connecting. Without this, a stale
+  // AP/AP+STA state left over from a crash or previous sketch can make
+  // WiFi.begin() hang indefinitely instead of connecting.
+  WiFi.disconnect(true);
+  WiFi.mode(WIFI_STA);
+  delay(100);
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   Serial.print("Đang kết nối WiFi");
   while (WiFi.status() != WL_CONNECTED) {

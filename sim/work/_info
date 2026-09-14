@@ -1,373 +1,1667 @@
 m255
 K4
 z2
-!s99 nomlopt
-!s11f vlog 2021.2_1 2021.05, May 15 2021
+Z0 !s12c _opt1
+Z1 !s99 nomlopt
+R0
+R1
+R0
+R1
+R0
+R1
+R0
+R1
+R0
+R1
+R0
+R1
+!s11f MIXED_VERSIONS
+R1
 13
 !s112 1.1
 !i10d 8192
 !i10e 25
 !i10f 100
 cModel Technology
-Z0 d/home/nguyenminhkha/Downloads/PUF-Based-Secure-Element-for-RISC-V-processor-feature-init-repo/sim
+Z2 d/home/nguyenminhkha/Downloads/PUF-Based-Secure-Element-for-RISC-V-processor-feature-init-repo/sim
 T_opt
 !s110 1783475541
 V5^o]>=S8ni71e?9bZ724e2
 04 12 4 work tb_sub_bytes fast 0
 =1-7c214ac8dcb4-6a4dad55-b485d-6e38
 !s124 OEM100
-o-quiet -auto_acc_if_foreign -work work +acc
-Z1 tCvgOpt 0
+Z3 o-quiet -auto_acc_if_foreign -work work +acc
+Z4 tCvgOpt 0
 n@_opt
 OL;O;2021.2_1;73
-vaes
-Z2 DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
-Z3 !s110 1783475540
+R2
+T_opt1
+!i145 1
+!i144 0
+!s110 1789369058
+VQJ7:NPIBTDC]e2Rj;e_<b2
+04 11 4 work tb_uart_cfg fast 0
+=1-1413330a7ca9-6aa79ae1-de68d-13c8e
+R1
+!s12f OEM100
+!s12b OEM100
+!s124 OEM10U167 
+!s135 nogc
+R3
+R4
+n@_opt1
+OL;O;2025.2;82
+vadd_round_key_core
+Z5 2../rtl/sha/sha256_k_constant.v|../rtl/sha/sha256_m_schedule.v|../rtl/sha/sha256_top.v|../rtl/sha/sha256.v|../rtl/ecc/ecc_top.v|../rtl/ecc/hamming_decoder_32.v|../rtl/ecc/hamming_encoder_32.v|../rtl/riscv_core/ALU_control.v|../rtl/riscv_core/ALU.v|../rtl/riscv_core/Branch_prediction.v|../rtl/riscv_core/Control_unit.v|../rtl/riscv_core/Data_memory.v|../rtl/riscv_core/Forwarding_unit.v|../rtl/riscv_core/Hazard_detection.v|../rtl/riscv_core/Immediate_generator.v|../rtl/riscv_core/Instruction_memory.v|../rtl/riscv_core/Mux.v|../rtl/riscv_core/PC.v|../rtl/riscv_core/Register_file.v|../rtl/riscv_core/RV32I.v|../rtl/riscv_core/Sign_extend.v|../rtl/aes_dual_rail/aes_core/add_round_key_core.v|../rtl/aes_dual_rail/aes_core/aes.v|../rtl/aes_dual_rail/aes_core/aff_trans.v|../rtl/aes_dual_rail/aes_core/GF.v|../rtl/aes_dual_rail/aes_core/inv_aff.v|../rtl/aes_dual_rail/aes_core/inv_mix_col_core.v|../rtl/aes_dual_rail/aes_core/mix_col_core.v|../rtl/aes_dual_rail/aes_core/sub_byte_core.v|../rtl/soc/axi_reg_bank.v|../rtl/soc/axi_slave_core.v|../rtl/soc/axi_slave_top.v|../rtl/soc/axi_to_ahb.v|../rtl/soc/control_fsm.v|../rtl/soc/rv32_axi_master.v|../rtl/soc/soc.v|../rtl/UART/ahb_to_apb.v|../rtl/UART/apb_decoder.v|../rtl/UART/baud_generator.v|../rtl/UART/uart_fifo.v|../rtl/UART/uart_interrupt.v|../rtl/UART/uart_receiver.v|../rtl/UART/uart_rx_buffer.v|../rtl/UART/uart_top.v|../rtl/UART/uart_transmiter.v|../rtl/UART/uart_tx_buffer.v|../rtl/puf/challenge_mapper.sv|../rtl/puf/comparator.sv|../rtl/puf/counter_bank.sv|../rtl/puf/measurement_controller.sv|../rtl/puf/measurement_engine.sv|../rtl/puf/pair_scheduler.sv|../rtl/puf/response_builder.sv|../rtl/puf/response_engine.sv|../rtl/puf/ro_bank.sv|../rtl/puf/ro_cell.sv|../rtl/puf/ro_puf_core.sv|../rtl/puf/snapshot_register.sv|../tb/unit_tests/tb_uart_cfg.sv
+Z6 DXx6 sv_std 3 std 0 22 @5XbY]_OacJl=`ToSm<M^0
+Z7 !s110 1789369055
 !i10b 1
-!s100 PXaa:d@[iiDc`E4WNOEfD1
-IXYGfaI1dQF8[<nUi0ZRZ20
+!s100 OVTzfaM>YK`SDFCiUOoeY1
+Io7:0n:_eIJ9zi[gjYZ9Fi2
 S1
-R0
-w1783332472
-8../rtl/aes_dual_rail/aes_core/aes.v
-F../rtl/aes_dual_rail/aes_core/aes.v
-!i122 0
-Z4 L0 1 7
-Z5 VDg1SIo80bB@j0V0VzS_@n1
-Z6 OL;L;2021.2_1;73
+Z8 d/home/kajinyashi2211/PUF-Based-Secure-Element-for-RISC-V-processor/sim
+Z9 w1788928035
+8../rtl/aes_dual_rail/aes_core/add_round_key_core.v
+F../rtl/aes_dual_rail/aes_core/add_round_key_core.v
+!i122 9
+L0 1 12
+Z10 VDg1SIo80bB@j0V0VzS_@n1
+Z11 OL;L;2025.2;82
 r1
 !s85 0
 31
-Z7 !s108 1783475540.000000
-Z8 !s107 ../tb/unit_tests/tb_sub_bytes.v|../tb/golden_models/aes_sbox_golden.v|../rtl/aes_dual_rail/aes_core/sub_bytes.v|../rtl/aes_dual_rail/aes_core/shift_rows.v|../rtl/aes_dual_rail/aes_core/GF.v|../rtl/aes_dual_rail/aes_core/inv_aff.v|../rtl/aes_dual_rail/aes_core/last_round.v|../rtl/aes_dual_rail/aes_core/key_expansion.v|../rtl/aes_dual_rail/aes_core/encryption_round.v|../rtl/aes_dual_rail/aes_core/aes_encrypt.v|../rtl/aes_dual_rail/aes_core/aff_trans.v|../rtl/aes_dual_rail/aes_core/add_round_key.v|../rtl/aes_dual_rail/aes_core/single2dual_converter.v|../rtl/aes_dual_rail/aes_core/decryption_round.v|../rtl/aes_dual_rail/aes_core/mix_columns.v|../rtl/aes_dual_rail/aes_core/aes_decrypt.v|../rtl/aes_dual_rail/aes_core/dual2single_converter.v|../rtl/aes_dual_rail/aes_core/aes.v|../rtl/sha/sha256_top.v|../rtl/sha/sha256.v|../rtl/sha/sha256_m_schedule.v|../rtl/sha/sha256_k_constant.v|
-Z9 !s90 -sv|-f|rtl.f|../tb/golden_models/aes_sbox_golden.v|../tb/unit_tests/tb_sub_bytes.v|
+Z12 !s108 1789369054.000000
+Z13 !s107 ../tb/unit_tests/tb_uart_cfg.sv|../rtl/puf/snapshot_register.sv|../rtl/puf/ro_puf_core.sv|../rtl/puf/ro_cell.sv|../rtl/puf/ro_bank.sv|../rtl/puf/response_engine.sv|../rtl/puf/response_builder.sv|../rtl/puf/pair_scheduler.sv|../rtl/puf/measurement_engine.sv|../rtl/puf/measurement_controller.sv|../rtl/puf/counter_bank.sv|../rtl/puf/comparator.sv|../rtl/puf/challenge_mapper.sv|../rtl/UART/uart_tx_buffer.v|../rtl/UART/uart_transmiter.v|../rtl/UART/uart_top.v|../rtl/UART/uart_rx_buffer.v|../rtl/UART/uart_receiver.v|../rtl/UART/uart_interrupt.v|../rtl/UART/uart_fifo.v|../rtl/UART/baud_generator.v|../rtl/UART/apb_decoder.v|../rtl/UART/ahb_to_apb.v|../rtl/soc/soc.v|../rtl/soc/rv32_axi_master.v|../rtl/soc/control_fsm.v|../rtl/soc/axi_to_ahb.v|../rtl/soc/axi_slave_top.v|../rtl/soc/axi_slave_core.v|../rtl/soc/axi_reg_bank.v|../rtl/aes_dual_rail/aes_core/sub_byte_core.v|../rtl/aes_dual_rail/aes_core/mix_col_core.v|../rtl/aes_dual_rail/aes_core/inv_mix_col_core.v|../rtl/aes_dual_rail/aes_core/inv_aff.v|../rtl/aes_dual_rail/aes_core/GF.v|../rtl/aes_dual_rail/aes_core/aff_trans.v|../rtl/aes_dual_rail/aes_core/aes.v|../rtl/aes_dual_rail/aes_core/add_round_key_core.v|../rtl/riscv_core/Sign_extend.v|../rtl/riscv_core/RV32I.v|../rtl/riscv_core/Register_file.v|../rtl/riscv_core/PC.v|../rtl/riscv_core/Mux.v|../rtl/riscv_core/Instruction_memory.v|../rtl/riscv_core/Immediate_generator.v|../rtl/riscv_core/Hazard_detection.v|../rtl/riscv_core/Forwarding_unit.v|../rtl/riscv_core/Data_memory.v|../rtl/riscv_core/Control_unit.v|../rtl/riscv_core/Branch_prediction.v|../rtl/riscv_core/ALU.v|../rtl/riscv_core/ALU_control.v|../rtl/ecc/hamming_encoder_32.v|../rtl/ecc/hamming_decoder_32.v|../rtl/ecc/ecc_top.v|../rtl/sha/sha256.v|../rtl/sha/sha256_top.v|../rtl/sha/sha256_m_schedule.v|../rtl/sha/sha256_k_constant.v|
+Z14 !s90 -sv|-timescale|1ns/1ps|../rtl/sha/sha256_k_constant.v|../rtl/sha/sha256_m_schedule.v|../rtl/sha/sha256_top.v|../rtl/sha/sha256.v|../rtl/ecc/ecc_top.v|../rtl/ecc/hamming_decoder_32.v|../rtl/ecc/hamming_encoder_32.v|../rtl/riscv_core/ALU_control.v|../rtl/riscv_core/ALU.v|../rtl/riscv_core/Branch_prediction.v|../rtl/riscv_core/Control_unit.v|../rtl/riscv_core/Data_memory.v|../rtl/riscv_core/Forwarding_unit.v|../rtl/riscv_core/Hazard_detection.v|../rtl/riscv_core/Immediate_generator.v|../rtl/riscv_core/Instruction_memory.v|../rtl/riscv_core/Mux.v|../rtl/riscv_core/PC.v|../rtl/riscv_core/Register_file.v|../rtl/riscv_core/RV32I.v|../rtl/riscv_core/Sign_extend.v|../rtl/aes_dual_rail/aes_core/add_round_key_core.v|../rtl/aes_dual_rail/aes_core/aes.v|../rtl/aes_dual_rail/aes_core/aff_trans.v|../rtl/aes_dual_rail/aes_core/GF.v|../rtl/aes_dual_rail/aes_core/inv_aff.v|../rtl/aes_dual_rail/aes_core/inv_mix_col_core.v|../rtl/aes_dual_rail/aes_core/mix_col_core.v|../rtl/aes_dual_rail/aes_core/sub_byte_core.v|../rtl/soc/axi_reg_bank.v|../rtl/soc/axi_slave_core.v|../rtl/soc/axi_slave_top.v|../rtl/soc/axi_to_ahb.v|../rtl/soc/control_fsm.v|../rtl/soc/rv32_axi_master.v|../rtl/soc/soc.v|../rtl/UART/ahb_to_apb.v|../rtl/UART/apb_decoder.v|../rtl/UART/baud_generator.v|../rtl/UART/uart_fifo.v|../rtl/UART/uart_interrupt.v|../rtl/UART/uart_receiver.v|../rtl/UART/uart_rx_buffer.v|../rtl/UART/uart_top.v|../rtl/UART/uart_transmiter.v|../rtl/UART/uart_tx_buffer.v|../rtl/puf/challenge_mapper.sv|../rtl/puf/comparator.sv|../rtl/puf/counter_bank.sv|../rtl/puf/measurement_controller.sv|../rtl/puf/measurement_engine.sv|../rtl/puf/pair_scheduler.sv|../rtl/puf/response_builder.sv|../rtl/puf/response_engine.sv|../rtl/puf/ro_bank.sv|../rtl/puf/ro_cell.sv|../rtl/puf/ro_puf_core.sv|../rtl/puf/snapshot_register.sv|../tb/unit_tests/tb_uart_cfg.sv|
 !i113 0
-Z10 o-sv -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
-Z11 !s92 -sv +incdir+../rtl/sha +incdir+../rtl/aes_dual_rail/aes_core -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
-R1
+Z15 o-sv -timescale 1ns/1ps -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R4
+vaes
+R5
+R6
+R7
+!i10b 1
+!s100 1N<nF>;4<d7HBh<>To=i=0
+IjzzFCEPY60H=ZM8of2bDk2
+S1
+R8
+Z16 w1789361719
+8../rtl/aes_dual_rail/aes_core/aes.v
+F../rtl/aes_dual_rail/aes_core/aes.v
+!i122 9
+L0 1 464
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
 vaes_sbox_golden
-R2
-R3
+Z17 DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
+Z18 !s110 1783475540
 !i10b 1
 !s100 5e`:R9mmmJc[0;_WacmGV0
 I`j@fN6g]FDjzid8LfVGB70
 S1
-R0
+R2
 w1783475319
 8../tb/golden_models/aes_sbox_golden.v
 F../tb/golden_models/aes_sbox_golden.v
 !i122 0
 L0 1 269
-R5
-R6
+R10
+Z19 OL;L;2021.2_1;73
 r1
 !s85 0
 31
-R7
-R8
-R9
+Z20 !s108 1783475540.000000
+Z21 !s107 ../tb/unit_tests/tb_sub_bytes.v|../tb/golden_models/aes_sbox_golden.v|../rtl/aes_dual_rail/aes_core/sub_bytes.v|../rtl/aes_dual_rail/aes_core/shift_rows.v|../rtl/aes_dual_rail/aes_core/GF.v|../rtl/aes_dual_rail/aes_core/inv_aff.v|../rtl/aes_dual_rail/aes_core/last_round.v|../rtl/aes_dual_rail/aes_core/key_expansion.v|../rtl/aes_dual_rail/aes_core/encryption_round.v|../rtl/aes_dual_rail/aes_core/aes_encrypt.v|../rtl/aes_dual_rail/aes_core/aff_trans.v|../rtl/aes_dual_rail/aes_core/add_round_key.v|../rtl/aes_dual_rail/aes_core/single2dual_converter.v|../rtl/aes_dual_rail/aes_core/decryption_round.v|../rtl/aes_dual_rail/aes_core/mix_columns.v|../rtl/aes_dual_rail/aes_core/aes_decrypt.v|../rtl/aes_dual_rail/aes_core/dual2single_converter.v|../rtl/aes_dual_rail/aes_core/aes.v|../rtl/sha/sha256_top.v|../rtl/sha/sha256.v|../rtl/sha/sha256_m_schedule.v|../rtl/sha/sha256_k_constant.v|
+Z22 !s90 -sv|-f|rtl.f|../tb/golden_models/aes_sbox_golden.v|../tb/unit_tests/tb_sub_bytes.v|
 !i113 0
-R10
-R11
-R1
+Z23 o-sv -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+Z24 !s92 -sv +incdir+../rtl/sha +incdir+../rtl/aes_dual_rail/aes_core -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R4
 vaff_trans
-R2
-R3
+R5
+R6
+R7
 !i10b 1
-!s100 7cj9XZkh>B>_J5UB_B<B52
-I;G58K?WfgmiiMT]I<5Ybz2
+!s100 >ANIF7^=5D9CloDkIcOQd2
+IQl<gGZV31o1N^cXIC2[a@1
 S1
-R0
-w1783474742
+R8
+Z25 w1783831550
 8../rtl/aes_dual_rail/aes_core/aff_trans.v
 F../rtl/aes_dual_rail/aes_core/aff_trans.v
-!i122 0
+!i122 9
 L0 1 27
-R5
-R6
+R10
+R11
 r1
 !s85 0
 31
-R7
-R8
-R9
+R12
+R13
+R14
 !i113 0
+R15
+R4
+vALU
+R5
+R6
+R7
+!i10b 1
+!s100 NhVNQMhAQP4o]1gMSIUhF3
+I[=352[9oXebj_7L_f?Qmz3
+S1
+R8
+Z26 w1782966103
+8../rtl/riscv_core/ALU.v
+F../rtl/riscv_core/ALU.v
+!i122 9
+L0 1 33
 R10
 R11
-R1
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+n@a@l@u
+vALU_control
+R5
+R6
+R7
+!i10b 1
+!s100 >Yl>]oCY7DOW_SecZ<iAX1
+IHQmoG`KUh_l8COmN8;QdV2
+S1
+R8
+R26
+8../rtl/riscv_core/ALU_control.v
+F../rtl/riscv_core/ALU_control.v
+!i122 9
+L0 1 30
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+n@a@l@u_control
+vapb_decoder
+R5
+R6
+R7
+!i10b 1
+!s100 @:R4FP^b@G133Cb`F_Rc[1
+I]P50;RVgi<Umim7[Ugd>D2
+S1
+R8
+Z27 w1789365412
+8../rtl/UART/apb_decoder.v
+F../rtl/UART/apb_decoder.v
+!i122 9
+L0 1 246
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vaxi_reg_bank
+R5
+R6
+R7
+!i10b 1
+!s100 jLjih`B9FMQf1>V`2_;Be0
+Ij4NKhm3Rz7QL9S2Ak==8V2
+S1
+R8
+R9
+8../rtl/soc/axi_reg_bank.v
+F../rtl/soc/axi_reg_bank.v
+!i122 9
+L0 1 319
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vaxi_slave_core
+R5
+R6
+R7
+!i10b 1
+!s100 6N54S<h4PG;j@dE8e1Z?D1
+IPFQLhfU9ockFW^fROU=RG0
+S1
+R8
+R16
+8../rtl/soc/axi_slave_core.v
+F../rtl/soc/axi_slave_core.v
+!i122 9
+L0 1 155
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vaxi_slave_top
+R5
+R6
+R7
+!i10b 1
+!s100 5g3PL4e`a[1AinKM=g^800
+IGC@E^OInkWVUXbCJ9E20?3
+S1
+R8
+R16
+8../rtl/soc/axi_slave_top.v
+F../rtl/soc/axi_slave_top.v
+!i122 9
+L0 1 143
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vaxi_to_ahb
+R5
+R6
+R7
+!i10b 1
+!s100 R>OVMHO8>Ad9ihDXV0Dk11
+I_gQeIC1KG`PeK]e@m>1SA3
+S1
+R8
+w1789366938
+8../rtl/soc/axi_to_ahb.v
+F../rtl/soc/axi_to_ahb.v
+!i122 9
+L0 1 188
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vbaud_generator
+R5
+R6
+R7
+!i10b 1
+!s100 @bZ;W2baZY4ffGFOFiez@2
+IC4;85<To4bLng<KK]T09V1
+S1
+R8
+R9
+8../rtl/UART/baud_generator.v
+F../rtl/UART/baud_generator.v
+!i122 9
+Z28 L0 1 59
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vBranch_prediction
+R5
+R6
+R7
+!i10b 1
+!s100 mVV0fLi00:Sh`gjW`g;bL2
+IgHQoGBIeD[YY_A9PG_T^d0
+S1
+R8
+R26
+8../rtl/riscv_core/Branch_prediction.v
+F../rtl/riscv_core/Branch_prediction.v
+!i122 9
+L0 1 21
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+n@branch_prediction
+vchallenge_mapper
+R5
+R6
+R7
+!i10b 1
+!s100 `P1f3L_AblmQb`WQSlzO[2
+IXc623A>dm=OOWbXTn7IMK0
+S1
+R8
+Z29 w1788837615
+8../rtl/puf/challenge_mapper.sv
+F../rtl/puf/challenge_mapper.sv
+!i122 9
+L0 1 29
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vcmsdk_ahb_to_apb
+R5
+R6
+R7
+!i10b 1
+!s100 G=;gWh2O<`XHUG>@W03Hk2
+I_UGdM9Z0cJjzRaLK?gnQ_3
+S1
+R8
+R9
+8../rtl/UART/ahb_to_apb.v
+F../rtl/UART/ahb_to_apb.v
+!i122 9
+L0 31 274
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vcomparator
+R5
+R6
+R7
+!i10b 1
+!s100 d?f5Hg94d254;<U;0eE:W1
+I?I>aDKAVd9QHfg6mR;56Y1
+S1
+R8
+R29
+8../rtl/puf/comparator.sv
+F../rtl/puf/comparator.sv
+!i122 9
+L0 1 37
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vcontrol_fsm
+R5
+R6
+R7
+!i10b 1
+!s100 G4Gmna7Z@e5Sl0fH<K7780
+I=W3>aeJBe@>2D5TgOY5<T3
+S1
+R8
+R16
+8../rtl/soc/control_fsm.v
+F../rtl/soc/control_fsm.v
+!i122 9
+L0 1 168
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vControl_unit
+R5
+R6
+R7
+!i10b 1
+!s100 foo>IBd>f3UX79<1;V^HS0
+IJcQn;cJRO5F08bU=:Ce3i3
+S1
+R8
+R26
+8../rtl/riscv_core/Control_unit.v
+F../rtl/riscv_core/Control_unit.v
+!i122 9
+L0 1 95
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+n@control_unit
+vcounter_bank
+R5
+R6
+R7
+!i10b 1
+!s100 z]RQ2ga;<dm`cWhU4RP[A0
+IEVEU_`776DOZPKY><CXR62
+S1
+R8
+R29
+8../rtl/puf/counter_bank.sv
+F../rtl/puf/counter_bank.sv
+!i122 9
+Z30 L0 1 22
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vData_memory
+R5
+R6
+R7
+!i10b 1
+!s100 S2fJ?CKFdQ34_FZY_fdMY2
+I9zf0EhELcUmknZXc`9HLP2
+S1
+R8
+R26
+8../rtl/riscv_core/Data_memory.v
+F../rtl/riscv_core/Data_memory.v
+!i122 9
+L0 1 32
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+n@data_memory
 vdual2single_converter
-R2
-R3
+R17
+R18
 !i10b 1
 !s100 CWz9EK;Q^69No[>]`^k]M2
 IZWHX_FlmFW<f0nioOa7FE0
 S1
-R0
+R2
 w1783473157
 8../rtl/aes_dual_rail/aes_core/dual2single_converter.v
 F../rtl/aes_dual_rail/aes_core/dual2single_converter.v
 !i122 0
-R4
-R5
-R6
+Z31 L0 1 7
+R10
+R19
 r1
 !s85 0
 31
-R7
-R8
-R9
+R20
+R21
+R22
 !i113 0
+R23
+R24
+R4
+vecc_top
+R5
+R6
+R7
+!i10b 1
+!s100 ba;B_jcMf9=5UMIQ[?bVE2
+I:ce6nX6S4d<QjRUFza1:h2
+S1
+R8
+w1788928083
+8../rtl/ecc/ecc_top.v
+F../rtl/ecc/ecc_top.v
+!i122 9
+L0 1 70
 R10
 R11
-R1
-vGF
-R2
-R3
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vForwarding_unit
+R5
+R6
+R7
 !i10b 1
-!s100 <jJWYc[GR`J^SL>66nD`:1
-IIGI_TVRD2P<jW>Q2Jea5<3
+!s100 ek3=G]IgA_^ICS2FBDief0
+I4o5E^I00P9PKf4Eh8L0Ok0
 S1
-R0
-w1783472904
+R8
+R26
+8../rtl/riscv_core/Forwarding_unit.v
+F../rtl/riscv_core/Forwarding_unit.v
+!i122 9
+Z32 L0 1 39
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+n@forwarding_unit
+vGF
+R5
+R6
+R7
+!i10b 1
+!s100 Ui_T;D4Y<>8Xhg]l]Yk1[0
+I65OYCe2gKWgYAOC>7L3[I3
+S1
+R8
+R25
 8../rtl/aes_dual_rail/aes_core/GF.v
 F../rtl/aes_dual_rail/aes_core/GF.v
-!i122 0
+!i122 9
 L0 1 288
-R5
-R6
+R10
+R11
 r1
 !s85 0
 31
-R7
-R8
-R9
+R12
+R13
+R14
 !i113 0
+R15
+R4
+n@g@f
+vhamming_decoder_32
+R5
+R6
+R7
+!i10b 1
+!s100 n6URXFQY7deReIU:c7<bN1
+IGVKjUjoaK??;XEe>2;5:l0
+S1
+R8
+R29
+8../rtl/ecc/hamming_decoder_32.v
+F../rtl/ecc/hamming_decoder_32.v
+!i122 9
+L0 1 54
 R10
 R11
-R1
-n@g@f
-vinv_aff
-R2
-R3
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vhamming_encoder_32
+R5
+R6
+R7
 !i10b 1
-!s100 4`9>AZ7Sa67;omYFK?72g3
-ID7M`63h9h@V<Mn9FPMAUo0
+!s100 ig;X5[Q@g7D259gYMPQSR1
+IV]oDe3MYWCik<hCBP^^k=3
 S1
-R0
-w1783472323
+R8
+R29
+8../rtl/ecc/hamming_encoder_32.v
+F../rtl/ecc/hamming_encoder_32.v
+!i122 9
+L0 1 26
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vHazard_detection
+R5
+R6
+R7
+!i10b 1
+!s100 ;hiVz`^]RIFV^[6E>SkUe1
+IcMZK?4e>]T7oU7h<<Lc5D0
+S1
+R8
+R26
+8../rtl/riscv_core/Hazard_detection.v
+F../rtl/riscv_core/Hazard_detection.v
+!i122 9
+R30
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+n@hazard_detection
+vImmediate_generator
+R5
+R6
+R7
+!i10b 1
+!s100 J`Q23BdG1?`0bzc2:14>@1
+IO2gLz>n;NBgBD5_@=a>M@2
+S1
+R8
+R26
+8../rtl/riscv_core/Immediate_generator.v
+F../rtl/riscv_core/Immediate_generator.v
+!i122 9
+Z33 L0 1 24
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+n@immediate_generator
+vInstruction_memory
+R5
+R6
+R7
+!i10b 1
+!s100 LMlcKocM1OIWM<DH?ImiN2
+IVIBdPI`LSooZD`BQRFH7>0
+S1
+R8
+w1789367282
+8../rtl/riscv_core/Instruction_memory.v
+F../rtl/riscv_core/Instruction_memory.v
+!i122 9
+L0 1 239
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+n@instruction_memory
+vinv_aff
+R5
+R6
+R7
+!i10b 1
+!s100 Tk2=08Q?MN9d:FTPza1]n1
+I32b2GI?Wo^:BCSMN^gMR40
+S1
+R8
+R25
 8../rtl/aes_dual_rail/aes_core/inv_aff.v
 F../rtl/aes_dual_rail/aes_core/inv_aff.v
-!i122 0
-L0 1 28
-R5
-R6
+!i122 9
+Z34 L0 1 28
+R10
+R11
 r1
 !s85 0
 31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vinv_mix_col_core
+R5
+R6
 R7
+!i10b 1
+!s100 A@4K[@zhZ@Y;9ifaQbg4@1
+IE3d<8:ae]hV`d:@E1cel?1
+S1
 R8
 R9
-!i113 0
+8../rtl/aes_dual_rail/aes_core/inv_mix_col_core.v
+F../rtl/aes_dual_rail/aes_core/inv_mix_col_core.v
+!i122 9
+Z35 L0 1 159
 R10
 R11
-R1
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
 vkey_expansion
-R2
-R3
+R17
+R18
 !i10b 1
 !s100 ODh1;8GU?Eg>7W8:h^gkJ2
 IfOCYnOz>9aJfH3gdFA7313
 S1
-R0
+R2
 w1783066243
 8../rtl/aes_dual_rail/aes_core/key_expansion.v
 F../rtl/aes_dual_rail/aes_core/key_expansion.v
 !i122 0
 L0 1 47
-R5
-R6
+R10
+R19
 r1
 !s85 0
 31
-R7
-R8
-R9
+R20
+R21
+R22
 !i113 0
+R23
+R24
+R4
+vmeasurement_controller
+R5
+R6
+R7
+!i10b 1
+!s100 X6g[<j@67G5T[P1A^KdX:2
+Iik]<7_Dim8kkSPMhhc7DS0
+S1
+R8
+R29
+8../rtl/puf/measurement_controller.sv
+F../rtl/puf/measurement_controller.sv
+!i122 9
+L0 1 87
 R10
 R11
-R1
-vsha256
-R2
-R3
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vmeasurement_engine
+R5
+R6
+R7
 !i10b 1
-!s100 K`RUfNY_C6iC8M_JT;I]c2
-IhCMbN:hTna3g_o?B9=d>Q1
+!s100 FdfO[k[NY=<m3mKV_Bb`?0
+ICmDm59`ml]38YRKkoibc]3
 S1
-R0
-w1783048441
+R8
+R29
+8../rtl/puf/measurement_engine.sv
+F../rtl/puf/measurement_engine.sv
+!i122 9
+R28
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vmix_col_core
+R5
+R6
+R7
+!i10b 1
+!s100 ;o9EJaFi1DgYHJY`mccT^3
+IkC`M^PRocRN5SINGN>h<z2
+S1
+R8
+R9
+8../rtl/aes_dual_rail/aes_core/mix_col_core.v
+F../rtl/aes_dual_rail/aes_core/mix_col_core.v
+!i122 9
+L0 1 82
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vpair_scheduler
+R5
+R6
+R7
+!i10b 1
+!s100 K>[PhY1SAVa:SmKTLBleU2
+I_TYbcUE`B<R@o5bIT`0HR2
+S1
+R8
+R29
+8../rtl/puf/pair_scheduler.sv
+F../rtl/puf/pair_scheduler.sv
+!i122 9
+L0 1 80
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vPC
+R5
+R6
+R7
+!i10b 1
+!s100 HBAZ0eCWHUW9WS5Uji0@U1
+I4io;eQhQVPNhl[nn37M163
+S1
+R8
+R9
+8../rtl/riscv_core/PC.v
+F../rtl/riscv_core/PC.v
+!i122 9
+Z36 L0 1 52
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+n@p@c
+vRegister_file
+R5
+R6
+R7
+!i10b 1
+!s100 Kd:c^_aBP<nILF@oLSJ4Z0
+IScbDAz4<Q0GPfjBJ:GG2=0
+S1
+R8
+R26
+8../rtl/riscv_core/Register_file.v
+F../rtl/riscv_core/Register_file.v
+!i122 9
+R32
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+n@register_file
+vresponse_builder
+R5
+R6
+R7
+!i10b 1
+!s100 _g1X5dBz2M?GgLm;zHmcf3
+INWb;nH7]acgEGlU[`]DUE3
+S1
+R8
+R29
+8../rtl/puf/response_builder.sv
+F../rtl/puf/response_builder.sv
+!i122 9
+L0 1 45
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vresponse_engine
+R5
+R6
+R7
+!i10b 1
+!s100 m0YdG0X=W28z3L[en[X]R3
+IjWHi>3;>AB9jV8h=mN`oO2
+S1
+R8
+R29
+8../rtl/puf/response_engine.sv
+F../rtl/puf/response_engine.sv
+!i122 9
+L0 1 71
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vro_bank
+R5
+R6
+R7
+!i10b 1
+!s100 8NYd76U8g;BRl0kB?3L^N3
+Ik8C;IBTYe>Ce<XSRIOUj<1
+S1
+R8
+R29
+8../rtl/puf/ro_bank.sv
+F../rtl/puf/ro_bank.sv
+!i122 9
+L0 1 20
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vro_cell
+R5
+R6
+R7
+!i10b 1
+!s100 ]@:R0dK>5V0<^GG:a=lKA0
+IKT[K2JDF<_a189NLMI2>l3
+S1
+R8
+R16
+8../rtl/puf/ro_cell.sv
+F../rtl/puf/ro_cell.sv
+!i122 9
+L0 1 42
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vro_puf_core
+R5
+R6
+R7
+!i10b 1
+!s100 LEJeXDY_RnQL_G]]lm2^i2
+IJ[J6mZCk?obNahDzo@50a3
+S1
+R8
+R29
+8../rtl/puf/ro_puf_core.sv
+F../rtl/puf/ro_puf_core.sv
+!i122 9
+L0 1 134
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vrv32_axi_master
+R5
+R6
+R7
+!i10b 1
+!s100 Jbb;4e@z;NlSAODGn=I942
+I7R@Vn2OfNeb7I9RFKPDA@0
+S1
+R8
+R9
+8../rtl/soc/rv32_axi_master.v
+F../rtl/soc/rv32_axi_master.v
+!i122 9
+L0 1 130
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vRV32I
+R5
+R6
+R7
+!i10b 1
+!s100 cD?P5FV58Q4Pko@C70:eV1
+IXGB9<5gi573W3<7Y3jEYc0
+S1
+R8
+w1789369048
+8../rtl/riscv_core/RV32I.v
+F../rtl/riscv_core/RV32I.v
+!i122 9
+L0 1 322
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+n@r@v32@i
+vsha256
+R5
+R6
+R7
+!i10b 1
+!s100 8k<JRzP<X[5Zg?o>?VLIJ3
+I7OV:Wh7UQ2iJLZ;T_@^]:1
+S1
+R8
+R9
 8../rtl/sha/sha256.v
 F../rtl/sha/sha256.v
-!i122 0
-L0 1 338
-R5
-R6
+!i122 9
+L0 1 341
+R10
+R11
 r1
 !s85 0
 31
-R7
-R8
-R9
+R12
+R13
+R14
 !i113 0
-R10
-R11
-R1
+R15
+R4
 vsha256_k_constant
-R2
-R3
+R5
+R6
+R7
 !i10b 1
-!s100 z7aD1Bo[Bl@>XaI;WeLjT0
-ISAEG>CmQ=j1_HSzd>:?L60
+!s100 :No9UkBTU[PU6<;U0cnFB1
+IJj^?o941=XC]Gn7K7z]b80
 S1
-R0
-w1782996015
+R8
+w1783566458
 8../rtl/sha/sha256_k_constant.v
 F../rtl/sha/sha256_k_constant.v
-!i122 0
+!i122 9
 L0 1 84
-R5
-R6
+R10
+R11
 r1
 !s85 0
 31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vsha256_m_schedule
+R5
+R6
 R7
+!i10b 1
+!s100 `<aogf_7l]=OPWbOO[jJL1
+I`mdWFgGhMQPBf3HAiXDMH3
+S1
 R8
 R9
-!i113 0
-R10
-R11
-R1
-vsha256_m_schedule
-R2
-R3
-!i10b 1
-!s100 9C2n>9dK2U`m8no]UF1oO1
-IZBPWK^<[9boeV4a:n6>e]2
-S1
-R0
-w1782995993
 8../rtl/sha/sha256_m_schedule.v
 F../rtl/sha/sha256_m_schedule.v
-!i122 0
-L0 1 152
-R5
-R6
+!i122 9
+L0 1 154
+R10
+R11
 r1
 !s85 0
 31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vsha256_top
+R5
+R6
 R7
+!i10b 1
+!s100 HP1OGjmiWe;>n:SQAT?D23
+I<^fQlLb^z60PbEc6=S1Sg0
+S1
 R8
 R9
-!i113 0
-R10
-R11
-R1
-vsha256_top
-R2
-R3
-!i10b 1
-!s100 ]Vch0?4j^gcbCZ[Od=6O`2
-Id@6U;R6a`lX_glkLIJlGI2
-S1
-R0
-w1783046712
 8../rtl/sha/sha256_top.v
 F../rtl/sha/sha256_top.v
-!i122 0
-L0 1 120
-R5
-R6
+!i122 9
+L0 1 131
+R10
+R11
 r1
 !s85 0
 31
-R7
-R8
-R9
+R12
+R13
+R14
 !i113 0
+R15
+R4
+vSign_extend
+R5
+R6
+R7
+!i10b 1
+!s100 JW]`M:KTaA6>9f5;NL2AU0
+I4<Y>b5;MVeh<P>FSL9=7h0
+S1
+R8
+R26
+8../rtl/riscv_core/Sign_extend.v
+F../rtl/riscv_core/Sign_extend.v
+!i122 9
+R33
 R10
 R11
-R1
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+n@sign_extend
 vsingle2dual_converter
-R2
-R3
+R17
+R18
 !i10b 1
 !s100 >1A2j87OJ@KFdP14[Mznd0
 IK_4=LNO4@]`D^8J0AGmI>3
 S1
-R0
+R2
 w1783473154
 8../rtl/aes_dual_rail/aes_core/single2dual_converter.v
 F../rtl/aes_dual_rail/aes_core/single2dual_converter.v
 !i122 0
-R4
-R5
-R6
+R31
+R10
+R19
 r1
 !s85 0
 31
-R7
-R8
-R9
+R20
+R21
+R22
 !i113 0
+R23
+R24
+R4
+vsnapshot_register
+R5
+R6
+R7
+!i10b 1
+!s100 I40naLB?<=?RjHPa[3JgS1
+Ia?8Qee4]WVgmY:nhboD`21
+S1
+R8
+R29
+8../rtl/puf/snapshot_register.sv
+F../rtl/puf/snapshot_register.sv
+!i122 9
+L0 1 25
 R10
 R11
-R1
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vsoc
+R5
+R6
+R7
+!i10b 1
+!s100 W`=_e@@efPZZCHl;k?gfO2
+I<zO]X`z3fZ2JcjcCSl:Q12
+S1
+R8
+R16
+8../rtl/soc/soc.v
+F../rtl/soc/soc.v
+!i122 9
+L0 1 273
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vsub_byte_core
+R5
+R6
+R7
+!i10b 1
+!s100 ]IebUTLSDzmE=XUH?kCmS1
+IW81_AW[L<B?XVK`0mSQ[X2
+S1
+R8
+R9
+8../rtl/aes_dual_rail/aes_core/sub_byte_core.v
+F../rtl/aes_dual_rail/aes_core/sub_byte_core.v
+!i122 9
+L0 1 46
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
 vsub_bytes
-R2
-R3
+R17
+R18
 !i10b 1
 !s100 b4V;P=a[BC^a2ocT?;IFE2
 IocZH9o]S9fC:]^1fQ^TNd0
 S1
-R0
+R2
 w1783475082
 8../rtl/aes_dual_rail/aes_core/sub_bytes.v
 F../rtl/aes_dual_rail/aes_core/sub_bytes.v
 !i122 0
-L0 1 159
-R5
-R6
+R35
+R10
+R19
 r1
 !s85 0
 31
-R7
-R8
-R9
+R20
+R21
+R22
 !i113 0
-R10
-R11
-R1
+R23
+R24
+R4
 vtb_sub_bytes
-R2
-R3
+R17
+R18
 !i10b 1
 !s100 eO2YD>nHM:MLWS6KzjINo2
 IIG3_JSLVPc37_bjM8F`A]0
 S1
-R0
+R2
 w1783475368
 8../tb/unit_tests/tb_sub_bytes.v
 F../tb/unit_tests/tb_sub_bytes.v
 !i122 0
 L0 3 180
-R5
-R6
+R10
+R19
 r1
 !s85 0
 31
-R7
-R8
-R9
+R20
+R21
+R22
 !i113 0
+R23
+R24
+R4
+vtb_uart_cfg
+R5
+R6
+R7
+!i10b 1
+!s100 Id87nJi3UXY5eNFBH1l>F2
+I[?[0I1X@Ho:lbZR_EW7Fm0
+S1
+R8
+w1789368882
+8../tb/unit_tests/tb_uart_cfg.sv
+F../tb/unit_tests/tb_uart_cfg.sv
+!i122 9
+L0 3 86
 R10
 R11
-R1
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vuart_fifo
+R5
+R6
+R7
+!i10b 1
+!s100 I8`=]:iHYb?J3Y8XKRWgM2
+IZ;dOATXzk_aOLa0V^ce0[1
+S1
+R8
+R16
+8../rtl/UART/uart_fifo.v
+F../rtl/UART/uart_fifo.v
+!i122 9
+R36
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vuart_interrupt
+R5
+R6
+R7
+!i10b 1
+!s100 MiNV9@`z_0E[d0OS5>4b:3
+Ia]nlI0RWLgej?H;imCMmJ0
+S1
+R8
+R9
+8../rtl/UART/uart_interrupt.v
+F../rtl/UART/uart_interrupt.v
+!i122 9
+R34
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vuart_receiver
+R5
+R6
+R7
+!i10b 1
+!s100 >RF@e4]BoZHH`g9VDV;F70
+IBDgUXGDTY]OAQUWWOG`8i2
+S1
+R8
+R27
+8../rtl/UART/uart_receiver.v
+F../rtl/UART/uart_receiver.v
+!i122 9
+L0 1 247
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vuart_rx_buffer
+R5
+R6
+R7
+!i10b 1
+!s100 OQLCA22a=:C94UHK`N:zh3
+IH0M0:`;zB^3HJgW22`DfQ2
+S1
+R8
+R16
+8../rtl/UART/uart_rx_buffer.v
+F../rtl/UART/uart_rx_buffer.v
+!i122 9
+R36
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vuart_top
+R5
+R6
+R7
+!i10b 1
+!s100 4U?D<>gm]MDALnUI>V`G72
+IkmXgMNO`RKAW6a@<CEH6j2
+S1
+R8
+R16
+8../rtl/UART/uart_top.v
+F../rtl/UART/uart_top.v
+!i122 9
+L0 1 224
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vuart_transmitter
+R5
+R6
+R7
+!i10b 1
+!s100 :ba:77iC5k`T1A5m[AeZU0
+IjNoI]zI;e@LgYXP@iQ7L?2
+S1
+R8
+R9
+8../rtl/UART/uart_transmiter.v
+F../rtl/UART/uart_transmiter.v
+!i122 9
+L0 1 219
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4
+vuart_tx_buffer
+R5
+R6
+R7
+!i10b 1
+!s100 Ied?F4l8Bz7Ob5a0M8b^>1
+IWz2<4X^K_T99FLM3O3OMI2
+S1
+R8
+R16
+8../rtl/UART/uart_tx_buffer.v
+F../rtl/UART/uart_tx_buffer.v
+!i122 9
+L0 1 85
+R10
+R11
+r1
+!s85 0
+31
+R12
+R13
+R14
+!i113 0
+R15
+R4

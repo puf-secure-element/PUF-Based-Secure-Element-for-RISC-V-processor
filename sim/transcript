@@ -1,0 +1,226 @@
+# ** Note: (vsim-220) 'modelsim.ini' is used as the ini file.
+# vsim -c -voptargs="+acc" tb_uart_cfg -do "run -all; quit" 
+# Start time: 13:57:37 on Sep 14,2026
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# ** Warning: (vopt-10908) Some optimizations are turned off because the +acc switch is in effect.
+# ** Note: (vopt-220) 'modelsim.ini' is used as the ini file.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
+# //  Questa Altera Starter FPGA Edition-64
+# //  Version 2025.2 linux_x86_64 May 31 2025
+# //
+# // Unpublished work. Copyright 2025 Siemens
+# //
+# // This material contains trade secrets or otherwise confidential information
+# // owned by Siemens Industry Software Inc. or its affiliates (collectively,
+# // "SISW"), or its licensors. Access to and use of this information is strictly
+# // limited as set forth in the Customer's applicable agreements with SISW.
+# //
+# // This material may not be copied, distributed, or otherwise disclosed outside
+# // of the Customer's facilities without the express written permission of SISW,
+# // and may not be used in any way not expressly authorized by SISW.
+# //
+# Loading sv_std.std
+# Loading work.tb_uart_cfg(fast)
+# Loading work.soc(fast)
+# Loading work.RV32I(fast)
+# Loading work.Register_file(fast)
+# Loading work.ALU(fast)
+# Loading work.Immediate_generator(fast)
+# Loading work.Sign_extend(fast)
+# Loading work.Control_unit(fast)
+# Loading work.ALU_control(fast)
+# Loading work.PC(fast)
+# Loading work.Branch_prediction(fast)
+# Loading work.Instruction_memory(fast)
+# Loading work.Forwarding_unit(fast)
+# Loading work.Hazard_detection(fast)
+# Loading work.rv32_axi_master(fast)
+# Loading work.axi_slave_top(fast)
+# Loading work.axi_reg_bank(fast)
+# Loading work.control_fsm(fast)
+# Loading work.axi_slave_core(fast)
+# Loading work.ro_puf_core(fast)
+# Loading work.ro_bank(fast)
+# Loading work.ro_cell(fast)
+# Loading work.ro_cell(fast__1)
+# Loading work.ro_cell(fast__2)
+# Loading work.ro_cell(fast__3)
+# Loading work.ro_cell(fast__4)
+# Loading work.ro_cell(fast__5)
+# Loading work.ro_cell(fast__6)
+# Loading work.ro_cell(fast__7)
+# Loading work.ro_cell(fast__8)
+# Loading work.ro_cell(fast__9)
+# Loading work.ro_cell(fast__10)
+# Loading work.ro_cell(fast__11)
+# Loading work.ro_cell(fast__12)
+# Loading work.ro_cell(fast__13)
+# Loading work.ro_cell(fast__14)
+# Loading work.ro_cell(fast__15)
+# Loading work.ro_cell(fast__16)
+# Loading work.ro_cell(fast__17)
+# Loading work.ro_cell(fast__18)
+# Loading work.ro_cell(fast__19)
+# Loading work.ro_cell(fast__20)
+# Loading work.ro_cell(fast__21)
+# Loading work.ro_cell(fast__22)
+# Loading work.ro_cell(fast__23)
+# Loading work.ro_cell(fast__24)
+# Loading work.ro_cell(fast__25)
+# Loading work.ro_cell(fast__26)
+# Loading work.ro_cell(fast__27)
+# Loading work.ro_cell(fast__28)
+# Loading work.ro_cell(fast__29)
+# Loading work.ro_cell(fast__30)
+# Loading work.ro_cell(fast__31)
+# Loading work.ro_cell(fast__32)
+# Loading work.ro_cell(fast__33)
+# Loading work.ro_cell(fast__34)
+# Loading work.ro_cell(fast__35)
+# Loading work.ro_cell(fast__36)
+# Loading work.ro_cell(fast__37)
+# Loading work.ro_cell(fast__38)
+# Loading work.ro_cell(fast__39)
+# Loading work.ro_cell(fast__40)
+# Loading work.ro_cell(fast__41)
+# Loading work.ro_cell(fast__42)
+# Loading work.ro_cell(fast__43)
+# Loading work.ro_cell(fast__44)
+# Loading work.ro_cell(fast__45)
+# Loading work.ro_cell(fast__46)
+# Loading work.ro_cell(fast__47)
+# Loading work.ro_cell(fast__48)
+# Loading work.ro_cell(fast__49)
+# Loading work.ro_cell(fast__50)
+# Loading work.ro_cell(fast__51)
+# Loading work.ro_cell(fast__52)
+# Loading work.ro_cell(fast__53)
+# Loading work.ro_cell(fast__54)
+# Loading work.ro_cell(fast__55)
+# Loading work.ro_cell(fast__56)
+# Loading work.ro_cell(fast__57)
+# Loading work.ro_cell(fast__58)
+# Loading work.ro_cell(fast__59)
+# Loading work.ro_cell(fast__60)
+# Loading work.ro_cell(fast__61)
+# Loading work.ro_cell(fast__62)
+# Loading work.ro_cell(fast__63)
+# Loading work.measurement_engine(fast)
+# Loading work.measurement_controller(fast)
+# Loading work.counter_bank(fast)
+# Loading work.snapshot_register(fast)
+# Loading work.response_engine(fast)
+# Loading work.pair_scheduler(fast)
+# Loading work.challenge_mapper(fast)
+# Loading work.comparator(fast)
+# Loading work.response_builder(fast)
+# Loading work.ecc_top(fast)
+# Loading work.hamming_encoder_32(fast)
+# Loading work.hamming_decoder_32(fast)
+# Loading work.sha256_top(fast)
+# Loading work.sha256(fast)
+# Loading work.sha256_m_schedule(fast)
+# Loading work.sha256_k_constant(fast)
+# Loading work.aes(fast)
+# Loading work.sub_byte_core(fast)
+# Loading work.inv_aff(fast)
+# Loading work.GF(fast)
+# Loading work.aff_trans(fast)
+# Loading work.mix_col_core(fast)
+# Loading work.inv_mix_col_core(fast)
+# Loading work.add_round_key_core(fast)
+# Loading work.axi_to_ahb(fast)
+# Loading work.uart_top(fast)
+# Loading work.cmsdk_ahb_to_apb(fast)
+# Loading work.apb_decoder(fast)
+# Loading work.uart_rx_buffer(fast)
+# Loading work.uart_tx_buffer(fast)
+# Loading work.uart_fifo(fast)
+# Loading work.uart_transmitter(fast)
+# Loading work.uart_receiver(fast)
+# Loading work.uart_interrupt(fast)
+# Loading work.baud_generator(fast)
+# run -all
+# 
+# === pipeline trace ===
+#   time   pc   ifid_instr  idex_rd  wb_rd wb_en wb_data   hz bus flush
+#   110000 000  00000000     0       0    0   00000000   0  0   0
+#   130000 004  000013b7     0       0    0   00000000   0  0   0
+#   150000 008  00000313     7       0    0   00000000   0  0   0
+#   170000 00c  01b00e13     6       0    0   00000000   0  0   0
+#   190000 010  02300e93    28       7    1   00001000   0  0   0
+#   210000 014  1063a023    29       6    1   00000000   0  0   0
+#   230000 018  00000013     0      28    1   0000001b   0  0   0
+#   250000 01c  00000013     0      29    1   00000023   0  1   0
+#   270000 01c  00000013     0      29    1   00000023   0  1   0
+#   290000 01c  00000013     0      29    1   00000023   0  1   0
+#   310000 01c  00000013     0      29    1   00000023   0  1   0
+#   330000 01c  00000013     0      29    1   00000023   0  1   0
+#   350000 01c  00000013     0      29    1   00000023   0  1   0
+#   370000 01c  00000013     0      29    1   00000023   0  1   0
+#   390000 01c  00000013     0      29    1   00000023   0  1   0
+#   410000 01c  00000013     0      29    1   00000023   0  0   0
+#   430000 020  11c3a223     0       0    0   00001100   0  0   0
+#   450000 024  00000013     4       0    1   00000000   0  0   0
+#   470000 028  00000013     0       0    1   00000000   0  1   0
+#   490000 028  00000013     0       0    1   00000000   0  1   0
+#   510000 028  00000013     0       0    1   00000000   0  1   0
+#   530000 028  00000013     0       0    1   00000000   0  1   0
+#   550000 028  00000013     0       0    1   00000000   0  1   0
+#   570000 028  00000013     0       0    1   00000000   0  1   0
+#   590000 028  00000013     0       0    1   00000000   0  1   0
+#   610000 028  00000013     0       0    1   00000000   0  1   0
+#   630000 028  00000013     0       0    1   00000000   0  0   0
+#   650000 02c  1063a423     0       4    0   00001104   0  0   0
+#   670000 030  00000013     8       0    1   00000000   0  0   0
+#   690000 034  00000013     0       0    1   00000000   0  1   0
+#   710000 034  00000013     0       0    1   00000000   0  1   0
+#   730000 034  00000013     0       0    1   00000000   0  1   0
+#   750000 034  00000013     0       0    1   00000000   0  1   0
+#   770000 034  00000013     0       0    1   00000000   0  1   0
+#   790000 034  00000013     0       0    1   00000000   0  1   0
+#   810000 034  00000013     0       0    1   00000000   0  1   0
+#   830000 034  00000013     0       0    1   00000000   0  1   0
+#   850000 034  00000013     0       0    1   00000000   0  0   0
+#   870000 038  11d3a623     0       8    0   00001108   0  0   0
+#   890000 03c  00800293    12       0    1   00000000   0  0   0
+#   910000 040  00200313     5       0    1   00000000   0  1   0
+#   930000 040  00200313     5       0    1   00000000   0  1   0
+#   950000 040  00200313     5       0    1   00000000   0  1   0
+#   970000 040  00200313     5       0    1   00000000   0  1   0
+#   990000 040  00200313     5       0    1   00000000   0  1   0
+#   1010000 040  00200313     5       0    1   00000000   0  1   0
+#   1030000 040  00200313     5       0    1   00000000   0  1   0
+#   1050000 040  00200313     5       0    1   00000000   0  1   0
+#   1070000 040  00200313     5       0    1   00000000   0  0   0
+#   1090000 044  0062a023     6      12    0   0000110c   0  0   0
+#   1110000 048  00c00293     0       5    1   00000008   0  0   0
+#   1130000 04c  00000313     5       6    1   00000002   0  1   0
+#   1150000 04c  00000313     5       6    1   00000002   0  1   0
+#   1170000 04c  00000313     5       6    1   00000002   0  1   0
+#   1190000 04c  00000313     5       6    1   00000002   0  1   0
+#   1210000 04c  00000313     5       6    1   00000002   0  0   0
+#   1230000 050  0062a023     6       0    0   00000008   0  0   0
+#   1250000 054  01400293     0       5    1   0000000c   0  0   0
+#   1270000 058  12345337     5       6    1   00000000   0  1   0
+#   1290000 058  12345337     5       6    1   00000000   0  1   0
+# 
+# === cpu register file ===
+#   x6  = 0x00000000   (expect 0x00000000)
+#   x7  = 0x00001000   (expect 0x00001000)
+#   x28 = 0x0000001b   (expect 0x0000001B)
+#   x29 = 0x00000023   (expect 0x00000023)
+# 
+# === uart config registers ===
+#   reg_mdr = 0x00   (expect 0x00)
+#   reg_dll = 0x1b   (expect 0x1B)
+#   reg_dlh = 0x00   (expect 0x00)
+#   reg_lcr = 0x23   (expect 0x23)
+#   bge                = 1   (expect 1)
+# 
+#   RESULT: PASS - uart is configured for 115200 8N1
+# 
+# ** Note: $finish    : ../tb/unit_tests/tb_uart_cfg.sv(79)
+#    Time: 1290 ns  Iteration: 1  Instance: /tb_uart_cfg
+# End time: 13:57:38 on Sep 14,2026, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 1

@@ -13,7 +13,7 @@ DB_PATH = "devices.db"
 # Khóa bí mật xác thực giữa ESP8266 và Backend (tránh thiết bị lạ gửi request giả)
 ESP32_SECRET = os.environ.get("ESP32_SECRET", "demo-secret-change-me")
 
-app = Flask(__name__, static_folder="static", static_url_path="")
+app = Flask(__name__, static_folder="../static", static_url_path="")
 
 # Tự động khởi tạo DB nếu chưa có
 def init_db_if_not_exists():

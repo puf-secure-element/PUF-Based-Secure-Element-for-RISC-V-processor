@@ -77,8 +77,17 @@ module control_fsm (
 
     // 1b. Key-ready latch - CHỈ reset bằng rst_n, soft_reset không được đụng vào
     // để đảm bảo PUF/ECC/SHA chỉ chạy đúng 1 lần trong suốt vòng đời sau reset.
+    //
+    // *** TEMP DIAGNOSTIC -- REVERT BEFORE REAL USE ***
+    // key_ready starts pre-set to 1 so RUN_PUF/WAIT_PUF/... (the entire
+    // PUF->ECC->SHA chain, and hence the real ro_cell hardware) is never
+    // entered at all. key_reg in axi_slave_core.v then stays at its reset
+    // value (all zeros) instead of a PUF-derived key. This is ONLY to test
+    // whether UART/AES/CPU/LEDR come alive on real hardware with the PUF
+    // completely out of the loop, isolating whether it is the cause of the
+    // board staying fully dark. Revert to 1'b0 once that's answered.
     always @(posedge clk) begin
-        if (!rst_n) key_ready <= 1'b0;
+        if (!rst_n) key_ready <= 1'b1;
         else if (next_state == DONE_KEY) key_ready <= 1'b1;
     end
 

@@ -206,10 +206,15 @@ module axi_reg_bank (
     reg [31:0]  aes_ct_reg [0:3];
     reg [31:0]  ecc_helper_reg [0:2]; // Thanh ghi Helper Data
     reg [127:0] aes_dout_reg;
-    reg [31:0]  manual_tx_reg [0:3]; // Thanh ghi staging cho gửi UART thủ công
+    // NOTE: manual-TX staging reuses aes_ct_reg[0:3] instead of adding 4 new
+    // 32-bit registers. aes_ct_reg is the AES-decrypt ciphertext input,
+    // which this design never uses (aes_decrypt_en is always 0 -- decrypt
+    // mode is never enabled by the boot firmware), so it's dead storage
+    // otherwise. Saves 128 flip-flops of new logic (was tipping Fitter
+    // routing over the edge in an unrelated area of the design).
 
     assign manual_tx_start = slv_reg_wren && (axi_awaddr[7:0] == MANUAL_TX_CTRL) && axi_wstrb_reg[0] && axi_wdata_reg[0];
-    assign manual_tx_data  = {manual_tx_reg[3], manual_tx_reg[2], manual_tx_reg[1], manual_tx_reg[0]};
+    assign manual_tx_data  = {aes_ct_reg[3], aes_ct_reg[2], aes_ct_reg[1], aes_ct_reg[0]};
 
     // NEW: CRC = XOR-fold 44 byte payload Enroll (12 byte helper + 32 byte
     // key). Thuần tổ hợp, luôn "sẵn sàng" ngay khi helper/key có giá trị --
@@ -241,7 +246,6 @@ module axi_reg_bank (
             aes_pt_reg[0] <= 32'h0; aes_pt_reg[1] <= 32'h0; aes_pt_reg[2] <= 32'h0; aes_pt_reg[3] <= 32'h0;
             aes_ct_reg[0] <= 32'h0; aes_ct_reg[1] <= 32'h0; aes_ct_reg[2] <= 32'h0; aes_ct_reg[3] <= 32'h0;
             ecc_helper_reg[0] <= 32'h0; ecc_helper_reg[1] <= 32'h0; ecc_helper_reg[2] <= 32'h0;
-            manual_tx_reg[0] <= 32'h0; manual_tx_reg[1] <= 32'h0; manual_tx_reg[2] <= 32'h0; manual_tx_reg[3] <= 32'h0;
             
             status_done_reg  <= 1'b0;
             status_error_reg <= 1'b0;
@@ -298,10 +302,11 @@ module axi_reg_bank (
                     ECC_HELPER_1: for (i=0; i<4; i=i+1) if (axi_wstrb_reg[i]) ecc_helper_reg[1][(i*8)+:8] <= axi_wdata_reg[(i*8)+:8];
                     ECC_HELPER_2: for (i=0; i<4; i=i+1) if (axi_wstrb_reg[i]) ecc_helper_reg[2][(i*8)+:8] <= axi_wdata_reg[(i*8)+:8];
 
-                    MANUAL_TX_0: for (i=0; i<4; i=i+1) if (axi_wstrb_reg[i]) manual_tx_reg[0][(i*8)+:8] <= axi_wdata_reg[(i*8)+:8];
-                    MANUAL_TX_1: for (i=0; i<4; i=i+1) if (axi_wstrb_reg[i]) manual_tx_reg[1][(i*8)+:8] <= axi_wdata_reg[(i*8)+:8];
-                    MANUAL_TX_2: for (i=0; i<4; i=i+1) if (axi_wstrb_reg[i]) manual_tx_reg[2][(i*8)+:8] <= axi_wdata_reg[(i*8)+:8];
-                    MANUAL_TX_3: for (i=0; i<4; i=i+1) if (axi_wstrb_reg[i]) manual_tx_reg[3][(i*8)+:8] <= axi_wdata_reg[(i*8)+:8];
+                    // Reuses aes_ct_reg -- see note above where it's declared.
+                    MANUAL_TX_0: for (i=0; i<4; i=i+1) if (axi_wstrb_reg[i]) aes_ct_reg[0][(i*8)+:8] <= axi_wdata_reg[(i*8)+:8];
+                    MANUAL_TX_1: for (i=0; i<4; i=i+1) if (axi_wstrb_reg[i]) aes_ct_reg[1][(i*8)+:8] <= axi_wdata_reg[(i*8)+:8];
+                    MANUAL_TX_2: for (i=0; i<4; i=i+1) if (axi_wstrb_reg[i]) aes_ct_reg[2][(i*8)+:8] <= axi_wdata_reg[(i*8)+:8];
+                    MANUAL_TX_3: for (i=0; i<4; i=i+1) if (axi_wstrb_reg[i]) aes_ct_reg[3][(i*8)+:8] <= axi_wdata_reg[(i*8)+:8];
                     default: ;
                 endcase
             end
@@ -365,10 +370,10 @@ module axi_reg_bank (
                     HELPER_OUT_0:    axi_rdata <= hw_ecc_helper_out[31:0];
                     HELPER_OUT_1:    axi_rdata <= hw_ecc_helper_out[63:32];
                     HELPER_OUT_2:    axi_rdata <= hw_ecc_helper_out[95:64];
-                    MANUAL_TX_0:     axi_rdata <= manual_tx_reg[0];
-                    MANUAL_TX_1:     axi_rdata <= manual_tx_reg[1];
-                    MANUAL_TX_2:     axi_rdata <= manual_tx_reg[2];
-                    MANUAL_TX_3:     axi_rdata <= manual_tx_reg[3];
+                    MANUAL_TX_0:     axi_rdata <= aes_ct_reg[0];
+                    MANUAL_TX_1:     axi_rdata <= aes_ct_reg[1];
+                    MANUAL_TX_2:     axi_rdata <= aes_ct_reg[2];
+                    MANUAL_TX_3:     axi_rdata <= aes_ct_reg[3];
                     MANUAL_TX_STAT:  axi_rdata <= {31'h0, hw_uart_tx_busy};
                     KEY_OUT_0:       axi_rdata <= hw_sha_key_out[31:0];
                     KEY_OUT_1:       axi_rdata <= hw_sha_key_out[63:32];

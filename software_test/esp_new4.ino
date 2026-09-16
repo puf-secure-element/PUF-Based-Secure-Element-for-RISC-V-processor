@@ -106,6 +106,7 @@ void checkPendingAndProcess() {
     return;
   }
 
+  http.addHeader("X-Device-Secret", ESP32_SECRET);
   int code = http.GET();
   if (code < 0) Serial1.printf("[AUTH] HTTP lỗi: %s\n", http.errorToString(code).c_str());
   if (code == 204) { http.end(); return; }
@@ -271,6 +272,7 @@ void checkPendingEnroll() {
     return;
   }
 
+  http.addHeader("X-Device-Secret", ESP32_SECRET);
   int code = http.GET();
   if (code < 0) Serial1.printf("[ENROLL] HTTP lỗi: %s\n", http.errorToString(code).c_str());
   if (code == 204) { http.end(); return; }

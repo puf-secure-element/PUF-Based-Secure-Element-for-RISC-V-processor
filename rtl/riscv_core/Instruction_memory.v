@@ -199,24 +199,26 @@ initial begin
 
 
     // =========================================================
-    // READ AES OUTPUT
+    // TEMP DIAGNOSTIC -- REVERT BEFORE REAL USE
+    // Original self-test AES_OUT reads (mem[52-59]) never actually ran a
+    // real AES op (no plaintext_pending trigger from CPU writes), so they
+    // always just read the post-reset 0 value -- harmless dead code, safe
+    // to repurpose. Replaced here with the EARLIEST possible manual-TX
+    // trigger, right where the WAIT_SHA poll loop above hands off, BEFORE
+    // any of the new Enroll code at mem[62]+. If LEDR9 lights up with this,
+    // the poll loop demonstrably exits correctly and the bug is somewhere
+    // in mem[62]-mem[90]; if LEDR9 stays dark even with this, the CPU never
+    // leaves the poll loop despite key_ready reaching 1 in hardware.
     // =========================================================
 
-    // AES_OUT_0 = 0x40
-    mem[52] = 32'h04000293;
-    mem[53] = 32'h0002A503;
-
-    // AES_OUT_1 = 0x44
-    mem[54] = 32'h04400293;
-    mem[55] = 32'h0002A583;
-
-    // AES_OUT_2 = 0x48
-    mem[56] = 32'h04800293;
-    mem[57] = 32'h0002A603;
-
-    // AES_OUT_3 = 0x4C
-    mem[58] = 32'h04C00293;
-    mem[59] = 32'h0002A683;
+    mem[52] = 32'h08000293;    // addi x5,x0,0x80   (MANUAL_TX_CTRL)
+    mem[53] = 32'h00100313;    // addi x6,x0,1
+    mem[54] = 32'h0062A023;    // sw   x6,0(x5)      (EARLY probe trigger)
+    mem[55] = 32'h00000013;    // NOP
+    mem[56] = 32'h00000013;    // NOP
+    mem[57] = 32'h00000013;    // NOP
+    mem[58] = 32'h00000013;    // NOP
+    mem[59] = 32'h00000013;    // NOP
 
 
     // =========================================================

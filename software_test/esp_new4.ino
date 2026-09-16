@@ -24,7 +24,7 @@
 
 const char* WIFI_SSID     = "EELA2201";
 const char* WIFI_PASSWORD = "eela2201";
-const char* BACKEND_URL = "http://10.152.89.151:5000";
+const char* BACKEND_URL = "http://192.168.0.3:5000";
 //const char* WIFI_SSID     = "Nhu Ngoc";
 //const char* WIFI_PASSWORD = "nn7677032022";
 //const char* BACKEND_URL = "http://192.168.1.52:5000";

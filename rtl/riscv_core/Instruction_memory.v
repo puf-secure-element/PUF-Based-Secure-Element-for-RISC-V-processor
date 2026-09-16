@@ -103,145 +103,92 @@ initial begin
 
 
     // =========================================================
-    // PLAINTEXT
+    // *** TEMP DIAGNOSTIC -- REVERT BEFORE REAL USE ***
     //
-    // 128-bit plaintext:
-    // 11111111_22222222_33333333_44444444
+    // mem[27..42] used to write a fixed 128-bit plaintext into AES_PT_*.
+    // That was dead code: real plaintext arrives from the UART RX buffer
+    // via hw_pt_load_valid, and only THAT path raises control_fsm's
+    // plaintext_pending -- a CPU write to AES_PT_* never starts an AES op.
+    // Reclaimed here for a firmware progress tracer, keeping mem[52] as the
+    // entry point for everything below so no later branch offset moves.
+    //
+    // x30 holds the DEBUG_TRACE port (0xC0); every value stamped there
+    // appears immediately on LEDR[7:0]. Read the LEDs as:
+    //
+    //   0x00  firmware never even reached mem[29] -- the CPU dies somewhere
+    //         in the config writes at mem[0..28]
+    //   0x01  all config writes done
+    //   0x02  START=1 written, entering the status poll loop
+    //   0x8x  live STATUS as the CPU reads it, bit7 added so that a status
+    //         of 0 is still visibly distinct from 'never written':
+    //           0x80 = STATUS reads 0     -> AXI *reads* return nothing,
+    //                                        even though writes work
+    //           0x81 = BUSY, still deriving the key (should be brief)
+    //           0x83 = DONE -- loop is about to exit
+    //           0x85 = ERROR bit set
+    //   0x03  poll loop exited on DONE
+    //   0x04  about to write MANUAL_TX_CTRL
+    //   0x05  that write returned (LEDR9 must be lit by now)
+    //   0x06  all four Enroll chunks pushed, firmware finished
+    //   0x0F  control_fsm reported ERROR; retrying START
+    //
+    // A resting value therefore names the exact instruction range that hangs.
     // =========================================================
 
+    mem[27] = 32'h0C000F13;    // addi x30,x0,0xC0       ; x30 = DEBUG_TRACE
+    mem[28] = 32'h00100F93;    // addi x31,x0,1
+    mem[29] = 32'h01FF2023;    // sw   x31,0(x30)        ; TRACE=01 cau hinh xong
 
-    // ---------------------------------------------------------
-    // PT[31:0] = 0x11111111
-    // ---------------------------------------------------------
+    // ---- START = 1 (re-entered from the error path at mem[51]) ----
+    mem[30] = 32'h00000293;    // addi x5,x0,0x00        ; SHA_ADDR_CTRL
+    mem[31] = 32'h00100313;    // addi x6,x0,1
+    mem[32] = 32'h0062A023;    // sw   x6,0(x5)          ; START=1
+    mem[33] = 32'h00200F93;    // addi x31,x0,2
+    mem[34] = 32'h01FF2023;    // sw   x31,0(x30)        ; TRACE=02 da ghi START
+    mem[35] = 32'h00400293;    // addi x5,x0,0x04        ; STATUS
 
-    mem[27] = 32'h02000293;    // addi x5,x0,0x20
+    // ---- poll STATUS until DONE, stamping the live value each pass ----
+    mem[36] = 32'h0002A383;    // lw   x7,0(x5)          ; doc STATUS
+    mem[37] = 32'h0803E493;    // ori  x9,x7,0x80        ; danh dau bit7
+    mem[38] = 32'h009F2023;    // sw   x9,0(x30)         ; TRACE=0x80|STATUS (live)
+    mem[39] = 32'h0043F413;    // andi x8,x7,4           ; bit ERROR
+    mem[40] = 32'h02041263;    // bne  x8,x0,+36        -> mem[49]
+    mem[41] = 32'h0023F413;    // andi x8,x7,2           ; bit DONE
+    mem[42] = 32'hFE0404E3;    // beq  x8,x0,-24       -> mem[36] (lap tiep)
 
-    mem[28] = 32'h11111337;    // lui x6,0x11111
-    mem[29] = 32'h11130313;    // addi x6,x6,0x111
+    // ---- success ----
+    mem[43] = 32'h00300F93;    // addi x31,x0,3
+    mem[44] = 32'h01FF2023;    // sw   x31,0(x30)        ; TRACE=03 thoat poll, DONE=1
+    mem[45] = 32'h01C0006F;    // jal  x0,+28          -> mem[52]
+    mem[46] = 32'h00000013;    // nop
+    mem[47] = 32'h00000013;    // nop
+    mem[48] = 32'h00000013;    // nop
 
-    mem[30] = 32'h0062A023;    // sw x6,0(x5)
+    // ---- ERROR: PUF is a noisy physical measurement, so a single
+    //      PUF->ECC->SHA attempt can legitimately fail. Stamp it and
+    //      re-issue START rather than dead-ending with key_ready stuck
+    //      at 0, which would silence the board until the next reconfigure.
+    mem[49] = 32'h00F00F93;    // addi x31,x0,0x0F
+    mem[50] = 32'h01FF2023;    // sw   x31,0(x30)        ; TRACE=0F FSM bao ERROR
+    mem[51] = 32'hFADFF06F;    // jal  x0,-84         -> mem[30] (thu lai START)
 
-
-    // ---------------------------------------------------------
-    // PT[63:32] = 0x22222222
-    // ---------------------------------------------------------
-
-    mem[31] = 32'h02400293;    // addi x5,x0,0x24
-
-    mem[32] = 32'h22222337;    // lui x6,0x22222
-    mem[33] = 32'h22230313;    // addi x6,x6,0x222
-
-    mem[34] = 32'h0062A023;    // sw x6,0(x5)
-
-
-    // ---------------------------------------------------------
-    // PT[95:64] = 0x33333333
-    // ---------------------------------------------------------
-
-    mem[35] = 32'h02800293;    // addi x5,x0,0x28
-
-    mem[36] = 32'h33333337;    // lui x6,0x33333
-    mem[37] = 32'h33330313;    // addi x6,x6,0x333
-
-    mem[38] = 32'h0062A023;    // sw x6,0(x5)
-
-
-    // ---------------------------------------------------------
-    // PT[127:96] = 0x44444444
-    // ---------------------------------------------------------
-
-    mem[39] = 32'h02C00293;    // addi x5,x0,0x2C
-
-    mem[40] = 32'h44444337;    // lui x6,0x44444
-    mem[41] = 32'h44430313;    // addi x6,x6,0x444
-
-    mem[42] = 32'h0062A023;    // sw x6,0(x5)
-
-
-    // =========================================================
-    // START
-    // 0x00 = 1
-    // =========================================================
-
-    mem[43] = 32'h00000293;    // addi x5,x0,0
-    mem[44] = 32'h00100313;    // addi x6,x0,1
-    mem[45] = 32'h0062A023;    // sw x6,0(x5)
-
-
-    // =========================================================
-    // STATUS ADDRESS
-    // x5 = 0x04
-    // =========================================================
-
-    mem[46] = 32'h00400293;    // addi x5,x0,0x04
-
-
-    // =========================================================
-    // POLL STATUS
-    // =========================================================
-
-    // lw x7,0(x5)
-    mem[47] = 32'h0002A383;
-
-    // andi x8,x7,4
-    // ERROR bit
-    mem[48] = 32'h0043F413;
-
-    // if ERROR != 0 -> error_loop
-    mem[49] = 32'h02041863;
-
-    // andi x8,x7,2
-    // DONE bit
-    mem[50] = 32'h0023F413;
-
-    // if DONE == 0 -> poll_status
-    mem[51] = 32'hFE0408E3;
-
-
-    // =========================================================
-    // TEMP DIAGNOSTIC -- REVERT BEFORE REAL USE
-    // Original self-test AES_OUT reads (mem[52-59]) never actually ran a
-    // real AES op (no plaintext_pending trigger from CPU writes), so they
-    // always just read the post-reset 0 value -- harmless dead code, safe
-    // to repurpose. Replaced here with the EARLIEST possible manual-TX
-    // trigger, right where the WAIT_SHA poll loop above hands off, BEFORE
-    // any of the new Enroll code at mem[62]+. If LEDR9 lights up with this,
-    // the poll loop demonstrably exits correctly and the bug is somewhere
-    // in mem[62]-mem[90]; if LEDR9 stays dark even with this, the CPU never
-    // leaves the poll loop despite key_ready reaching 1 in hardware.
-    // =========================================================
-
-    mem[52] = 32'h08000293;    // addi x5,x0,0x80   (MANUAL_TX_CTRL)
-    mem[53] = 32'h00100313;    // addi x6,x0,1
-    mem[54] = 32'h0062A023;    // sw   x6,0(x5)      (EARLY probe trigger)
-    mem[55] = 32'h00000013;    // NOP
-    mem[56] = 32'h00000013;    // NOP
-    mem[57] = 32'h00000013;    // NOP
-    mem[58] = 32'h00000013;    // NOP
-    mem[59] = 32'h00000013;    // NOP
-
-
-    // =========================================================
-    // SUCCESS LOOP -> jump forward to the Enroll-response sender at
-    // mem[62] (skipping over mem[61]'s error-retry jal, which must stay
-    // reachable at its original index for the WAIT_SHA poll loop above).
-    // =========================================================
-
-    mem[60] = 32'h0080006F;    // jal x0,8  -> mem[62]
-
-
-    // =========================================================
-    // ERROR LOOP -> RETRY
-    // PUF is a physical, occasionally-noisy measurement; a single
-    // PUF->ECC->SHA attempt is not guaranteed to succeed (timeout or
-    // sha_error sends control_fsm to ERROR, which never sets key_ready).
-    // Dead-ending here left key_ready stuck at 0 forever -- the whole
-    // UART auto-encrypt path needs key_ready, so one bad measurement
-    // permanently silenced the board until the next full reconfigure.
-    // Jump back to re-issue START=1 and retry the whole chain instead.
-    // =========================================================
-
-    mem[61] = 32'hFB9FF06F;    // jal x0,-72  -> mem[43] (re-issue START=1)
+    // ---- post-loop: hand over to the Enroll sender ----
+    //      The bare manual-TX probe that used to sit here has been removed:
+    //      it fired a 16-byte block of whatever aes_ct_reg happened to hold
+    //      (all zeros), which prepended 16 junk bytes to the Enroll frame AND
+    //      left the transmitter busy, so the first real chunk's trigger was
+    //      swallowed. LEDR9 now lights on the first genuine Enroll block,
+    //      which is what it was meant to indicate all along. --
+    mem[52] = 32'h00400F93;    // addi x31,x0,4
+    mem[53] = 32'h01FF2023;    // sw   x31,0(x30)        ; TRACE=04 vao trinh gui Enroll
+    mem[54] = 32'h00000013;    // nop
+    mem[55] = 32'h00000013;    // nop
+    mem[56] = 32'h00000013;    // nop
+    mem[57] = 32'h00000013;    // nop
+    mem[58] = 32'h00000013;    // nop
+    mem[59] = 32'h00000013;    // nop
+    mem[60] = 32'h0080006F;    // jal  x0,+8             -> mem[62] (trinh gui Enroll)
+    mem[61] = 32'h00000013;    // nop
 
 
     // =========================================================
@@ -311,78 +258,99 @@ initial begin
     mem[89]  = 32'h00030337;    // lui  x6,0x30                  (x6 = 0x00030000 = ETX<<16)
     mem[90]  = 32'h006BEBB3;    // or   x23,x23,x6               (x23 = tail_word)
 
-    // -- Chunk 1: header, helper0, helper1, helper2 --
-    mem[91]  = 32'h07C00293;    // addi x5,x0,0x7C        (MANUAL_TX_3)
-    mem[92]  = 32'h0162A023;    // sw   x22,0(x5)
-    mem[93]  = 32'h07800293;    // addi x5,x0,0x78        (MANUAL_TX_2)
-    mem[94]  = 32'h00A2A023;    // sw   x10,0(x5)
-    mem[95]  = 32'h07400293;    // addi x5,x0,0x74        (MANUAL_TX_1)
-    mem[96]  = 32'h00B2A023;    // sw   x11,0(x5)
-    mem[97]  = 32'h07000293;    // addi x5,x0,0x70        (MANUAL_TX_0)
-    mem[98]  = 32'h00C2A023;    // sw   x12,0(x5)
-    mem[99]  = 32'h08000293;    // addi x5,x0,0x80        (MANUAL_TX_CTRL)
-    mem[100] = 32'h00100313;    // addi x6,x0,1
-    mem[101] = 32'h0062A023;    // sw   x6,0(x5)                 (trigger send)
-    mem[102] = 32'h08400293;    // addi x5,x0,0x84        (MANUAL_TX_STAT)
-    mem[103] = 32'h0002AC03;    // poll1: lw x24,0(x5)
-    mem[104] = 32'h001C7C13;    // andi x24,x24,1
-    mem[105] = 32'hFE0C1CE3;    // bne  x24,x0,-8 -> mem[103]
+    // -- Four 16-byte blocks. Each one WAITS FOR AN IDLE TRANSMITTER FIRST,
+    //    then stages MANUAL_TX_3..0 and triggers.
+    //
+    //    The previous order (stage -> trigger -> wait) never protected its
+    //    own trigger, only the next one, and uart_tx_buffer samples
+    //    encrypted_plaintext_valid solely in its !tx_active branch -- so a
+    //    trigger arriving while the previous block was still going was
+    //    swallowed without a trace. Measured in RTL simulation: 3 of 5
+    //    triggers silently dropped, plus one byte lost to a full FIFO,
+    //    24 of 80 bytes reaching the pin. Same 15 instructions per block,
+    //    so no index below shifts. --
 
-    // -- Chunk 2: key0, key1, key2, key3 --
-    mem[106] = 32'h07C00293;    // addi x5,x0,0x7C        (MANUAL_TX_3)
-    mem[107] = 32'h00D2A023;    // sw   x13,0(x5)
-    mem[108] = 32'h07800293;    // addi x5,x0,0x78        (MANUAL_TX_2)
-    mem[109] = 32'h00E2A023;    // sw   x14,0(x5)
-    mem[110] = 32'h07400293;    // addi x5,x0,0x74        (MANUAL_TX_1)
-    mem[111] = 32'h00F2A023;    // sw   x15,0(x5)
-    mem[112] = 32'h07000293;    // addi x5,x0,0x70        (MANUAL_TX_0)
-    mem[113] = 32'h0102A023;    // sw   x16,0(x5)
-    mem[114] = 32'h08000293;    // addi x5,x0,0x80        (MANUAL_TX_CTRL)
-    mem[115] = 32'h00100313;    // addi x6,x0,1
-    mem[116] = 32'h0062A023;    // sw   x6,0(x5)                 (trigger send)
-    mem[117] = 32'h08400293;    // addi x5,x0,0x84        (MANUAL_TX_STAT)
-    mem[118] = 32'h0002AC03;    // poll2: lw x24,0(x5)
-    mem[119] = 32'h001C7C13;    // andi x24,x24,1
-    mem[120] = 32'hFE0C1CE3;    // bne  x24,x0,-8 -> mem[118]
+    // -- Chunk 1: header + helper0..2 --
+    mem[91] = 32'h08400293;    // addi x5,x0,0x84        (Khoi 1 header+helper: MANUAL_TX_STAT)
+    mem[92] = 32'h0002AC03;    // lw   x24,0(x5)         ; cho TX ranh HAN
+    mem[93] = 32'h001C7C13;    // andi x24,x24,1
+    mem[94] = 32'hFE0C1CE3;    // bne  x24,x0,-8        -> mem[92]
+    mem[95] = 32'h07C00293;    // addi x5,x0,0x7C        (MANUAL_TX_3)
+    mem[96] = 32'h0162A023;    // sw   x22,0(x5)
+    mem[97] = 32'h07800293;    // addi x5,x0,0x78        (MANUAL_TX_2)
+    mem[98] = 32'h00A2A023;    // sw   x10,0(x5)
+    mem[99] = 32'h07400293;    // addi x5,x0,0x74        (MANUAL_TX_1)
+    mem[100] = 32'h00B2A023;    // sw   x11,0(x5)
+    mem[101] = 32'h07000293;    // addi x5,x0,0x70        (MANUAL_TX_0)
+    mem[102] = 32'h00C2A023;    // sw   x12,0(x5)
+    mem[103] = 32'h08000293;    // addi x5,x0,0x80        (MANUAL_TX_CTRL)
+    mem[104] = 32'h00100313;    // addi x6,x0,1
+    mem[105] = 32'h0062A023;    // sw   x6,0(x5)          ; KICH gui 16 byte
 
-    // -- Chunk 3: key4, key5, key6, key7 --
-    mem[121] = 32'h07C00293;    // addi x5,x0,0x7C        (MANUAL_TX_3)
-    mem[122] = 32'h0112A023;    // sw   x17,0(x5)
-    mem[123] = 32'h07800293;    // addi x5,x0,0x78        (MANUAL_TX_2)
-    mem[124] = 32'h0122A023;    // sw   x18,0(x5)
-    mem[125] = 32'h07400293;    // addi x5,x0,0x74        (MANUAL_TX_1)
-    mem[126] = 32'h0132A023;    // sw   x19,0(x5)
-    mem[127] = 32'h07000293;    // addi x5,x0,0x70        (MANUAL_TX_0)
-    mem[128] = 32'h0142A023;    // sw   x20,0(x5)
-    mem[129] = 32'h08000293;    // addi x5,x0,0x80        (MANUAL_TX_CTRL)
-    mem[130] = 32'h00100313;    // addi x6,x0,1
-    mem[131] = 32'h0062A023;    // sw   x6,0(x5)                 (trigger send)
-    mem[132] = 32'h08400293;    // addi x5,x0,0x84        (MANUAL_TX_STAT)
-    mem[133] = 32'h0002AC03;    // poll3: lw x24,0(x5)
-    mem[134] = 32'h001C7C13;    // andi x24,x24,1
-    mem[135] = 32'hFE0C1CE3;    // bne  x24,x0,-8 -> mem[133]
+    // -- Chunk 2: key0..3 --
+    mem[106] = 32'h08400293;    // addi x5,x0,0x84        (Khoi 2 key0-3: MANUAL_TX_STAT)
+    mem[107] = 32'h0002AC03;    // lw   x24,0(x5)         ; cho TX ranh HAN
+    mem[108] = 32'h001C7C13;    // andi x24,x24,1
+    mem[109] = 32'hFE0C1CE3;    // bne  x24,x0,-8        -> mem[107]
+    mem[110] = 32'h07C00293;    // addi x5,x0,0x7C        (MANUAL_TX_3)
+    mem[111] = 32'h00D2A023;    // sw   x13,0(x5)
+    mem[112] = 32'h07800293;    // addi x5,x0,0x78        (MANUAL_TX_2)
+    mem[113] = 32'h00E2A023;    // sw   x14,0(x5)
+    mem[114] = 32'h07400293;    // addi x5,x0,0x74        (MANUAL_TX_1)
+    mem[115] = 32'h00F2A023;    // sw   x15,0(x5)
+    mem[116] = 32'h07000293;    // addi x5,x0,0x70        (MANUAL_TX_0)
+    mem[117] = 32'h0102A023;    // sw   x16,0(x5)
+    mem[118] = 32'h08000293;    // addi x5,x0,0x80        (MANUAL_TX_CTRL)
+    mem[119] = 32'h00100313;    // addi x6,x0,1
+    mem[120] = 32'h0062A023;    // sw   x6,0(x5)          ; KICH gui 16 byte
 
-    // -- Chunk 4: tail (CRC,ETX,..), then 3 don't-care padding words --
-    mem[136] = 32'h07C00293;    // addi x5,x0,0x7C        (MANUAL_TX_3)
-    mem[137] = 32'h0172A023;    // sw   x23,0(x5)
-    mem[138] = 32'h07800293;    // addi x5,x0,0x78        (MANUAL_TX_2)
-    mem[139] = 32'h0002A023;    // sw   x0,0(x5)                 (padding)
-    mem[140] = 32'h07400293;    // addi x5,x0,0x74        (MANUAL_TX_1)
-    mem[141] = 32'h0002A023;    // sw   x0,0(x5)                 (padding)
-    mem[142] = 32'h07000293;    // addi x5,x0,0x70        (MANUAL_TX_0)
-    mem[143] = 32'h0002A023;    // sw   x0,0(x5)                 (padding)
-    mem[144] = 32'h08000293;    // addi x5,x0,0x80        (MANUAL_TX_CTRL)
-    mem[145] = 32'h00100313;    // addi x6,x0,1
-    mem[146] = 32'h0062A023;    // sw   x6,0(x5)                 (trigger send)
-    mem[147] = 32'h08400293;    // addi x5,x0,0x84        (MANUAL_TX_STAT)
-    mem[148] = 32'h0002AC03;    // poll4: lw x24,0(x5)
-    mem[149] = 32'h001C7C13;    // andi x24,x24,1
-    mem[150] = 32'hFE0C1CE3;    // bne  x24,x0,-8 -> mem[148]
+    // -- Chunk 3: key4..7 --
+    mem[121] = 32'h08400293;    // addi x5,x0,0x84        (Khoi 3 key4-7: MANUAL_TX_STAT)
+    mem[122] = 32'h0002AC03;    // lw   x24,0(x5)         ; cho TX ranh HAN
+    mem[123] = 32'h001C7C13;    // andi x24,x24,1
+    mem[124] = 32'hFE0C1CE3;    // bne  x24,x0,-8        -> mem[122]
+    mem[125] = 32'h07C00293;    // addi x5,x0,0x7C        (MANUAL_TX_3)
+    mem[126] = 32'h0112A023;    // sw   x17,0(x5)
+    mem[127] = 32'h07800293;    // addi x5,x0,0x78        (MANUAL_TX_2)
+    mem[128] = 32'h0122A023;    // sw   x18,0(x5)
+    mem[129] = 32'h07400293;    // addi x5,x0,0x74        (MANUAL_TX_1)
+    mem[130] = 32'h0132A023;    // sw   x19,0(x5)
+    mem[131] = 32'h07000293;    // addi x5,x0,0x70        (MANUAL_TX_0)
+    mem[132] = 32'h0142A023;    // sw   x20,0(x5)
+    mem[133] = 32'h08000293;    // addi x5,x0,0x80        (MANUAL_TX_CTRL)
+    mem[134] = 32'h00100313;    // addi x6,x0,1
+    mem[135] = 32'h0062A023;    // sw   x6,0(x5)          ; KICH gui 16 byte
+
+    // -- Chunk 4: tail + padding --
+    mem[136] = 32'h08400293;    // addi x5,x0,0x84        (Khoi 4 tail+dem: MANUAL_TX_STAT)
+    mem[137] = 32'h0002AC03;    // lw   x24,0(x5)         ; cho TX ranh HAN
+    mem[138] = 32'h001C7C13;    // andi x24,x24,1
+    mem[139] = 32'hFE0C1CE3;    // bne  x24,x0,-8        -> mem[137]
+    mem[140] = 32'h07C00293;    // addi x5,x0,0x7C        (MANUAL_TX_3)
+    mem[141] = 32'h0172A023;    // sw   x23,0(x5)
+    mem[142] = 32'h07800293;    // addi x5,x0,0x78        (MANUAL_TX_2)
+    mem[143] = 32'h0002A023;    // sw   x0,0(x5)
+    mem[144] = 32'h07400293;    // addi x5,x0,0x74        (MANUAL_TX_1)
+    mem[145] = 32'h0002A023;    // sw   x0,0(x5)
+    mem[146] = 32'h07000293;    // addi x5,x0,0x70        (MANUAL_TX_0)
+    mem[147] = 32'h0002A023;    // sw   x0,0(x5)
+    mem[148] = 32'h08000293;    // addi x5,x0,0x80        (MANUAL_TX_CTRL)
+    mem[149] = 32'h00100313;    // addi x6,x0,1
+    mem[150] = 32'h0062A023;    // sw   x6,0(x5)          ; KICH gui 16 byte
 
     // -- Done: halt forever (hardware AES/UART auto-path continues to
     //    handle Auth traffic autonomously without any further CPU work,
     //    exactly as it already did before this Enroll code existed) --
-    mem[151] = 32'h0000006F;    // jal x0,0
+    // -- Wait for all 64 bytes to actually leave the wire, then stamp 06.
+    //    MANUAL_TX_STAT now covers the TX FIFO too, so this really does
+    //    mean 'frame fully transmitted', not just 'handed to the FIFO'. --
+    mem[151] = 32'h08400293;    // addi x5,x0,0x84        (MANUAL_TX_STAT)
+    mem[152] = 32'h0002AC03;    // lw   x24,0(x5)         ; cho 64 byte ra het day
+    mem[153] = 32'h001C7C13;    // andi x24,x24,1
+    mem[154] = 32'hFE0C1CE3;    // bne  x24,x0,-8         -> mem[152]
+    mem[155] = 32'h00600F93;    // addi x31,x0,6
+    mem[156] = 32'h01FF2023;    // sw   x31,0(x30)        ; TRACE=06 Enroll gui xong
+    mem[157] = 32'h0000006F;    // jal  x0,0              ; dung han
 
 end
 

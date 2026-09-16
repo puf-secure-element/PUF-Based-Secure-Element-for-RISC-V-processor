@@ -15,7 +15,12 @@ module soc (
     // manual 16-byte UART send (Enroll response). Exposed so de10_standard.v
     // can latch it onto an LED -- lets us tell apart "CPU never reached the
     // Enroll code" from "it triggered a send but the byte never made it out".
-    output  wire             manual_tx_fired
+    output  wire             manual_tx_fired,
+
+    // TEMP DIAGNOSTIC: 8-bit firmware progress stamp, driven onto
+    // LEDR[7:0] by de10_standard.v. See Instruction_memory.v for the
+    // meaning of each value.
+    output  wire     [7:0]   debug_trace
 );
 
     parameter   SHA_ADDR_CTRL       = 10'h00;
@@ -156,6 +161,7 @@ module soc (
     // manual-TX outputs off instead of leaving them undriven.
     assign w_manual_tx_valid = 1'b0;
     assign w_manual_tx_data  = 128'h0;
+    assign debug_trace       = 8'h00;
 `else
     // =========================================================================
     // 1. KHỐI CPU RISC-V (Bản đã nâng cấp có mem_req, mem_ready)
@@ -246,7 +252,8 @@ module soc (
 
         .uart_tx_busy           (w_uart_tx_busy),
         .manual_tx_valid        (w_manual_tx_valid),
-        .manual_tx_data         (w_manual_tx_data)
+        .manual_tx_data         (w_manual_tx_data),
+        .debug_trace            (debug_trace)
     );
 
     // =========================================================================

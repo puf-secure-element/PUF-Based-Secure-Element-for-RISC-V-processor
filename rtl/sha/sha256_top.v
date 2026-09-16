@@ -86,14 +86,24 @@ module sha256_top(
                 end
             end 
             
+            // An explicit start request always runs the hash. The old code
+            // gated start_pulse on (ecc_response != ecc_reg) as a "don't
+            // re-hash identical data" optimisation, but that silently
+            // swallowed the request instead of reporting anything: start_reg
+            // was cleared, no pulse was issued, hash_valid never rose, and
+            // control_fsm simply sat in WAIT_SHA until its 65535-cycle
+            // timeout and went to ERROR. It fired in two ordinary cases --
+            // a corrected response of all zeros (ecc_reg's reset value), and
+            // any retry after an ERROR, because a PUF is *designed* to
+            // reproduce the same response every time. That made the
+            // firmware's retry path permanently dead. Deduplication belongs
+            // on the `next` path below (continuing a multi-block hash), not
+            // on an explicit start.
             if (start_reg && ecc_valid) begin
-                start_reg <= 1'b0;
-
-                if (ecc_valid && (ecc_response != ecc_reg)) begin
-                    ecc_reg        <= ecc_response;   
-                    start_pulse    <= 1'b1;
-                    hash_valid_reg <= 1'b0;
-                end
+                start_reg      <= 1'b0;
+                ecc_reg        <= ecc_response;
+                start_pulse    <= 1'b1;
+                hash_valid_reg <= 1'b0;
             end
 
             next_reg_d <= next_reg;

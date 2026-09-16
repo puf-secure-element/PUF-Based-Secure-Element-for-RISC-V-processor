@@ -226,5 +226,14 @@ module uart_top (//AHB interface
                             .bclk(bclk));
 
   assign interrupt = tx_fifo_full | tx_fifo_empty | rx_fifo_full | rx_fifo_empty | parrity_error;
-  assign tx_busy   = hw_tx_busy;
+  // tx_busy feeds MANUAL_TX_STAT, which firmware polls to decide when the
+  // next 16-byte block may be handed over. hw_tx_busy alone is not enough:
+  // it only covers uart_tx_buffer walking a block INTO the 16-byte TX FIFO,
+  // and drops as soon as the last byte is queued -- while up to 16 bytes are
+  // still draining onto the wire at 115200 baud. Firmware then handed over
+  // the next block on top of a partly-full FIFO, and uart_fifo silently
+  // discards a write issued while full (fifo_we = ~fifo_full & wr), so bytes
+  // went missing mid-frame. Include the FIFO occupancy so 'not busy' means
+  // the FIFO is empty and a fresh 16-byte block is guaranteed to fit.
+  assign tx_busy   = hw_tx_busy | ~tx_empty_status;
 endmodule

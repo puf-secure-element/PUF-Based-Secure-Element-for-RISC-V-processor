@@ -37,7 +37,10 @@ module axi_slave_top (
     // above stay pure AES-only signals for existing testbenches.
     input  wire          uart_tx_busy,        // from uart_top (hw_tx_busy)
     output wire          manual_tx_valid,
-    output wire [127:0]  manual_tx_data
+    output wire [127:0]  manual_tx_data,
+
+    // *** TEMP DIAGNOSTIC -- REVERT BEFORE REAL USE ***
+    output wire [7:0]    debug_trace
 );
 
     wire reg_start, soft_reset;
@@ -102,7 +105,8 @@ module axi_slave_top (
 
         .hw_uart_tx_busy    (uart_tx_busy),
         .manual_tx_start    (manual_tx_valid),
-        .manual_tx_data     (manual_tx_data)
+        .manual_tx_data     (manual_tx_data),
+        .debug_trace        (debug_trace)
     );
 
     control_fsm u_fsm (

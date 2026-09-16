@@ -61,7 +61,15 @@ module axi_reg_bank (
     // (hw_uart_tx_busy) until it drops before loading/sending the next block.
     input  wire         hw_uart_tx_busy,
     output wire         manual_tx_start,
-    output wire [127:0] manual_tx_data
+    output wire [127:0] manual_tx_data,
+
+    // *** TEMP DIAGNOSTIC -- REVERT BEFORE REAL USE ***
+    // 8-bit firmware progress tracer. One LED bit is not enough to say
+    // WHERE the CPU stops, and a full Quartus compile costs about an hour,
+    // so expose a byte the firmware can stamp at each milestone and wire
+    // it straight to LEDR[7:0]. Value 0 = firmware never got far enough to
+    // write it at all.
+    output wire [7:0]   debug_trace
 );
 
     // =========================================================================
@@ -128,6 +136,8 @@ module axi_reg_bank (
     // Byte CRC (XOR-fold phần cứng của toàn bộ 44 byte payload Enroll:
     // 12 byte helper + 32 byte key) -- tính sẵn bằng tổ hợp logic để
     // firmware không cần viết vòng lặp XOR bằng tay.
+    // *** TEMP DIAGNOSTIC -- REVERT BEFORE REAL USE ***
+    localparam DEBUG_TRACE     = 10'h0C0;
     localparam ENROLL_CRC      = 10'h0B0;
 
     localparam ADDR_ID         = 10'h0F8;
@@ -229,6 +239,10 @@ module axi_reg_bank (
             enroll_crc = enroll_crc ^ enroll_payload_bits[crc_i*8 +: 8];
     end
 
+    // *** TEMP DIAGNOSTIC -- REVERT BEFORE REAL USE ***
+    reg [7:0] debug_trace_reg;
+    assign debug_trace = debug_trace_reg;
+
     reg status_done_reg;
     reg status_error_reg;
     
@@ -250,6 +264,7 @@ module axi_reg_bank (
             status_done_reg  <= 1'b0;
             status_error_reg <= 1'b0;
             aes_dout_reg     <= 128'h0;
+            debug_trace_reg  <= 8'h00;
         end else begin
             // Hardware Status Logic
             if (reg_start) begin
@@ -303,6 +318,7 @@ module axi_reg_bank (
                     ECC_HELPER_2: for (i=0; i<4; i=i+1) if (axi_wstrb_reg[i]) ecc_helper_reg[2][(i*8)+:8] <= axi_wdata_reg[(i*8)+:8];
 
                     // Reuses aes_ct_reg -- see note above where it's declared.
+                    DEBUG_TRACE: if (axi_wstrb_reg[0]) debug_trace_reg <= axi_wdata_reg[7:0];
                     MANUAL_TX_0: for (i=0; i<4; i=i+1) if (axi_wstrb_reg[i]) aes_ct_reg[0][(i*8)+:8] <= axi_wdata_reg[(i*8)+:8];
                     MANUAL_TX_1: for (i=0; i<4; i=i+1) if (axi_wstrb_reg[i]) aes_ct_reg[1][(i*8)+:8] <= axi_wdata_reg[(i*8)+:8];
                     MANUAL_TX_2: for (i=0; i<4; i=i+1) if (axi_wstrb_reg[i]) aes_ct_reg[2][(i*8)+:8] <= axi_wdata_reg[(i*8)+:8];
@@ -384,6 +400,7 @@ module axi_reg_bank (
                     KEY_OUT_6:       axi_rdata <= hw_sha_key_out[223:192];
                     KEY_OUT_7:       axi_rdata <= hw_sha_key_out[255:224];
                     ENROLL_CRC:      axi_rdata <= {24'h0, enroll_crc};
+                    DEBUG_TRACE:     axi_rdata <= {24'h0, debug_trace_reg};
                     ADDR_ID:         axi_rdata <= 32'h43525950; // "CRYP"
                     ADDR_VERSION:    axi_rdata <= 32'h00010000;
                     default: begin

@@ -10,6 +10,7 @@ module de10_standard (
     wire         irq;
     wire         aes_done;
     wire         manual_tx_fired;
+    wire [7:0]   debug_trace;
 
     soc u_soc (
         .clk             (CLOCK_50),
@@ -19,7 +20,8 @@ module de10_standard (
         .uart_rxd        (UART_RXD),
         .uart_txd        (UART_TXD),
         .uart_irq        (irq),
-        .manual_tx_fired (manual_tx_fired)
+        .manual_tx_fired (manual_tx_fired),
+        .debug_trace     (debug_trace)
     );
 
     // *** TEMP DIAGNOSTIC -- REVERT BEFORE REAL USE ***
@@ -61,7 +63,12 @@ module de10_standard (
     // comes out of reset (see uart_transmiter.v: tx_shift_data <= 9'h1 on
     // reset), with no enable-bit gating at all -- a real "is uart_top
     // alive" signal. Mirror it onto LEDR9 so it's visible without a scope.
-    assign LEDR[7:0] = data_out[7:0];
+    // *** TEMP DIAGNOSTIC -- REVERT BEFORE REAL USE ***
+    // LEDR[7:0] used to mirror data_out[7:0] (last AES byte), which only
+    // ever confirmed something we already know works. Re-purposed as the
+    // firmware progress tracer instead -- see Instruction_memory.v for the
+    // value table. 0x00 means the firmware never reached its first stamp.
+    assign LEDR[7:0] = debug_trace;
     assign LEDR[8]   = diag_counter[25];
     assign LEDR[9]   = manual_tx_fired_sticky;
 

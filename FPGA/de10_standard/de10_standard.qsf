@@ -122,6 +122,14 @@ set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_RO
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+# This is what actually rescued the fit. SEED 7 alone was not enough: the
+# Fitter kept failing with "Can't fit design in device" on a handful of
+# signals inside aes|sub_byte_core|GF. The design only uses ~32% of the
+# logic ("Difficulty packing: Low"), so the shortage was never capacity --
+# it was local routing congestion, which dual-rail AES makes much worse by
+# doubling every wire. Area-driven optimisation packs the same logic into
+# fewer, tighter LABs and frees the routing resources the Fitter needed.
+# Do not drop this line without re-running a full compile.
 set_global_assignment -name OPTIMIZATION_MODE "AGGRESSIVE AREA"
 set_global_assignment -name VERILOG_FILE ../../rtl/aes_dual_rail/aes_core/add_round_key.v
 set_global_assignment -name VERILOG_FILE ../../rtl/aes_dual_rail/aes_core/aes_decrypt.v

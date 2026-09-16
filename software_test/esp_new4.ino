@@ -210,7 +210,12 @@ void checkForBootEnrollFrame() {
   if (!Serial.available()) return;
 
   uint8_t stx = Serial.read();
-  if (stx != STX) return;            // byte rác/không liên quan, bỏ qua
+  if (stx != STX) {
+    Serial1.printf("[ENROLL-DEBUG] Byte lạ trên Serial (FPGA link): 0x%02X (không phải STX)\n", stx);
+    return;            // byte rác/không liên quan, bỏ qua
+  }
+
+  Serial1.println("[ENROLL-DEBUG] Thấy STX (0x02) trên Serial -- đang đợi 51 byte còn lại...");
 
   // Còn 51 byte nữa sau STX (CMD,LEN,RESERVED + 44 payload + CRC,ETX,x2 RESERVED).
   // Nếu đúng là khung Enroll thật, cả 51 byte này tới gần như ngay lập tức
@@ -223,12 +228,14 @@ void checkForBootEnrollFrame() {
       rest[received++] = Serial.read();
     }
     if (millis() - startWait > 200) {
+      Serial1.printf("[ENROLL-DEBUG] Timeout, chỉ nhận %d/51 byte sau STX -- không phải khung Enroll thật\n", received);
       return; // STX rơi lẻ, không có gì theo sau -- không phải khung Enroll thật
     }
   }
 
   uint8_t cmd = rest[0];
   uint8_t len = rest[1];
+  Serial1.printf("[ENROLL-DEBUG] Đủ 51 byte. CMD=0x%02X LEN=%d (mong đợi CMD=0x81 LEN=44)\n", cmd, len);
   if (cmd != CMD_ENROLL_RESPONSE || len != 44) {
     return; // trùng STX ngẫu nhiên, không phải khung Enroll -- bỏ qua
   }

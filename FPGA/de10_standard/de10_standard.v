@@ -9,16 +9,32 @@ module de10_standard (
     wire [127:0] data_out;
     wire         irq;
     wire         aes_done;
+    wire         manual_tx_fired;
 
     soc u_soc (
-        .clk       (CLOCK_50),
-        .rst_n     (KEY[0]),
-        .data_out  (data_out),
-        .aes_done  (aes_done),
-        .uart_rxd  (UART_RXD),
-        .uart_txd  (UART_TXD),
-        .uart_irq  (irq)
+        .clk             (CLOCK_50),
+        .rst_n           (KEY[0]),
+        .data_out        (data_out),
+        .aes_done        (aes_done),
+        .uart_rxd        (UART_RXD),
+        .uart_txd        (UART_TXD),
+        .uart_irq        (irq),
+        .manual_tx_fired (manual_tx_fired)
     );
+
+    // *** TEMP DIAGNOSTIC -- REVERT BEFORE REAL USE ***
+    // Sticky latch: set forever (until KEY0 reset) the first time firmware
+    // ever triggers a manual UART send (Enroll response, mem[91..] onward).
+    // Bisects "CPU never reached the Enroll code" (this stays dark) from
+    // "it triggered a send but the byte never reached the host" (this lights
+    // up even if nothing ever showed up on the ESP/listener side).
+    reg manual_tx_fired_sticky;
+    always @(posedge CLOCK_50 or negedge KEY[0]) begin
+        if (!KEY[0])
+            manual_tx_fired_sticky <= 1'b0;
+        else if (manual_tx_fired)
+            manual_tx_fired_sticky <= 1'b1;
+    end
 
     // *** TEMP DIAGNOSTIC -- REVERT BEFORE REAL USE ***
     // Free-running counter wired straight to CLOCK_50/KEY[0], with zero
@@ -47,6 +63,6 @@ module de10_standard (
     // alive" signal. Mirror it onto LEDR9 so it's visible without a scope.
     assign LEDR[7:0] = data_out[7:0];
     assign LEDR[8]   = diag_counter[25];
-    assign LEDR[9]   = UART_TXD;
+    assign LEDR[9]   = manual_tx_fired_sticky;
 
 endmodule

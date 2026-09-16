@@ -9,7 +9,13 @@ module soc (
     // UART serial pins
     input   wire             uart_rxd,
     output  wire             uart_txd,
-    output  wire             uart_irq
+    output  wire             uart_irq,
+
+    // TEMP DIAGNOSTIC: raw pulse, 1 cycle high whenever firmware triggers a
+    // manual 16-byte UART send (Enroll response). Exposed so de10_standard.v
+    // can latch it onto an LED -- lets us tell apart "CPU never reached the
+    // Enroll code" from "it triggered a send but the byte never made it out".
+    output  wire             manual_tx_fired
 );
 
     parameter   SHA_ADDR_CTRL       = 10'h00;
@@ -122,6 +128,8 @@ module soc (
     wire    [127:0] w_manual_tx_data;
     wire            w_final_aes_block_valid = w_aes_block_valid | w_manual_tx_valid;
     wire    [127:0] w_final_aes_data        = w_manual_tx_valid ? w_manual_tx_data : data_out;
+
+    assign manual_tx_fired = w_manual_tx_valid;
 
     // *** TEMP DIAGNOSTIC -- REVERT BEFORE REAL USE ***
     // ro_puf_core removal alone did not bring LEDR9/irq alive, so the

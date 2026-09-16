@@ -47,6 +47,15 @@ set_global_assignment -name SDC_FILE de10_standard.sdc
 # this the simulation branch gets fed to Analysis & Synthesis and fails with
 # "real variable data type values are not supported".
 set_global_assignment -name VERILOG_MACRO "SYNTHESIS=1"
+# NEW: the design added several small registers (Enroll helper/key/CRC
+# exposure, manual-TX staging) which pushed routing congestion right up to
+# the edge -- Fitter failed with "Can't fit design in device" on 4 signals
+# inside the AES sub_byte_core GF module specifically, an area unrelated to
+# the actual new logic (pure routing contention, not a real resource
+# shortage). A different fitter seed reshuffles placement/routing decisions
+# and commonly resolves this kind of marginal congestion without needing to
+# shrink the design.
+set_global_assignment -name SEED 7
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to UART_TXD
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to UART_RXD
 # ---- Clock (was wrong: AA26 is HSMC_CLKIN_P1, not the 50 MHz oscillator) ----

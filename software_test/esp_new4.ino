@@ -36,6 +36,9 @@ const char* BACKEND_URL = "http://10.238.250.137:5000";
 //const char* WIFI_SSID     = "Nhi";
 //const char* WIFI_PASSWORD = "0909794900";
 //const char* BACKEND_URL = "http://192.168.1.105:5000";
+// Bump this whenever the sketch changes so the boot log names the build.
+#define BUILD_TAG "2026-09-17a"
+
 const char* DEVICE_ID     = "0001";
 const char* ESP32_SECRET  = "demo-secret-change-me";
 
@@ -64,6 +67,17 @@ void setup() {
   Serial.begin(FPGA_BAUD);   // Serial (UART0, GPIO1/3) dành riêng cho FPGA
   Serial1.begin(115200);     // Serial1 (TX-only, GPIO2) dùng để log debug
   Serial1.println("\n[BOOT] Reset reason: " + ESP.getResetReason());
+
+  // Identify which build is actually on the chip. There are several stray
+  // copies of this sketch around, and more than one debugging session has
+  // been spent on a symptom whose real cause was the IDE compiling an older
+  // one. These four lines make the running firmware say so itself, so the
+  // boot log settles it instead of guesswork.
+  Serial1.println("[BOOT] build   : " BUILD_TAG);
+  Serial1.println("[BOOT] ssid    : " + String(WIFI_SSID));
+  Serial1.println("[BOOT] backend : " + String(BACKEND_URL));
+  Serial1.printf ("[BOOT] secret  : %d ky tu, bat dau bang '%c'\n",
+                  strlen(ESP32_SECRET), ESP32_SECRET[0]);
 
   // Force clean station mode before connecting. Without this, a stale
   // AP/AP+STA state left over from a crash or previous sketch can make

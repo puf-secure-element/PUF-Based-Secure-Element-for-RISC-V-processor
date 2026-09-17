@@ -37,7 +37,7 @@ const char* BACKEND_URL = "http://10.238.250.137:5000";
 //const char* WIFI_PASSWORD = "0909794900";
 //const char* BACKEND_URL = "http://192.168.1.105:5000";
 // Bump this whenever the sketch changes so the boot log names the build.
-#define BUILD_TAG "2026-09-17a"
+#define BUILD_TAG "2026-09-17b"
 
 const char* DEVICE_ID     = "0001";
 const char* ESP32_SECRET  = "demo-secret-change-me";
@@ -223,7 +223,14 @@ bool   enrollFrameCaptured = false;
 String cachedHelperHex, cachedKeyHex;
 
 void checkForBootEnrollFrame() {
-  if (enrollFrameCaptured) return;   // đã bắt được rồi, không cần nghe nữa
+  // Deliberately keeps listening after the first capture, overwriting the
+  // cache each time. The FPGA derives a fresh key on every KEY0 reset (ECC
+  // runs in Enrollment mode, so the key is SHA over that boot's raw PUF
+  // response), which means a cached frame goes stale the moment the board is
+  // reset. Stopping after one capture made the ESP upload the key from an
+  // earlier boot while the board was already using a different one -- an
+  // Enroll that reported success and an Auth that then failed, with no sign
+  // of which of the two was wrong.
   if (!Serial.available()) return;
 
   uint8_t stx = Serial.read();
@@ -270,10 +277,15 @@ void checkForBootEnrollFrame() {
     return;
   }
 
+  bool refreshed = enrollFrameCaptured && (cachedKeyHex != bytesToHexString(payload + 12, 32));
   cachedHelperHex = bytesToHexString(payload, 12);
   cachedKeyHex    = bytesToHexString(payload + 12, 32);
   enrollFrameCaptured = true;
 
+  if (refreshed) {
+    Serial1.println("\n--- [ENROLL] Khung MOI -- khoa da doi so voi lan truoc (board vua reset).");
+    Serial1.println("    Cache da duoc cap nhat; hay bam Enroll lai de backend luu khoa moi.");
+  }
   Serial1.println("\n--- [ENROLL] Bắt được khung Enroll tự động từ FPGA:");
   Serial1.println("         Helper Data (12B): " + cachedHelperHex);
   Serial1.println("         Key (32B)        : " + cachedKeyHex);

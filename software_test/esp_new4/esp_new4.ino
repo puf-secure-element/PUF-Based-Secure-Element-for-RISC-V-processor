@@ -37,7 +37,7 @@ const char* BACKEND_URL = "http://10.238.250.137:5000";
 //const char* WIFI_PASSWORD = "0909794900";
 //const char* BACKEND_URL = "http://192.168.1.105:5000";
 // Bump this whenever the sketch changes so the boot log names the build.
-#define BUILD_TAG "2026-09-17b"
+#define BUILD_TAG "2026-09-17c"
 
 const char* DEVICE_ID     = "0001";
 const char* ESP32_SECRET  = "demo-secret-change-me";
@@ -231,13 +231,20 @@ void checkForBootEnrollFrame() {
   // earlier boot while the board was already using a different one -- an
   // Enroll that reported success and an Auth that then failed, with no sign
   // of which of the two was wrong.
-  if (!Serial.available()) return;
-
-  uint8_t stx = Serial.read();
-  if (stx != STX) {
-    Serial1.printf("[ENROLL-DEBUG] Byte lạ trên Serial (FPGA link): 0x%02X (không phải STX)\n", stx);
-    return;            // byte rác/không liên quan, bỏ qua
+  // Discard everything ahead of a frame start in one pass. Dropping a single
+  // byte per loop() meant 1.5 s per byte: the 12 padding bytes that always
+  // trail a frame took 18 s to clear, and resynchronising from the middle of
+  // one took over a minute, during which a genuine frame could not be seen.
+  int skipped = 0;
+  while (Serial.available() && Serial.peek() != STX) {
+    Serial.read();
+    skipped++;
   }
+  if (skipped) {
+    Serial1.printf("[ENROLL-DEBUG] Bo qua %d byte trước khi tìm thấy STX\n", skipped);
+  }
+  if (!Serial.available()) return;
+  Serial.read();   // nuốt chính byte STX
 
   Serial1.println("[ENROLL-DEBUG] Thấy STX (0x02) trên Serial -- đang đợi 51 byte còn lại...");
 
@@ -289,6 +296,15 @@ void checkForBootEnrollFrame() {
   Serial1.println("\n--- [ENROLL] Bắt được khung Enroll tự động từ FPGA:");
   Serial1.println("         Helper Data (12B): " + cachedHelperHex);
   Serial1.println("         Key (32B)        : " + cachedKeyHex);
+
+  // The board sends 4 x 16 bytes because MANUAL_TX works a block at a time,
+  // so 12 padding bytes always follow the 52-byte frame. Drain them here
+  // rather than leaving them to be reported one at a time as stray bytes.
+  unsigned long padWait = millis();
+  int padding = 0;
+  while (padding < 12 && millis() - padWait < 50) {
+    if (Serial.available()) { Serial.read(); padding++; }
+  }
 }
 
 void checkPendingEnroll() {

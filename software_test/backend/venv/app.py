@@ -134,6 +134,15 @@ def enroll_start():
 
     job_id = secrets.token_hex(8)
     conn = get_db()
+    # Clicking Enroll again supersedes any earlier unfinished job for this
+    # device. Without this, re-offering below (see enroll_pending) would keep
+    # serving the oldest stranded job forever and the page waiting on the newest
+    # one would never see a result.
+    conn.execute(
+        "UPDATE enroll_jobs SET status = 'superseded' "
+        "WHERE device_id = ? AND status IN ('pending', 'sent_to_board')",
+        (device_id,),
+    )
     conn.execute(
         "INSERT INTO enroll_jobs (job_id, device_id, status) VALUES (?, ?, 'pending')",
         (job_id, device_id),
@@ -154,18 +163,32 @@ def enroll_pending():
         return jsonify({"error": "Thiếu device_id"}), 400
 
     conn = get_db()
+    # Offer the job until the board actually reports a result, not just once.
+    # The old query marked a job sent_to_board on the first GET and then only
+    # ever selected 'pending', so a job handed over while the device was not
+    # ready was dropped for good. That is the normal case here, not an edge
+    # case: the ESP can only upload after the FPGA has emitted its one-shot
+    # Enroll frame, which happens on a KEY0 press. Clicking Enroll before
+    # pressing KEY0 delivered the job into a device that had nothing to send,
+    # and the page then polled until it timed out while the board sat holding
+    # the data. Re-offering also covers an ESP that reboots mid-job.
     row = conn.execute(
-        "SELECT job_id FROM enroll_jobs WHERE device_id = ? AND status = 'pending' ORDER BY created_at ASC LIMIT 1",
+        "SELECT job_id, status FROM enroll_jobs "
+        "WHERE device_id = ? AND status IN ('pending', 'sent_to_board') "
+        "ORDER BY created_at ASC LIMIT 1",
         (device_id,),
     ).fetchone()
     if not row:
         conn.close()
         return jsonify({}), 204  # Không có Job nào
 
+    first_delivery = row["status"] == "pending"
     conn.execute("UPDATE enroll_jobs SET status = 'sent_to_board' WHERE job_id = ?", (row["job_id"],))
     conn.commit()
     conn.close()
-    print(f"[ENROLL] Giao Job {row['job_id']} cho ESP8266 xử lý...")
+    # Only announce the first handover; re-offers repeat every poll interval.
+    if first_delivery:
+        print(f"[ENROLL] Giao Job {row['job_id']} cho ESP8266 xử lý...")
     return jsonify({"job_id": row["job_id"]})
 
 @app.route("/api/enroll/board_response", methods=["POST"])

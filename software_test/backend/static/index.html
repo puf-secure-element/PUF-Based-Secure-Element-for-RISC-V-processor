@@ -23,6 +23,13 @@
   .status-label.pending { color: #9a7b1a; }
   .field { font-family: monospace; font-size: 12px; word-break: break-all; margin: 4px 0; color: #555; }
   .hidden { display: none; }
+  input[type=text] { font-size: 15px; padding: 8px 12px; border-radius: 6px; border: 1px solid #ccc; width: 100%; box-sizing: border-box; }
+  #nonce { font-family: monospace; letter-spacing: 0.5px; }
+  #nonce.bad { border-color: #a3242c; background: #fdf2f2; }
+  #nonce.good { border-color: #1a7f37; background: #f2fbf5; }
+  .check { font-size: 14px; margin: 14px 0 6px; display: flex; align-items: center; gap: 8px; }
+  .check input { margin: 0; }
+  .hint { font-size: 12px; color: #777; margin-top: 4px; }
 </style>
 </head>
 <body>
@@ -37,6 +44,18 @@
   <button class="btn-enroll" onclick="enrollViaEsp()">Enroll thiết bị (qua ESP)</button>
 
   <h2>Bước 2: Xác thực</h2>
+
+  <label class="check">
+    <input type="checkbox" id="manual_nonce_on" onchange="toggleNonce()" />
+    Tự nhập nonce (để gỡ lỗi -- cùng nonce luôn cho cùng cipher)
+  </label>
+  <div id="nonce_row" class="hidden">
+    <input type="text" id="nonce" maxlength="47" spellcheck="false"
+           placeholder="000102030405060708090a0b0c0d0e0f"
+           oninput="checkNonce()" />
+    <div class="hint" id="nonce_hint">Cần đúng 32 ký tự hex (16 byte). Cho phép cách, dấu : hoặc -.</div>
+  </div>
+
   <button class="btn-real" onclick="authenticateReal()">Xác thực với board thật (qua ESP)</button>
 </div>
 
@@ -46,7 +65,37 @@
 const deviceIdOf = () => document.getElementById('device_id').value;
 const box = () => document.getElementById('result-box');
 
-function renderResult(status, data) {
+const nonceEl = () => document.getElementById('nonce');
+const manualOn = () => document.getElementById('manual_nonce_on').checked;
+const cleanNonce = () => nonceEl().value.replace(/[\s:-]/g, '');
+
+function toggleNonce() {
+  document.getElementById('nonce_row').classList.toggle('hidden', !manualOn());
+  if (manualOn()) { nonceEl().focus(); checkNonce(); }
+}
+
+// Backend van la noi kiem tra that su; cho nay chi de biet ngay khi go.
+function checkNonce() {
+  const v = cleanNonce();
+  const el = nonceEl();
+  const hint = document.getElementById('nonce_hint');
+  const isHex = /^[0-9a-fA-F]*$/.test(v);
+  el.classList.remove('good', 'bad');
+  if (v.length === 0) {
+    hint.textContent = 'Cần đúng 32 ký tự hex (16 byte). Cho phép cách, dấu : hoặc -.';
+  } else if (!isHex) {
+    el.classList.add('bad');
+    hint.textContent = 'Chỉ được dùng ký tự hex 0-9 và a-f.';
+  } else if (v.length === 32) {
+    el.classList.add('good');
+    hint.textContent = 'Đủ 16 byte.';
+  } else {
+    el.classList.add('bad');
+    hint.textContent = `${v.length}/32 ký tự hex (${Math.floor(v.length / 2)}/16 byte).`;
+  }
+}
+
+function renderResult(status, data, nonce, source) {
   const cls = status === 'passed' ? 'pass' : status === 'failed' ? 'fail' : 'pending';
   const label = cls === 'pass' ? 'PASSED - Mở khóa'
               : cls === 'fail' ? 'FAILED - Từ chối'
@@ -56,7 +105,7 @@ function renderResult(status, data) {
   box().innerHTML = `
     <div class="result ${cls}">
       <div class="status-label ${cls}">${label}</div>
-      ${data.nonce ? `<div class="field">Nonce: ${data.nonce}</div>` : ''}
+      ${nonce ? `<div class="field">Nonce (${source}): ${nonce}</div>` : ''}
     </div>
   `;
 }
@@ -96,16 +145,20 @@ async function authenticateReal() {
   box().className = '';
   box().innerHTML = '<div class="result pending"><div class="status-label pending">Đang gửi yêu cầu tới board...</div></div>';
 
-  let sessionId;
+  let sessionId, usedNonce = '', nonceSource = '';
   try {
+    const payload = { device_id: deviceIdOf() };
+    if (manualOn()) payload.nonce = cleanNonce();
     const startRes = await fetch('/api/auth/start', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ device_id: deviceIdOf() })
+      body: JSON.stringify(payload)
     });
     const startData = await startRes.json();
     if (!startRes.ok) { box().innerHTML = `<div class="result fail"><p>Lỗi: ${startData.error}</p></div>`; return; }
     sessionId = startData.session_id;
+    usedNonce = startData.nonce;
+    nonceSource = startData.nonce_source;
   } catch (err) {
     box().innerHTML = `<div class="result fail"><p>Không kết nối được backend: ${err}</p></div>`;
     return;
@@ -116,10 +169,10 @@ async function authenticateReal() {
     const res = await fetch(`/api/auth/result/${sessionId}`);
     const data = await res.json();
     if (data.status === 'passed' || data.status === 'failed') {
-      renderResult(data.status, data);
+      renderResult(data.status, data, usedNonce, nonceSource);
       return;
     }
-    renderResult('pending', data);
+    renderResult('pending', data, usedNonce, nonceSource);
   }
   box().innerHTML = `<div class="result fail"><p>Hết thời gian chờ -- kiểm tra ESP/FPGA đã bật chưa.</p></div>`;
 }

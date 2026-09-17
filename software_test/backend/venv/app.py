@@ -244,14 +244,33 @@ def auth_start():
     if not device_id:
         return jsonify({"error": "Thiếu device_id"}), 400
 
+    # Nonce ngẫu nhiên là mặc định. Một nonce truyền vào sẵn dùng để gỡ lỗi:
+    # cùng nonce + cùng khóa luôn ra cùng cipher, nên đối chiếu tay được với
+    # compute_expected_cipher() mà không phải đoán. Đánh đổi: nonce do người
+    # gọi chọn thì bỏ mất tính chống phát lại của challenge-response -- ai từng
+    # thấy một cặp (nonce, cipher) là phát lại được. Chỉ dùng khi thử nghiệm.
+    raw_nonce = str(data.get("nonce") or "").strip()
+    if raw_nonce:
+        cleaned = raw_nonce.replace(" ", "").replace(":", "").replace("-", "")
+        try:
+            nonce = bytes.fromhex(cleaned)
+        except ValueError:
+            return jsonify({"error": "Nonce phải là chuỗi hex (0-9, a-f)"}), 400
+        if len(nonce) != 16:
+            return jsonify({
+                "error": f"Nonce phải đúng 16 byte (32 ký tự hex), nhận được {len(nonce)} byte"
+            }), 400
+        nonce_source = "thủ công"
+    else:
+        nonce = secrets.token_bytes(16)
+        nonce_source = "ngẫu nhiên"
+
     conn = get_db()
     device = conn.execute("SELECT * FROM devices WHERE device_id = ?", (device_id,)).fetchone()
     if not device:
         conn.close()
         return jsonify({"error": f"Device {device_id} chưa được Enroll"}), 404
 
-    # Sinh Nonce ngẫu nhiên đúng chuẩn 16 bytes (128 bits)
-    nonce = secrets.token_bytes(16)
     session_id = secrets.token_hex(8)
 
     conn.execute(
@@ -262,8 +281,15 @@ def auth_start():
     conn.close()
 
     print(f"\n[AUTH] Web tạo phiên xác thực mới: {session_id}")
-    print(f"       Nonce (16-byte): {nonce.hex().upper()}")
-    return jsonify({"session_id": session_id, "status": "pending"})
+    print(f"       Nonce (16-byte, {nonce_source}): {nonce.hex().upper()}")
+    # Trả nonce về cho phía gọi để hiển thị. /api/auth/result vẫn chỉ trả status
+    # -- chính nó mới là chỗ ghép được (nonce, cipher) thành cặp để phân tích.
+    return jsonify({
+        "session_id": session_id,
+        "status": "pending",
+        "nonce": nonce.hex(),
+        "nonce_source": nonce_source,
+    })
 
 @app.route("/api/auth/pending", methods=["GET"])
 def auth_pending():

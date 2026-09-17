@@ -36,6 +36,25 @@ def require_device_secret() -> bool:
     return request.headers.get("X-Device-Secret") == ESP32_SECRET
 
 
+def _hex_groups(b: bytes) -> str:
+    """16 byte -> '4 nhóm 4 byte', để hai dòng xếp thẳng cột khi so sánh."""
+    return " ".join(b[i:i + 4].hex() for i in range(0, len(b), 4))
+
+
+def _diff_marks(a: bytes, b: bytes) -> str:
+    """Dòng '^^' nằm dưới đúng những byte lệch nhau, cùng cách nhóm như trên."""
+    n = max(len(a), len(b))
+    groups = []
+    for i in range(0, n, 4):
+        mark = ""
+        for j in range(i, min(i + 4, n)):
+            x = a[j] if j < len(a) else None
+            y = b[j] if j < len(b) else None
+            mark += "  " if (x is not None and x == y) else "^^"
+        groups.append(mark)
+    return " ".join(groups)
+
+
 def fpga_key_to_aes_key(key_bytes: bytes) -> bytes:
     """Đổi 32 byte khóa theo thứ tự FPGA gửi lên -> thứ tự khóa AES chuẩn.
 
@@ -100,6 +119,14 @@ def init_db_if_not_exists():
         created_at  DATETIME DEFAULT CURRENT_TIMESTAMP
     );
     """)
+    # Di chuyển thêm cột cho database đã tạo từ trước: CREATE TABLE IF NOT
+    # EXISTS ở trên không đụng tới bảng đã tồn tại, nên cột mới phải thêm
+    # riêng. Chạy lần hai sẽ báo "duplicate column name" -- bỏ qua.
+    try:
+        conn.execute("ALTER TABLE auth_sessions ADD COLUMN nonce_source TEXT")
+    except sqlite3.OperationalError:
+        pass
+    conn.commit()
     conn.close()
 
 init_db_if_not_exists()
@@ -274,8 +301,9 @@ def auth_start():
     session_id = secrets.token_hex(8)
 
     conn.execute(
-        "INSERT INTO auth_sessions (session_id, device_id, nonce, status) VALUES (?, ?, ?, 'pending')",
-        (session_id, device_id, nonce.hex()),
+        "INSERT INTO auth_sessions (session_id, device_id, nonce, status, nonce_source) "
+        "VALUES (?, ?, ?, 'pending', ?)",
+        (session_id, device_id, nonce.hex(), nonce_source),
     )
     conn.commit()
     conn.close()
@@ -367,28 +395,67 @@ def auth_board_response():
     conn.commit()
     conn.close()
 
-    print(f"[AUTH] Nhận kết quả từ Board cho Session: {session_id}")
-    print(f"       Nonce:      {session['nonce']}")
-    print(f"       Nhận được:  {cipher_hex}")
-    if expected_hex is not None:
-        print(f"       Kỳ vọng:    {expected_hex}")
-        if not passed:
-            # Gợi ý hiệu chỉnh: nếu bản KHÔNG đảo nhóm byte lại khớp, nghĩa là
-            # fpga_key_to_aes_key() đang đảo thừa -> bỏ phép đảo đi.
-            alt_hex, alt_err = None, None
+    # Khối này được in ra để chiếu lúc demo, nên nó tự tách khỏi dòng log HTTP
+    # của Flask và xếp hai ciphertext thẳng cột: người xem thấy ngay chúng
+    # giống hay khác, và khác ở đúng byte nào.
+    try:
+        nonce_source = session["nonce_source"] or "ngẫu nhiên"
+    except (IndexError, KeyError):
+        nonce_source = "ngẫu nhiên"
+
+    W = 68
+    print("\n" + "=" * W)
+    print(f"  XÁC THỰC — phiên {session_id}")
+    print("=" * W)
+    print(f"  Thiết bị     : {session['device_id']}")
+    print(f"  Nonce        : {session['nonce']}   ({nonce_source})")
+    if device:
+        key_ref = device["key_ref"]
+        print(f"  Khóa đã lưu  : {key_ref[:8]}…{key_ref[-8:]}   "
+              f"({len(key_ref) // 2} byte, lưu lúc Enroll)")
+    print()
+
+    if expected_hex is None:
+        print(f"  FPGA trả về  : {cipher_hex}")
+        print(f"  Backend tính : không tính được — {err}")
+    else:
+        try:
+            got = bytes.fromhex(cipher_hex)
+            want = bytes.fromhex(expected_hex)
+        except ValueError:
+            got, want = b"", b""
+        if got and want:
+            same = sum(1 for x, y in zip(got, want) if x == y)
+            print(f"  FPGA trả về  : {_hex_groups(got)}")
+            print(f"  Backend tính : {_hex_groups(want)}")
+            marks = _diff_marks(got, want)
+            if same == len(want):
+                print(f"                 {'─' * len(marks)}")
+                print(f"  {same}/{len(want)} byte trùng khớp")
+            else:
+                print(f"                 {marks}")
+                print(f"  {same}/{len(want)} byte trùng khớp — {len(want) - same} byte lệch")
+        else:
+            print(f"  FPGA trả về  : {cipher_hex}")
+            print(f"  Backend tính : {expected_hex}")
+
+        if not passed and device:
+            # Nếu bản KHÔNG đảo nhóm byte lại khớp thì fpga_key_to_aes_key()
+            # đang đảo thừa -- đây là lỗi thứ tự byte, không phải sai khóa.
             try:
                 alt_hex = _aes256_ecb_encrypt(
                     bytes.fromhex(device["key_ref"]), bytes.fromhex(session["nonce"])
                 ).hex()
-            except Exception as e:  # noqa: BLE001 - chỉ để chẩn đoán
-                alt_err = str(e)
+            except Exception:  # noqa: BLE001 - chỉ để chẩn đoán
+                alt_hex = None
             if alt_hex == cipher_hex:
-                print("       >>> KHỚP nếu KHÔNG đảo nhóm byte khóa."
-                      " Hãy bỏ phép đảo trong fpga_key_to_aes_key().")
-            elif alt_err:
-                print(f"       (không thử được phương án thứ tự byte khác: {alt_err})")
-    print(f"       => KẾT QUẢ XÁC THỰC: "
-          f"{'THÀNH CÔNG (PASSED)' if passed else 'THẤT BẠI (FAILED)'} — {reason}\n")
+                print()
+                print("  >>> Khớp nếu KHÔNG đảo nhóm byte khóa.")
+                print("      Lỗi nằm ở fpga_key_to_aes_key(), không phải ở khóa.")
+
+    print()
+    print(f"  {'✓ PASSED — mở khóa' if passed else '✗ FAILED — từ chối'}  ({reason})")
+    print("=" * W + "\n")
 
     return jsonify({"status": new_status, "reason": reason})
 

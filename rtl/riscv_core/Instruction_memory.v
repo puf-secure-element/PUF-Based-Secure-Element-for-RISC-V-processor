@@ -379,6 +379,10 @@ initial begin
     //   board -> host : 02 84 00 00 | 00 03 00 00 | đệm      (xin helper)
     //   host -> board : helper[0..11] | A5 5A C3 3C          (magic)
     //
+    // Nếu helper đã được nung sẵn vào bitstream (BAKED_HELPER_VALID trong
+    // axi_reg_bank.v), ECC_MODE đã bằng 1 ngay từ reset -- firmware thấy
+    // vậy thì bỏ qua toàn bộ phần hỏi host và vào thẳng luồng chính.
+    //
     // Ánh xạ byte (uart_rx_buffer nạp byte đầu vào bit cao nhất):
     //   AES_PT_3 = byte  0..3  -> ECC_HELPER_0
     //   AES_PT_2 = byte  4..7  -> ECC_HELPER_1
@@ -386,71 +390,78 @@ initial begin
     //   AES_PT_0 = byte 12..15 = magic
     // =========================================================
 
-    mem[160] = 32'h08400293;    // addi x5,x0,0x84        (MANUAL_TX_STAT)
-    mem[161] = 32'h0002AC03;    // lw   x24,0(x5)         ; cho TX ranh han
-    mem[162] = 32'h001C7C13;    // andi x24,x24,1
-    mem[163] = 32'hFE0C1CE3;    // bne  x24,x0,tx_wait
-    mem[164] = 32'h02840B37;    // lui  x22,0x02840       ; 02 84 00 00  STX CMD LEN RSV
-    mem[165] = 32'h07C00293;    // addi x5,x0,0x7C
-    mem[166] = 32'h0162A023;    // sw   x22,0(x5)
-    mem[167] = 32'h00030BB7;    // lui  x23,0x30          ; 00 03 00 00  CRC=0 ETX=3
-    mem[168] = 32'h07800293;    // addi x5,x0,0x78
-    mem[169] = 32'h0172A023;    // sw   x23,0(x5)
-    mem[170] = 32'h07400293;    // addi x5,x0,0x74
-    mem[171] = 32'h0002A023;    // sw   x0,0(x5)                  (dem)
-    mem[172] = 32'h07000293;    // addi x5,x0,0x70
-    mem[173] = 32'h0002A023;    // sw   x0,0(x5)                  (dem)
-    mem[174] = 32'h08000293;    // addi x5,x0,0x80        (MANUAL_TX_CTRL)
-    mem[175] = 32'h00100313;    // addi x6,x0,1
-    mem[176] = 32'h0062A023;    // sw   x6,0(x5)          ; KICH gui yeu cau helper
-    mem[177] = 32'h0C000F13;    // addi x30,x0,0xC0       (DEBUG_TRACE)
-    mem[178] = 32'h01100F93;    // addi x31,x0,0x11
-    mem[179] = 32'h01FF2023;    // sw   x31,0(x30)        ; TRACE=11 da gui yeu cau helper
-    mem[180] = 32'h00C00CB7;    // lui  x25,0xC00         ; ~12.6 trieu vong ~ 5 giay
-    mem[181] = 32'h00400293;    // addi x5,x0,0x04        (STATUS)
-    mem[182] = 32'h0002AC03;    // lw   x24,0(x5)
-    mem[183] = 32'h008C7C13;    // andi x24,x24,8         ; bit3 = co khoi 16 byte moi
-    mem[184] = 32'h000C1863;    // bne  x24,x0,got        -> da nhan duoc
-    mem[185] = 32'hFFFC8C93;    // addi x25,x25,-1
-    mem[186] = 32'hFE0C98E3;    // bne  x25,x0,wait       -> chua het gio, cho tiep
-    mem[187] = 32'h0740006F;    // jal  x0,timeout        -> het gio
-    mem[188] = 32'h02000293;    // addi x5,x0,0x20        (AES_PT_0 = 4 byte cuoi)
-    mem[189] = 32'h0002A683;    // lw   x13,0(x5)
-    mem[190] = 32'hA55ACD37;    // lui  x26,0xA55AC
-    mem[191] = 32'h33CD0D13;    // addi x26,x26,0x33C     ; magic = 0xA55AC33C
-    mem[192] = 32'h05A69663;    // bne  x13,x26,retry     -> khong phai khoi helper
-    mem[193] = 32'h02C00293;    // addi x5,x0,0x2C        (AES_PT_3 = helper byte 0-3)
-    mem[194] = 32'h0002A503;    // lw   x10,0(x5)
-    mem[195] = 32'h02800293;    // addi x5,x0,0x28        (AES_PT_2 = helper byte 4-7)
-    mem[196] = 32'h0002A583;    // lw   x11,0(x5)
-    mem[197] = 32'h02400293;    // addi x5,x0,0x24        (AES_PT_1 = helper byte 8-11)
-    mem[198] = 32'h0002A603;    // lw   x12,0(x5)
-    mem[199] = 32'h05000293;    // addi x5,x0,0x50        (ECC_HELPER_0)
-    mem[200] = 32'h00A2A023;    // sw   x10,0(x5)
-    mem[201] = 32'h05400293;    // addi x5,x0,0x54        (ECC_HELPER_1)
-    mem[202] = 32'h00B2A023;    // sw   x11,0(x5)
-    mem[203] = 32'h05800293;    // addi x5,x0,0x58        (ECC_HELPER_2)
-    mem[204] = 32'h00C2A023;    // sw   x12,0(x5)
-    mem[205] = 32'h00C00293;    // addi x5,x0,0x0C        (ECC_MODE)
-    mem[206] = 32'h00100313;    // addi x6,x0,1
-    mem[207] = 32'h0062A023;    // sw   x6,0(x5)          ; ECC_MODE = 1  RECONSTRUCT
-    mem[208] = 32'h01A00F93;    // addi x31,x0,0x1A
-    mem[209] = 32'h01FF2023;    // sw   x31,0(x30)        ; TRACE=1A chay Reconstruct
-    mem[210] = 32'h02C0006F;    // jal  x0,ack            -> don dep roi tra ve
-    mem[211] = 32'h00400293;    // addi x5,x0,0x04
-    mem[212] = 32'h00800313;    // addi x6,x0,8
-    mem[213] = 32'h0062A023;    // sw   x6,0(x5)          ; xoa co, bo khoi la
-    mem[214] = 32'h00400293;    // addi x5,x0,0x04        (nap lai dia chi cho vong cho)
-    mem[215] = 32'hF7DFF06F;    // jal  x0,wait           -> cho khoi ke tiep
-    mem[216] = 32'h00C00293;    // addi x5,x0,0x0C        (ECC_MODE)
-    mem[217] = 32'h00000313;    // addi x6,x0,0
-    mem[218] = 32'h0062A023;    // sw   x6,0(x5)          ; ECC_MODE = 0  ENROLL
-    mem[219] = 32'h01B00F93;    // addi x31,x0,0x1B
-    mem[220] = 32'h01FF2023;    // sw   x31,0(x30)        ; TRACE=1B het gio, chay Enroll
-    mem[221] = 32'h00400293;    // addi x5,x0,0x04
-    mem[222] = 32'h00800313;    // addi x6,x0,8
-    mem[223] = 32'h0062A023;    // sw   x6,0(x5)          ; xoa co + bo khoi treo (pt_ack)
-    mem[224] = 32'hCD1FF06F;    // jal  x0,mem[20]        -> quay lai luong chinh
+    mem[160] = 32'h0C000F13;    // addi x30,x0,0xC0       (DEBUG_TRACE)
+    mem[161] = 32'h00C00293;    // addi x5,x0,0x0C        (ECC_MODE)
+    mem[162] = 32'h0002AC03;    // lw   x24,0(x5)
+    mem[163] = 32'h001C7C13;    // andi x24,x24,1
+    mem[164] = 32'h000C0863;    // beq  x24,x0,ask_host   -> chua nung, di hoi host
+    mem[165] = 32'h01C00F93;    // addi x31,x0,0x1C
+    mem[166] = 32'h01FF2023;    // sw   x31,0(x30)        ; TRACE=1C helper nung san, Reconstruct luon
+    mem[167] = 32'hDB5FF06F;    // jal  x0,mem[20]        -> vao thang luong chinh
+    mem[168] = 32'h08400293;    // addi x5,x0,0x84        (MANUAL_TX_STAT)
+    mem[169] = 32'h0002AC03;    // lw   x24,0(x5)         ; cho TX ranh han
+    mem[170] = 32'h001C7C13;    // andi x24,x24,1
+    mem[171] = 32'hFE0C1CE3;    // bne  x24,x0,tx_wait
+    mem[172] = 32'h02840B37;    // lui  x22,0x02840       ; 02 84 00 00  STX CMD LEN RSV
+    mem[173] = 32'h07C00293;    // addi x5,x0,0x7C
+    mem[174] = 32'h0162A023;    // sw   x22,0(x5)
+    mem[175] = 32'h00030BB7;    // lui  x23,0x30          ; 00 03 00 00  CRC=0 ETX=3
+    mem[176] = 32'h07800293;    // addi x5,x0,0x78
+    mem[177] = 32'h0172A023;    // sw   x23,0(x5)
+    mem[178] = 32'h07400293;    // addi x5,x0,0x74
+    mem[179] = 32'h0002A023;    // sw   x0,0(x5)                  (dem)
+    mem[180] = 32'h07000293;    // addi x5,x0,0x70
+    mem[181] = 32'h0002A023;    // sw   x0,0(x5)                  (dem)
+    mem[182] = 32'h08000293;    // addi x5,x0,0x80        (MANUAL_TX_CTRL)
+    mem[183] = 32'h00100313;    // addi x6,x0,1
+    mem[184] = 32'h0062A023;    // sw   x6,0(x5)          ; KICH gui yeu cau helper
+    mem[185] = 32'h01100F93;    // addi x31,x0,0x11
+    mem[186] = 32'h01FF2023;    // sw   x31,0(x30)        ; TRACE=11 da gui yeu cau helper
+    mem[187] = 32'h00C00CB7;    // lui  x25,0xC00         ; ~12.6 trieu vong ~ 5 giay
+    mem[188] = 32'h00400293;    // addi x5,x0,0x04        (STATUS)
+    mem[189] = 32'h0002AC03;    // lw   x24,0(x5)
+    mem[190] = 32'h008C7C13;    // andi x24,x24,8         ; bit3 = co khoi 16 byte moi
+    mem[191] = 32'h000C1863;    // bne  x24,x0,got        -> da nhan duoc
+    mem[192] = 32'hFFFC8C93;    // addi x25,x25,-1
+    mem[193] = 32'hFE0C98E3;    // bne  x25,x0,wait       -> chua het gio, cho tiep
+    mem[194] = 32'h0740006F;    // jal  x0,timeout        -> het gio
+    mem[195] = 32'h02000293;    // addi x5,x0,0x20        (AES_PT_0 = 4 byte cuoi)
+    mem[196] = 32'h0002A683;    // lw   x13,0(x5)
+    mem[197] = 32'hA55ACD37;    // lui  x26,0xA55AC
+    mem[198] = 32'h33CD0D13;    // addi x26,x26,0x33C     ; magic = 0xA55AC33C
+    mem[199] = 32'h05A69663;    // bne  x13,x26,retry     -> khong phai khoi helper
+    mem[200] = 32'h02C00293;    // addi x5,x0,0x2C        (AES_PT_3 = helper byte 0-3)
+    mem[201] = 32'h0002A503;    // lw   x10,0(x5)
+    mem[202] = 32'h02800293;    // addi x5,x0,0x28        (AES_PT_2 = helper byte 4-7)
+    mem[203] = 32'h0002A583;    // lw   x11,0(x5)
+    mem[204] = 32'h02400293;    // addi x5,x0,0x24        (AES_PT_1 = helper byte 8-11)
+    mem[205] = 32'h0002A603;    // lw   x12,0(x5)
+    mem[206] = 32'h05000293;    // addi x5,x0,0x50        (ECC_HELPER_0)
+    mem[207] = 32'h00A2A023;    // sw   x10,0(x5)
+    mem[208] = 32'h05400293;    // addi x5,x0,0x54        (ECC_HELPER_1)
+    mem[209] = 32'h00B2A023;    // sw   x11,0(x5)
+    mem[210] = 32'h05800293;    // addi x5,x0,0x58        (ECC_HELPER_2)
+    mem[211] = 32'h00C2A023;    // sw   x12,0(x5)
+    mem[212] = 32'h00C00293;    // addi x5,x0,0x0C        (ECC_MODE)
+    mem[213] = 32'h00100313;    // addi x6,x0,1
+    mem[214] = 32'h0062A023;    // sw   x6,0(x5)          ; ECC_MODE = 1  RECONSTRUCT
+    mem[215] = 32'h01A00F93;    // addi x31,x0,0x1A
+    mem[216] = 32'h01FF2023;    // sw   x31,0(x30)        ; TRACE=1A chay Reconstruct
+    mem[217] = 32'h02C0006F;    // jal  x0,ack            -> don dep roi tra ve
+    mem[218] = 32'h00400293;    // addi x5,x0,0x04
+    mem[219] = 32'h00800313;    // addi x6,x0,8
+    mem[220] = 32'h0062A023;    // sw   x6,0(x5)          ; xoa co, bo khoi la
+    mem[221] = 32'h00400293;    // addi x5,x0,0x04        (nap lai dia chi cho vong cho)
+    mem[222] = 32'hF7DFF06F;    // jal  x0,wait           -> cho khoi ke tiep
+    mem[223] = 32'h00C00293;    // addi x5,x0,0x0C        (ECC_MODE)
+    mem[224] = 32'h00000313;    // addi x6,x0,0
+    mem[225] = 32'h0062A023;    // sw   x6,0(x5)          ; ECC_MODE = 0  ENROLL
+    mem[226] = 32'h01B00F93;    // addi x31,x0,0x1B
+    mem[227] = 32'h01FF2023;    // sw   x31,0(x30)        ; TRACE=1B het gio, chay Enroll
+    mem[228] = 32'h00400293;    // addi x5,x0,0x04
+    mem[229] = 32'h00800313;    // addi x6,x0,8
+    mem[230] = 32'h0062A023;    // sw   x6,0(x5)          ; xoa co + bo khoi treo (pt_ack)
+    mem[231] = 32'hCB5FF06F;    // jal  x0,mem[20]        -> quay lai luong chinh
 
 end
 

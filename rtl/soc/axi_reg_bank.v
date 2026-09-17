@@ -81,6 +81,38 @@ module axi_reg_bank (
 );
 
     // =========================================================================
+    // HELPER DATA NUNG SẴN VÀO BITSTREAM  -- CHỈ CẦN SỬA 4 DÒNG DƯỚI ĐÂY
+    // =========================================================================
+    // Board không có bộ nhớ không bay hơi, nên sau mỗi lần mất điện nó phải
+    // lấy lại helper data của lần Enroll từ đâu đó. Cách mặc định là hỏi host
+    // qua UART (xem mem[160] trong Instruction_memory.v). Cách thứ hai, không
+    // cần mạng và không cần ESP: nung thẳng helper vào giá trị reset của thanh
+    // ghi -- nó trở thành một phần của bitstream.
+    //
+    // Cách làm:
+    //   1. Để nguyên như dưới (VALID = 0), build, nạp, chạy Enroll một lần.
+    //   2. Lấy chuỗi helper 24 ký tự hex trong log, ví dụ
+    //          4CECF1C5DAA972A849C184D6
+    //      cắt làm ba, mỗi phần 8 ký tự, điền theo đúng thứ tự:
+    //          BAKED_HELPER_0 = 32'h4CECF1C5
+    //          BAKED_HELPER_1 = 32'hDAA972A8
+    //          BAKED_HELPER_2 = 32'h49C184D6
+    //   3. Đổi BAKED_HELPER_VALID thành 1'b1, build lại, nạp.
+    //
+    // Từ đó mỗi lần bật nguồn board tự chạy Reconstruction và dẫn xuất lại
+    // ĐÚNG khóa của lần Enroll đó -- firmware đọc ECC_MODE thấy đã bằng 1 nên
+    // bỏ qua luôn bước hỏi host.
+    //
+    // Đánh đổi: bitstream gắn chặt với đúng con chip này. Đem nạp sang board
+    // khác thì helper không khớp đáp ứng PUF của nó, ECC sửa sai, ra khóa rác.
+    // Muốn Enroll lại thì phải lặp lại ba bước trên.
+    // =========================================================================
+    localparam        BAKED_HELPER_VALID = 1'b0;          // 1'b1 = bật Reconstruct ngay từ reset
+    localparam [31:0] BAKED_HELPER_0     = 32'h00000000;  // = HELPER_OUT_0, hex byte 0-3
+    localparam [31:0] BAKED_HELPER_1     = 32'h00000000;  // = HELPER_OUT_1, hex byte 4-7
+    localparam [31:0] BAKED_HELPER_2     = 32'h00000000;  // = HELPER_OUT_2, hex byte 8-11
+
+    // =========================================================================
     // PARAMETER HÓA ĐỊA CHỈ 
     // =========================================================================
     localparam SHA_ADDR_CTRL   = 10'h000; // Dùng làm thanh ghi Master Start/Reset
@@ -271,11 +303,15 @@ module axi_reg_bank (
             puf_chlg_reg     <= 16'hA5A5;
             puf_wind_reg     <= 32'd50;
             aes_ctrl_reg     <= 2'b01; 
-            ecc_ctrl_reg     <= 1'b1;  
+            // Reset về chế độ nung sẵn: 1 = Reconstruct khi đã điền helper,
+            // 0 = để firmware tự quyết (hỏi host, hết giờ thì Enroll).
+            ecc_ctrl_reg     <= BAKED_HELPER_VALID;
             
             aes_pt_reg[0] <= 32'h0; aes_pt_reg[1] <= 32'h0; aes_pt_reg[2] <= 32'h0; aes_pt_reg[3] <= 32'h0;
             aes_ct_reg[0] <= 32'h0; aes_ct_reg[1] <= 32'h0; aes_ct_reg[2] <= 32'h0; aes_ct_reg[3] <= 32'h0;
-            ecc_helper_reg[0] <= 32'h0; ecc_helper_reg[1] <= 32'h0; ecc_helper_reg[2] <= 32'h0;
+            ecc_helper_reg[0] <= BAKED_HELPER_0;
+            ecc_helper_reg[1] <= BAKED_HELPER_1;
+            ecc_helper_reg[2] <= BAKED_HELPER_2;
             
             status_done_reg  <= 1'b0;
             status_error_reg <= 1'b0;

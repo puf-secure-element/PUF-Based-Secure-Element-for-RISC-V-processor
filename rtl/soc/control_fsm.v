@@ -27,6 +27,11 @@ module control_fsm (
     // NEW: Bắt tay với khối UART/CPU cho luồng AES lặp lại nhiều lần
     // plaintext_ready: xung 1 chu kỳ báo đã nhận đủ 128-bit plaintext từ UART
     input  wire plaintext_ready,
+    // plaintext_flush: firmware ghi 1 vào STATUS bit 3 -> bỏ khối đang treo.
+    // Dùng cho luồng ECC Reconstruction: khối helper mà host đẩy xuống đi qua
+    // đúng đường UART RX như một plaintext, nên nếu không rút lại thì ngay sau
+    // khi key_ready lên, FSM sẽ đem nó đi mã hoá và nhả ra 16 byte rác.
+    input  wire plaintext_flush,
     // uart_tx_valid: xung 1 chu kỳ báo data_out (AES done) đã sẵn sàng để
     // truyền ra UART/software
     output reg  uart_tx_valid,
@@ -89,6 +94,8 @@ module control_fsm (
         end else begin
             if (plaintext_ready) begin
                 plaintext_pending <= 1'b1;
+            end else if (plaintext_flush) begin
+                plaintext_pending <= 1'b0; // firmware chủ động bỏ khối này
             end else if (current_state == IDLE && next_state == RUN_AES) begin
                 plaintext_pending <= 1'b0; // đã được FSM tiêu thụ
             end

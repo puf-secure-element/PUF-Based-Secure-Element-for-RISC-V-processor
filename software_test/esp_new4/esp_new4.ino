@@ -37,7 +37,7 @@ const char* BACKEND_URL = "http://10.238.250.137:5000";
 //const char* WIFI_PASSWORD = "0909794900";
 //const char* BACKEND_URL = "http://192.168.1.105:5000";
 // Bump this whenever the sketch changes so the boot log names the build.
-#define BUILD_TAG "2026-09-17c"
+#define BUILD_TAG "2026-09-17d-recon"
 
 const char* DEVICE_ID     = "0001";
 const char* ESP32_SECRET  = "demo-secret-change-me";
@@ -55,6 +55,10 @@ const uint8_t CMD_ENROLL_REQUEST  = 0x01;
 const uint8_t CMD_ENROLL_RESPONSE = 0x81;
 const uint8_t CMD_AUTH_CHALLENGE  = 0x02;
 const uint8_t CMD_AUTH_RESPONSE   = 0x82;
+// Board phát khung này ngay sau reset để xin lại helper data của lần
+// Enroll trước; có helper thì nó chạy ECC Reconstruction và dẫn xuất lại
+// đúng khóa cũ thay vì sinh khóa mới.
+const uint8_t CMD_HELPER_REQUEST  = 0x84;
 
 WiFiClientSecure secureClient;
 WiFiClient plainClient;
@@ -222,6 +226,68 @@ void postBoardResponse(const String& sessionId, const String& cipherHex) {
 bool   enrollFrameCaptured = false;
 String cachedHelperHex, cachedKeyHex;
 
+// Đọc đúng n byte, bỏ cuộc sau timeoutMs. Khung thật tới liền mạch ở 115200
+// (52 byte ~ 4.5 ms) nên timeout ngắn là đủ, không chặn tác vụ Auth lâu.
+bool readExactly(uint8_t* buf, int n, unsigned long timeoutMs) {
+  int got = 0;
+  unsigned long t0 = millis();
+  while (got < n) {
+    if (Serial.available()) { buf[got++] = Serial.read(); t0 = millis(); }
+    else if (millis() - t0 > timeoutMs) return false;
+    yield();
+  }
+  return true;
+}
+
+// Board gửi 4x16 byte vì MANUAL_TX làm việc theo khối, nên sau phần khung có
+// thật luôn còn byte đệm. Nuốt cho hết để chúng không bị báo là byte lạ.
+void drainPadding(int frameLen) {
+  int pad = (16 - (frameLen % 16)) % 16;
+  unsigned long t0 = millis();
+  int done = 0;
+  while (done < pad && millis() - t0 < 50) {
+    if (Serial.available()) { Serial.read(); done++; }
+  }
+}
+
+String fetchHelperFromBackend() {
+  HTTPClient http;
+  String url = String(BACKEND_URL) + "/api/helper?device_id=" + DEVICE_ID;
+  bool ok = isHttps(url) ? http.begin(secureClient, url) : http.begin(plainClient, url);
+  if (!ok) return "";
+  http.addHeader("X-Device-Secret", ESP32_SECRET);
+  int code = http.GET();
+  if (code != 200) {
+    if (code == 204) Serial1.println("    Backend chưa có helper cho thiết bị này.");
+    else             Serial1.printf("    Backend trả HTTP %d khi xin helper\n", code);
+    http.end();
+    return "";
+  }
+  String body = http.getString();
+  http.end();
+  StaticJsonDocument<192> doc;
+  if (deserializeJson(doc, body)) return "";
+  return doc["helper_data"].as<String>();
+}
+
+// Board vừa reset và đang chờ helper. Nó chờ khoảng 5 giây rồi mới bỏ cuộc
+// và tự chạy Enrollment, nên trả lời ngay trong vòng lặp này là kịp.
+void handleHelperRequest() {
+  Serial1.println("\n--- [RECON] Board xin helper data để chạy Reconstruction");
+  String helperHex = fetchHelperFromBackend();
+  if (helperHex.length() != 24) {
+    Serial1.println("    Không có helper hợp lệ -- để board tự chạy Enroll và sinh khóa mới.");
+    return;
+  }
+  uint8_t block[16];
+  hexStringToBytes(helperHex, block, 12);
+  // 4 byte magic để firmware phân biệt khối helper với nhiễu hoặc với nonce Auth
+  block[12] = 0xA5; block[13] = 0x5A; block[14] = 0xC3; block[15] = 0x3C;
+  Serial.write(block, 16);
+  Serial.flush();
+  Serial1.println("    Đã gửi helper xuống board: " + helperHex);
+}
+
 void checkForBootEnrollFrame() {
   // Deliberately keeps listening after the first capture, overwriting the
   // cache each time. The FPGA derives a fresh key on every KEY0 reset (ECC
@@ -248,32 +314,41 @@ void checkForBootEnrollFrame() {
 
   Serial1.println("[ENROLL-DEBUG] Thấy STX (0x02) trên Serial -- đang đợi 51 byte còn lại...");
 
-  // Còn 51 byte nữa sau STX (CMD,LEN,RESERVED + 44 payload + CRC,ETX,x2 RESERVED).
-  // Nếu đúng là khung Enroll thật, cả 51 byte này tới gần như ngay lập tức
-  // (52 byte @ 115200 baud ~ 4.5ms) -- timeout ngắn là đủ, không chặn Auth lâu.
-  uint8_t rest[51];
-  int received = 0;
-  unsigned long startWait = millis();
-  while (received < 51) {
-    if (Serial.available()) {
-      rest[received++] = Serial.read();
-    }
-    if (millis() - startWait > 200) {
-      Serial1.printf("[ENROLL-DEBUG] Timeout, chỉ nhận %d/51 byte sau STX -- không phải khung Enroll thật\n", received);
-      return; // STX rơi lẻ, không có gì theo sau -- không phải khung Enroll thật
-    }
+  // Đọc CMD, LEN, RESERVED rồi mới biết còn bao nhiêu byte nữa. Board phát
+  // hai loại khung khác độ dài: CMD=0x81 (Enroll, LEN=44) và CMD=0x84 (xin
+  // helper, LEN=0), nên không thể đọc cứng một con số như trước.
+  uint8_t hdr[3];
+  if (!readExactly(hdr, 3, 200)) {
+    Serial1.println("[FRAME] Timeout khi đọc CMD/LEN sau STX -- không phải khung thật");
+    return;
+  }
+  uint8_t cmd = hdr[0];
+  uint8_t len = hdr[1];
+
+  if (cmd == CMD_HELPER_REQUEST && len == 0) {
+    uint8_t tail[2];                       // CRC + ETX
+    if (!readExactly(tail, 2, 200)) return;
+    if (tail[1] != ETX) return;
+    drainPadding(6);                       // STX + 3 + CRC + ETX
+    handleHelperRequest();
+    return;
   }
 
-  uint8_t cmd = rest[0];
-  uint8_t len = rest[1];
-  Serial1.printf("[ENROLL-DEBUG] Đủ 51 byte. CMD=0x%02X LEN=%d (mong đợi CMD=0x81 LEN=44)\n", cmd, len);
   if (cmd != CMD_ENROLL_RESPONSE || len != 44) {
-    return; // trùng STX ngẫu nhiên, không phải khung Enroll -- bỏ qua
+    Serial1.printf("[FRAME] Khung lạ: CMD=0x%02X LEN=%d -- bỏ qua\n", cmd, len);
+    return;
   }
 
-  uint8_t* payload      = rest + 3;   // 44 byte: rest[3..46]
-  uint8_t  receivedCrc  = rest[47];
-  uint8_t  receivedEtx  = rest[48];
+  uint8_t body[46];                        // 44 payload + CRC + ETX
+  if (!readExactly(body, 46, 200)) {
+    Serial1.println("[ENROLL-DEBUG] Timeout giữa chừng khung Enroll");
+    return;
+  }
+  Serial1.printf("[ENROLL-DEBUG] Khung Enroll đủ byte. CMD=0x%02X LEN=%d\n", cmd, len);
+
+  uint8_t* payload      = body;            // 44 byte
+  uint8_t  receivedCrc  = body[44];
+  uint8_t  receivedEtx  = body[45];
 
   uint8_t calculatedCrc = 0;
   for (int i = 0; i < 44; ++i) calculatedCrc ^= payload[i];
@@ -297,14 +372,7 @@ void checkForBootEnrollFrame() {
   Serial1.println("         Helper Data (12B): " + cachedHelperHex);
   Serial1.println("         Key (32B)        : " + cachedKeyHex);
 
-  // The board sends 4 x 16 bytes because MANUAL_TX works a block at a time,
-  // so 12 padding bytes always follow the 52-byte frame. Drain them here
-  // rather than leaving them to be reported one at a time as stray bytes.
-  unsigned long padWait = millis();
-  int padding = 0;
-  while (padding < 12 && millis() - padWait < 50) {
-    if (Serial.available()) { Serial.read(); padding++; }
-  }
+  drainPadding(50);   // STX + 3 + 44 + CRC + ETX = 50, khung đệm lên 64
 }
 
 void checkPendingEnroll() {

@@ -12,7 +12,6 @@ module ecc_top (
     output reg          corr_resp_val_o // Valid signal for downstream SHA-256 block
 );
 
-    reg [95:0] helper_reg;
     wire [95:0]  calc_helper;
     wire [511:0] decoded_resp;
 
@@ -26,22 +25,25 @@ module ecc_top (
                 .parity_o(calc_helper[i*6 +: 6])
             );
 
+            // Lấy thẳng helper_in_i, không qua thanh ghi trung gian. Hai lý do:
+            //   1. helper_reg cũ chỉ được nạp khi mode_i==0, nên ở chế độ
+            //      Reconstruct nó đứng nguyên ở giá trị reset 0 -- bộ giải mã
+            //      nhận parity toàn 0, tính ra syndrome sai và lật nhầm một bit
+            //      vốn không lỗi. Cổng helper_in_i chưa từng nối vào đâu.
+            //   2. Kể cả khi nạp đúng, helper_reg vẫn chốt ở cùng nhịp start_i
+            //      mà corr_resp_o chốt decoded_resp, nên bộ giải mã vẫn đọc giá
+            //      trị của nhịp trước.
+            // helper_in_i đến từ ecc_helper_reg trong axi_reg_bank -- firmware
+            // đã ghi xong và giữ ổn định từ trước khi ghi START, nên dùng trực
+            // tiếp là an toàn. Bỏ luôn 96 flip-flop không còn ai đọc.
             hamming_decoder_32 dec_inst (
                 .noisy_data_i(raw_resp_i[i*32 +: 32]),
-                .parity_i    (helper_reg[i*6 +: 6]),
+                .parity_i    (helper_in_i[i*6 +: 6]),
                 .corr_data_o (decoded_resp[i*32 +: 32])
             );
 
         end
     endgenerate
-
-    always @(posedge clk_i or negedge rst_n_i) begin
-        if (!rst_n_i) begin
-            helper_reg <= 96'h0;
-        end else if (start_i && (mode_i == 1'b0)) begin
-            helper_reg <= calc_helper;  
-        end
-    end
 
     always @(posedge clk_i or negedge rst_n_i) begin
         if (!rst_n_i) begin

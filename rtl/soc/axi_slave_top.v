@@ -45,6 +45,7 @@ module axi_slave_top (
 
     wire reg_start, soft_reset;
     wire hw_busy, hw_done_pulse, hw_error_pulse;
+    wire w_pt_ack;
     wire puf_start, ecc_start, sha_start, aes_start;
     wire puf_valid, ecc_valid, sha_valid, sha_error;
     wire key_ready;
@@ -106,7 +107,8 @@ module axi_slave_top (
         .hw_uart_tx_busy    (uart_tx_busy),
         .manual_tx_start    (manual_tx_valid),
         .manual_tx_data     (manual_tx_data),
-        .debug_trace        (debug_trace)
+        .debug_trace        (debug_trace),
+        .pt_ack             (w_pt_ack)
     );
 
     control_fsm u_fsm (
@@ -129,6 +131,7 @@ module axi_slave_top (
 
         .key_ready          (key_ready),
         .plaintext_ready    (uart_plaintext_valid),
+        .plaintext_flush    (w_pt_ack),
         .uart_tx_valid      (aes_block_valid)
     );
 

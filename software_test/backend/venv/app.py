@@ -263,6 +263,35 @@ def enroll_result(job_id):
 # 2. API CHO TÁC VỤ AUTHENTICATION (XÁC THỰC CHALLENGE-RESPONSE)
 # =========================================================================
 
+@app.route("/api/helper", methods=["GET"])
+def device_helper():
+    """Board xin lại helper data để chạy ECC Reconstruction.
+
+    Board không có bộ nhớ không bay hơi, nên sau mỗi lần reset nó phải hỏi
+    lại helper của lần Enroll. Có helper thì ECC sửa được đáp ứng PUF nhiễu
+    về đúng giá trị cũ -> dẫn xuất lại ĐÚNG khóa đã đăng ký. Không có thì
+    board tự chạy Enrollment và sinh khóa mới.
+
+    Helper data là thông tin chẵn lẻ, thiết kế để lưu công khai được -- nhưng
+    vẫn đặt sau X-Device-Secret như mọi endpoint hướng thiết bị khác.
+    """
+    if not require_device_secret():
+        return jsonify({"error": "Unauthorized"}), 401
+
+    device_id = request.args.get("device_id")
+    if not device_id:
+        return jsonify({"error": "Thiếu device_id"}), 400
+
+    conn = get_db()
+    row = conn.execute(
+        "SELECT helper_data FROM devices WHERE device_id = ?", (device_id,)
+    ).fetchone()
+    conn.close()
+    if not row or not row["helper_data"]:
+        return jsonify({}), 204  # chưa Enroll bao giờ
+
+    return jsonify({"helper_data": row["helper_data"]})
+
 @app.route("/api/auth/start", methods=["POST"])
 def auth_start():
     """Web App bấm 'Authenticate' -> Sinh Nonce 16 bytes ngẫu nhiên"""

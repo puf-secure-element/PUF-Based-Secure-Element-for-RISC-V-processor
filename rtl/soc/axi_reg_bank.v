@@ -69,7 +69,15 @@ module axi_reg_bank (
     // so expose a byte the firmware can stamp at each milestone and wire
     // it straight to LEDR[7:0]. Value 0 = firmware never got far enough to
     // write it at all.
-    output wire [7:0]   debug_trace
+    output wire [7:0]   debug_trace,
+
+    // NEW: ECC Reconstruction handshake. The host pushes 16 bytes down the
+    // normal UART RX path before the key chain starts; they land in
+    // aes_pt_reg, which the CPU can already read. All that was missing was a
+    // way for firmware to notice the block had arrived, and a way to retract
+    // it afterwards -- otherwise control_fsm would later treat that helper
+    // block as an AES plaintext and emit a stray ciphertext.
+    output wire         pt_ack
 );
 
     // =========================================================================
@@ -223,6 +231,12 @@ module axi_reg_bank (
     // otherwise. Saves 128 flip-flops of new logic (was tipping Fitter
     // routing over the edge in an unrelated area of the design).
 
+    // Ghi 1 vào STATUS bit 3 vừa xoá cờ, vừa báo control_fsm bỏ khối đang
+    // treo -- nếu không, sau khi key_ready lên thì FSM sẽ đem chính khối
+    // helper đó đi mã hoá và nhả ra 16 byte rác.
+    assign pt_ack = slv_reg_wren && (axi_awaddr[7:0] == SHA_ADDR_STATUS)
+                    && axi_wstrb_reg[0] && axi_wdata_reg[3];
+
     assign manual_tx_start = slv_reg_wren && (axi_awaddr[7:0] == MANUAL_TX_CTRL) && axi_wstrb_reg[0] && axi_wdata_reg[0];
     assign manual_tx_data  = {aes_ct_reg[3], aes_ct_reg[2], aes_ct_reg[1], aes_ct_reg[0]};
 
@@ -238,6 +252,8 @@ module axi_reg_bank (
         for (crc_i = 0; crc_i < 44; crc_i = crc_i + 1)
             enroll_crc = enroll_crc ^ enroll_payload_bits[crc_i*8 +: 8];
     end
+
+    reg status_pt_reg;   // sticky: một khối 16 byte đã tới từ UART
 
     // *** TEMP DIAGNOSTIC -- REVERT BEFORE REAL USE ***
     reg [7:0] debug_trace_reg;
@@ -265,6 +281,7 @@ module axi_reg_bank (
             status_error_reg <= 1'b0;
             aes_dout_reg     <= 128'h0;
             debug_trace_reg  <= 8'h00;
+            status_pt_reg    <= 1'b0;
         end else begin
             // Hardware Status Logic
             if (reg_start) begin
@@ -285,6 +302,14 @@ module axi_reg_bank (
                     end
                 end
             end
+
+            // Đặt cờ khi có khối mới; firmware xoá bằng cách ghi 1 vào bit 3
+            // của STATUS. Tách riêng khỏi khối done/error ở trên vì reg_start
+            // không được phép xoá nó: khối helper tới TRƯỚC khi ghi START.
+            if (hw_pt_load_valid)
+                status_pt_reg <= 1'b1;
+            else if (pt_ack)
+                status_pt_reg <= 1'b0;
 
             // NEW: hardware load of plaintext from UART RX buffer (128-bit block
             // complete). Given priority over a same-cycle CPU write to AES_PT_*.
@@ -363,7 +388,8 @@ module axi_reg_bank (
                 axi_rvalid <= 1'b1; axi_rresp <= 2'b00; 
                 case (axi_araddr[7:0])
                     SHA_ADDR_CTRL:   axi_rdata <= 32'h0;
-                    SHA_ADDR_STATUS: axi_rdata <= {29'h0, status_error_reg, status_done_reg, hw_busy}; 
+                    SHA_ADDR_STATUS: axi_rdata <= {28'h0, status_pt_reg,
+                                                   status_error_reg, status_done_reg, hw_busy}; 
                     AES_ADDR_CTRL:   axi_rdata <= {30'h0, aes_ctrl_reg};
                     ECC_ADDR_CTRL:   axi_rdata <= {31'h0, ecc_ctrl_reg};
                     PUF_CHLG:        axi_rdata <= {16'h0, puf_chlg_reg}; 

@@ -22,15 +22,17 @@
 #include <ESP8266HTTPClient.h>
 #include <ArduinoJson.h>
 
-const char* WIFI_SSID     = "EELA2201";
-const char* WIFI_PASSWORD = "eela2201";
-const char* BACKEND_URL = "http://192.168.0.3:5000";
+// BACKEND_URL must match the host IP on whatever network is active -- check
+// with `ip addr show` after every network switch, it is DHCP and moves.
+const char* WIFI_SSID     = "Hehe";
+const char* WIFI_PASSWORD = "123456789";
+const char* BACKEND_URL = "http://10.238.250.137:5000";
+//const char* WIFI_SSID     = "EELA2201";
+//const char* WIFI_PASSWORD = "eela2201";
+//const char* BACKEND_URL = "http://192.168.0.3:5000";
 //const char* WIFI_SSID     = "Nhu Ngoc";
 //const char* WIFI_PASSWORD = "nn7677032022";
 //const char* BACKEND_URL = "http://192.168.1.52:5000";
-//const char* WIFI_SSID     = "Hehe";
-//const char* WIFI_PASSWORD = "123456789";
-//const char* BACKEND_URL = "http://10.152.89.151:5000";
 //const char* WIFI_SSID     = "Nhi";
 //const char* WIFI_PASSWORD = "0909794900";
 //const char* BACKEND_URL = "http://192.168.1.105:5000";

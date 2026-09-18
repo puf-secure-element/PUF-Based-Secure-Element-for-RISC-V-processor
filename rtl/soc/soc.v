@@ -20,7 +20,12 @@ module soc (
     // TEMP DIAGNOSTIC: 8-bit firmware progress stamp, driven onto
     // LEDR[7:0] by de10_standard.v. See Instruction_memory.v for the
     // meaning of each value.
-    output  wire     [7:0]   debug_trace
+    output  wire     [7:0]   debug_trace,
+
+    // TEMP DIAGNOSTIC: xung 1 chu kỳ mỗi khi uart_rx_buffer gom đủ một khối
+    // 16 byte từ host. Đây là câu trả lời trực tiếp cho "nonce có tới được
+    // FPGA không" -- thứ mà trước đây không nhìn thấy được từ ngoài.
+    output  wire             rx_block_pulse
 );
 
     parameter   SHA_ADDR_CTRL       = 10'h00;
@@ -135,6 +140,7 @@ module soc (
     wire    [127:0] w_final_aes_data        = w_manual_tx_valid ? w_manual_tx_data : data_out;
 
     assign manual_tx_fired = w_manual_tx_valid;
+    assign rx_block_pulse  = w_uart_plaintext_valid;
 
     // *** TEMP DIAGNOSTIC -- REVERT BEFORE REAL USE ***
     // ro_puf_core removal alone did not bring LEDR9/irq alive, so the

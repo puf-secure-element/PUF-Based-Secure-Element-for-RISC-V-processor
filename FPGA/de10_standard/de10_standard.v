@@ -11,6 +11,7 @@ module de10_standard (
     wire         aes_done;
     wire         manual_tx_fired;
     wire [7:0]   debug_trace;
+    wire         rx_block_pulse;
 
     soc u_soc (
         .clk             (CLOCK_50),
@@ -21,7 +22,8 @@ module de10_standard (
         .uart_txd        (UART_TXD),
         .uart_irq        (irq),
         .manual_tx_fired (manual_tx_fired),
-        .debug_trace     (debug_trace)
+        .debug_trace     (debug_trace),
+        .rx_block_pulse  (rx_block_pulse)
     );
 
     // *** TEMP DIAGNOSTIC -- REVERT BEFORE REAL USE ***
@@ -70,6 +72,19 @@ module de10_standard (
     // value table. 0x00 means the firmware never reached its first stamp.
     assign LEDR[7:0] = debug_trace;
     assign LEDR[8]   = diag_counter[25];
-    assign LEDR[9]   = manual_tx_fired_sticky;
+    // *** TEMP DIAGNOSTIC -- REVERT BEFORE REAL USE ***
+    // LEDR9 trước đây chốt cứng lần kích manual-TX đầu tiên; việc đó đã chứng
+    // minh xong (khung Enroll tới được ESP với CRC đúng). Giờ nó đổi trạng
+    // thái mỗi khi FPGA gom đủ MỘT KHỐI 16 BYTE từ host, tức mỗi lần nhận
+    // được một nonce. Nhờ vậy phân biệt được hai thứ trước đây nhìn giống hệt
+    // nhau khi Auth trả về 0/16: nonce không tới nơi (đèn đứng yên -> lỗi dây
+    // ESP TX -> UART_RXD) hay nonce tới mà board không trả lời (đèn đổi ->
+    // lỗi nằm trong FPGA).
+    reg rx_block_toggle;
+    always @(posedge CLOCK_50 or negedge KEY[0]) begin
+        if (!KEY[0])              rx_block_toggle <= 1'b0;
+        else if (rx_block_pulse)  rx_block_toggle <= ~rx_block_toggle;
+    end
+    assign LEDR[9]   = rx_block_toggle;
 
 endmodule

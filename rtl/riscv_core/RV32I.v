@@ -95,6 +95,11 @@ module RV32I(
     reg MEM_WB_Mem_To_Reg;
     reg [31:0] MEM_WB_mem_data;
     reg [31:0] MEM_WB_ALU_result;
+
+    wire [31:0] ex_mem_fwd_data =
+        (EX_MEM_Jump) ? EX_MEM_pc_plus :
+        (EX_MEM_LUI)  ? EX_MEM_imm     :
+                        EX_MEM_ALU_result;
   
     //================= GÁN TÍN HIỆU RA BUS =================//
     assign mem_req   = EX_MEM_Mem_Read || EX_MEM_Mem_Write;
@@ -109,20 +114,29 @@ module RV32I(
     
 
     //================= Assign =================//
-    assign Flush = Branch_taken || ID_EX_Jump;
+    assign Flush = (ID_EX_Branch && Branch_taken) || ID_EX_Jump;
 
     assign opcode = IF_ID_Instruction[6:0];
     assign funct3 = IF_ID_Instruction[14:12];
 
     assign forwardA_data =
         (ForwardA == 2'b00) ? ID_EX_rv1 :
-        (ForwardA == 2'b10) ? EX_MEM_ALU_result :
+        (ForwardA == 2'b10) ? ex_mem_fwd_data :
         (ForwardA == 2'b01) ? write_data :
                              ID_EX_rv1;
 
+    // Must forward ex_mem_fwd_data, not the raw ALU result -- exactly as the
+    // rs1 mux above already does. EX_MEM_ALU_result is meaningless for LUI
+    // (whose value is EX_MEM_imm) and for JAL (EX_MEM_pc_plus), so an rs2
+    // read of a register written by an immediately preceding LUI or JAL got
+    // garbage. The Enroll sender's tail word hit this: `lui x6,0x30` followed
+    // by `or x23,x23,x6` forwarded the LUI's bogus adder output instead of
+    // 0x00030000, dropping ETX out of the frame. The rs1 path was already
+    // correct, which is why `lui x22,..` + `addi x22,x22,..` built the header
+    // word fine and only the rs2 case was broken.
     assign forwardB_data =
         (ForwardB == 2'b00) ? ID_EX_rv2 :
-        (ForwardB == 2'b10) ? EX_MEM_ALU_result :
+        (ForwardB == 2'b10) ? ex_mem_fwd_data :
         (ForwardB == 2'b01) ? write_data :
                              ID_EX_rv2;
 
@@ -172,7 +186,18 @@ module RV32I(
         else if (bus_stall) begin
             // Đóng băng toàn bộ pipeline, cấm nhảy vào Flush
         end
-        else if (hazard_stall || ID_Flush) begin
+        // A taken branch/jump must bubble ID/EX as well as IF/ID. `Flush`
+        // used to reach only the IF/ID register, but IF/ID is latched on the
+        // very same edge -- so while IF/ID was being overwritten with a NOP,
+        // its OLD contents (the instruction right after the branch) were
+        // simultaneously clocked into ID/EX and executed. Every taken branch
+        // and every jump therefore ran one extra instruction, an unintended
+        // delay slot the firmware knows nothing about. In the Enroll sender's
+        // wait loop that meant `addi x5,x0,0x7C` leaked through on each
+        // iteration, so the next `lw x24,0(x5)` polled MANUAL_TX_3 instead of
+        // MANUAL_TX_STAT, read back the staged header word, and fell out of
+        // the loop while the transmitter was still busy.
+        else if (hazard_stall || ID_Flush || Flush) begin
             ID_EX_RegWrite <= 0; ID_EX_Mem_Read <= 0; ID_EX_Mem_Write <= 0;
             ID_EX_Branch <= 0; ID_EX_Jump <= 0; ID_EX_ALUSrc1 <= 0;
             ID_EX_ALUSrc2 <= 0; ID_EX_LUI <= 0; ID_EX_ALUOp <= 3'b000;

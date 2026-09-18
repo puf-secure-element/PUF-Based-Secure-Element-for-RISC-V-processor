@@ -1,0 +1,20 @@
+BEGIN 1:RV32I:fast:work
+    write_data :  1:tb_uart_cfg:fast:work
+    Flush :  1:tb_uart_cfg:fast:work
+    pc :  1:tb_uart_cfg:fast:work
+    ID_EX_rd :  1:tb_uart_cfg:fast:work
+    MEM_WB_RegWrite :  1:tb_uart_cfg:fast:work
+    hazard_stall :  1:tb_uart_cfg:fast:work
+    IF_ID_Instruction :  1:tb_uart_cfg:fast:work
+    MEM_WB_rd :  1:tb_uart_cfg:fast:work
+    bus_stall :  1:tb_uart_cfg:fast:work
+END 
+BEGIN 1:apb_decoder:fast:work
+    reg_dll :  1:tb_uart_cfg:fast:work
+    reg_lcr :  1:tb_uart_cfg:fast:work
+    reg_mdr :  1:tb_uart_cfg:fast:work
+    reg_dlh :  1:tb_uart_cfg:fast:work
+END 
+BEGIN 1:Register_file:fast:work
+    in_registers :  1:tb_uart_cfg:fast:work
+END 

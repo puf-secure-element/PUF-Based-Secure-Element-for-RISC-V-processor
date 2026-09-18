@@ -26,7 +26,12 @@ module uart_top (//AHB interface
 
                  //Ciphertext input (AES block ready to transmit)
                  input wire          aes_block_valid,
-                 input wire [127:0]  aes_data_out
+                 input wire [127:0]  aes_data_out,
+
+                 //NEW: exposes the auto-TX walk-out status so the CPU can
+                 //poll it before triggering another manual 16-byte send
+                 //(Enroll response) through the same path.
+                 output wire         tx_busy
                 );
   
   wire       bclk;
@@ -60,6 +65,7 @@ module uart_top (//AHB interface
 
   wire rx_rd;
   wire rx_wr;
+  wire rx_wr_stream;
   wire [7:0] rx_data_out;
   wire [7:0] rx_data_in;
   wire rx_full_status;
@@ -69,24 +75,10 @@ module uart_top (//AHB interface
   wire en_tx_fifo_empty;
   wire en_rx_fifo_full;
   wire en_rx_fifo_empty;
-  wire en_parrity_error;
-  wire tx_fifo_full;
-  wire tx_fifo_empty;
-  wire rx_fifo_full;
-  wire rx_fifo_empty;
-  wire parrity_error;
-  wire s_parrity_error;
-  wire parrity_error_status;
   
   wire[9:0]   paddr;
   wire[31:0]  pwdata;
   wire[31:0]  prdata;
-  wire        psel;
-  wire        penable;
-  wire        pwrite;
-  wire        pready;
-  wire        pslverr;  
-
 
   cmsdk_ahb_to_apb #(.ADDRWIDTH(10)) 
   u_bridge(.HCLK(HCLK),      
@@ -151,7 +143,7 @@ module uart_top (//AHB interface
 
   uart_rx_buffer u_rx_buffer(.clk(HCLK),
                             .rst_n(HRESETN),
-                            .rx_wr(rx_wr),
+                            .rx_wr(rx_wr_stream),
                             .rx_data(rx_data_in),
                             .plaintext_valid(plaintext_valid),
                             .plaintext(plaintext));
@@ -202,6 +194,7 @@ module uart_top (//AHB interface
                           .rx_data(rx_data_in),
                           .rx_full_status(rx_full_status),
                           .rx_wr(rx_wr),
+                          .rx_wr_stream(rx_wr_stream),
                           .osm_sel(osm_sel),
                           .eps(eps),
                           .pen(pen),
@@ -233,4 +226,14 @@ module uart_top (//AHB interface
                             .bclk(bclk));
 
   assign interrupt = tx_fifo_full | tx_fifo_empty | rx_fifo_full | rx_fifo_empty | parrity_error;
+  // tx_busy feeds MANUAL_TX_STAT, which firmware polls to decide when the
+  // next 16-byte block may be handed over. hw_tx_busy alone is not enough:
+  // it only covers uart_tx_buffer walking a block INTO the 16-byte TX FIFO,
+  // and drops as soon as the last byte is queued -- while up to 16 bytes are
+  // still draining onto the wire at 115200 baud. Firmware then handed over
+  // the next block on top of a partly-full FIFO, and uart_fifo silently
+  // discards a write issued while full (fifo_we = ~fifo_full & wr), so bytes
+  // went missing mid-frame. Include the FIFO occupancy so 'not busy' means
+  // the FIFO is empty and a fresh 16-byte block is guaranteed to fit.
+  assign tx_busy   = hw_tx_busy | ~tx_empty_status;
 endmodule

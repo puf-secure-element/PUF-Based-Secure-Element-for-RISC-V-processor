@@ -40,6 +40,65 @@
 set_global_assignment -name FAMILY "Cyclone V"
 set_global_assignment -name DEVICE 5CSXFC6D6F31C6
 set_global_assignment -name TOP_LEVEL_ENTITY de10_standard
+set_global_assignment -name SDC_FILE de10_standard.sdc
+# rtl/puf/ro_cell.sv picks its synthesizable ring-oscillator chain vs. its
+# simulation-only `real`-delay model via `ifndef SYNTHESIS. Quartus does not
+# define SYNTHESIS on its own (unlike some other toolchains), so without
+# this the simulation branch gets fed to Analysis & Synthesis and fails with
+# "real variable data type values are not supported".
+set_global_assignment -name VERILOG_MACRO "SYNTHESIS=1"
+# NEW: the design added several small registers (Enroll helper/key/CRC
+# exposure, manual-TX staging) which pushed routing congestion right up to
+# the edge -- Fitter failed with "Can't fit design in device" on 4 signals
+# inside the AES sub_byte_core GF module specifically, an area unrelated to
+# the actual new logic (pure routing contention, not a real resource
+# shortage). A different fitter seed reshuffles placement/routing decisions
+# and commonly resolves this kind of marginal congestion without needing to
+# shrink the design.
+set_global_assignment -name SEED 7
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to UART_TXD
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to UART_RXD
+# ---- Clock (was wrong: AA26 is HSMC_CLKIN_P1, not the 50 MHz oscillator) ----
+set_location_assignment PIN_AF14 -to CLOCK_50
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to CLOCK_50
+
+# ---- UART on GPIO header (header pin 1 = TXD, pin 2 = RXD, pin 12 = GND) ----
+set_location_assignment PIN_W15 -to UART_TXD
+set_location_assignment PIN_AK2 -to UART_RXD
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to UART_TXD
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to UART_RXD
+
+# ---- Push-buttons ----
+set_location_assignment PIN_AJ4  -to KEY[0]
+set_location_assignment PIN_AK4  -to KEY[1]
+set_location_assignment PIN_AA14 -to KEY[2]
+set_location_assignment PIN_AA15 -to KEY[3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to KEY[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to KEY[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to KEY[2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to KEY[3]
+
+# ---- LEDs ----
+set_location_assignment PIN_AA24 -to LEDR[0]
+set_location_assignment PIN_AB23 -to LEDR[1]
+set_location_assignment PIN_AC23 -to LEDR[2]
+set_location_assignment PIN_AD24 -to LEDR[3]
+set_location_assignment PIN_AG25 -to LEDR[4]
+set_location_assignment PIN_AF25 -to LEDR[5]
+set_location_assignment PIN_AE24 -to LEDR[6]
+set_location_assignment PIN_AF24 -to LEDR[7]
+set_location_assignment PIN_AB22 -to LEDR[8]
+set_location_assignment PIN_AC22 -to LEDR[9]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LEDR[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LEDR[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LEDR[2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LEDR[3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LEDR[4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LEDR[5]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LEDR[6]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LEDR[7]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LEDR[8]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LEDR[9]
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 25.1STD.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "10:26:22  AUGUST 25, 2026"
 set_global_assignment -name LAST_QUARTUS_VERSION "25.1std.0 Lite Edition"
@@ -49,7 +108,7 @@ set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 256
 set_global_assignment -name EDA_SIMULATION_TOOL "Questa Altera FPGA (SystemVerilog)"
 set_global_assignment -name EDA_TIME_SCALE "1 ps" -section_id eda_simulation
-set_global_assignment -name EDA_RUN_TOOL_AUTOMATICALLY ON -section_id eda_simulation
+set_global_assignment -name EDA_RUN_TOOL_AUTOMATICALLY OFF -section_id eda_simulation
 set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "SYSTEMVERILOG HDL" -section_id eda_simulation
 set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_board_design_timing
 set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_board_design_symbol
@@ -63,6 +122,14 @@ set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_RO
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+# This is what actually rescued the fit. SEED 7 alone was not enough: the
+# Fitter kept failing with "Can't fit design in device" on a handful of
+# signals inside aes|sub_byte_core|GF. The design only uses ~32% of the
+# logic ("Difficulty packing: Low"), so the shortage was never capacity --
+# it was local routing congestion, which dual-rail AES makes much worse by
+# doubling every wire. Area-driven optimisation packs the same logic into
+# fewer, tighter LABs and frees the routing resources the Fitter needed.
+# Do not drop this line without re-running a full compile.
 set_global_assignment -name OPTIMIZATION_MODE "AGGRESSIVE AREA"
 set_global_assignment -name VERILOG_FILE ../../rtl/aes_dual_rail/aes_core/add_round_key.v
 set_global_assignment -name VERILOG_FILE ../../rtl/aes_dual_rail/aes_core/aes_decrypt.v
@@ -94,5 +161,51 @@ set_global_assignment -name SYSTEMVERILOG_FILE ../../rtl/puf/snapshot_register.s
 
 # RTL file list
 source "rtl_files.qsf"
+set_global_assignment -name VERILOG_FILE ../../rtl/aes_dual_rail/aes_core/add_round_key_core.v
+set_global_assignment -name VERILOG_FILE ../../rtl/aes_dual_rail/aes_core/aes.v
+set_global_assignment -name VERILOG_FILE ../../rtl/aes_dual_rail/aes_core/aff_trans.v
+set_global_assignment -name VERILOG_FILE ../../rtl/aes_dual_rail/aes_core/GF.v
+set_global_assignment -name VERILOG_FILE ../../rtl/aes_dual_rail/aes_core/inv_aff.v
+set_global_assignment -name VERILOG_FILE ../../rtl/aes_dual_rail/aes_core/inv_mix_col_core.v
+set_global_assignment -name VERILOG_FILE ../../rtl/aes_dual_rail/aes_core/mix_col_core.v
+set_global_assignment -name VERILOG_FILE ../../rtl/aes_dual_rail/aes_core/sub_byte_core.v
+set_global_assignment -name VERILOG_FILE ../../rtl/ecc/ecc_top.v
+set_global_assignment -name VERILOG_FILE ../../rtl/ecc/hamming_decoder_32.v
+set_global_assignment -name VERILOG_FILE ../../rtl/ecc/hamming_encoder_32.v
+set_global_assignment -name VERILOG_FILE ../../rtl/riscv_core/ALU.v
+set_global_assignment -name VERILOG_FILE ../../rtl/riscv_core/ALU_control.v
+set_global_assignment -name VERILOG_FILE ../../rtl/riscv_core/Branch_prediction.v
+set_global_assignment -name VERILOG_FILE ../../rtl/riscv_core/Control_unit.v
+set_global_assignment -name VERILOG_FILE ../../rtl/riscv_core/Data_memory.v
+set_global_assignment -name VERILOG_FILE ../../rtl/riscv_core/Forwarding_unit.v
+set_global_assignment -name VERILOG_FILE ../../rtl/riscv_core/Hazard_detection.v
+set_global_assignment -name VERILOG_FILE ../../rtl/riscv_core/Immediate_generator.v
+set_global_assignment -name VERILOG_FILE ../../rtl/riscv_core/Instruction_memory.v
+set_global_assignment -name VERILOG_FILE ../../rtl/riscv_core/Mux.v
+set_global_assignment -name VERILOG_FILE ../../rtl/riscv_core/PC.v
+set_global_assignment -name VERILOG_FILE ../../rtl/riscv_core/Register_file.v
+set_global_assignment -name VERILOG_FILE ../../rtl/riscv_core/RV32I.v
+set_global_assignment -name VERILOG_FILE ../../rtl/riscv_core/Sign_extend.v
+set_global_assignment -name VERILOG_FILE ../../rtl/sha/sha256.v
+set_global_assignment -name VERILOG_FILE ../../rtl/sha/sha256_k_constant.v
+set_global_assignment -name VERILOG_FILE ../../rtl/sha/sha256_m_schedule.v
+set_global_assignment -name VERILOG_FILE ../../rtl/sha/sha256_top.v
+set_global_assignment -name VERILOG_FILE ../../rtl/soc/axi_reg_bank.v
+set_global_assignment -name VERILOG_FILE ../../rtl/soc/axi_slave_core.v
+set_global_assignment -name VERILOG_FILE ../../rtl/soc/axi_slave_top.v
+set_global_assignment -name VERILOG_FILE ../../rtl/soc/axi_to_ahb.v
+set_global_assignment -name VERILOG_FILE ../../rtl/soc/control_fsm.v
+set_global_assignment -name VERILOG_FILE ../../rtl/soc/rv32_axi_master.v
+set_global_assignment -name VERILOG_FILE ../../rtl/soc/soc.v
+set_global_assignment -name VERILOG_FILE ../../rtl/UART/ahb_to_apb.v
+set_global_assignment -name VERILOG_FILE ../../rtl/UART/apb_decoder.v
+set_global_assignment -name VERILOG_FILE ../../rtl/UART/baud_generator.v
+set_global_assignment -name VERILOG_FILE ../../rtl/UART/uart_fifo.v
+set_global_assignment -name VERILOG_FILE ../../rtl/UART/uart_interrupt.v
+set_global_assignment -name VERILOG_FILE ../../rtl/UART/uart_receiver.v
+set_global_assignment -name VERILOG_FILE ../../rtl/UART/uart_rx_buffer.v
+set_global_assignment -name VERILOG_FILE ../../rtl/UART/uart_top.v
+set_global_assignment -name VERILOG_FILE ../../rtl/UART/uart_transmiter.v
+set_global_assignment -name VERILOG_FILE ../../rtl/UART/uart_tx_buffer.v
 
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

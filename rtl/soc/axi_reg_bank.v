@@ -44,8 +44,73 @@ module axi_reg_bank (
 
     // NEW: hardware-side plaintext load from UART RX (bypasses AXI writes)
     input  wire         hw_pt_load_valid,
-    input  wire [127:0] hw_pt_load_data
+    input  wire [127:0] hw_pt_load_data,
+
+    // NEW: ECC helper data (generated during Enrollment) -- read-only for CPU
+    input  wire [95:0]  hw_ecc_helper_out,
+
+    // NEW: SHA-256 derived key -- read-only for CPU, reported as the
+    // Enroll "key" field
+    input  wire [255:0] hw_sha_key_out,
+
+    // NEW: manual 16-byte UART TX trigger, for sending the Enroll response
+    // frame. Bypasses AES entirely -- reuses the same uart_tx_buffer
+    // hardware path already proven reliable for the AES auto-TX block (same
+    // 16-byte-at-a-time walk-out, same tx_busy handshake). Firmware loads
+    // MANUAL_TX_0..3, writes 1 to MANUAL_TX_CTRL, then polls MANUAL_TX_STAT
+    // (hw_uart_tx_busy) until it drops before loading/sending the next block.
+    input  wire         hw_uart_tx_busy,
+    output wire         manual_tx_start,
+    output wire [127:0] manual_tx_data,
+
+    // *** TEMP DIAGNOSTIC -- REVERT BEFORE REAL USE ***
+    // 8-bit firmware progress tracer. One LED bit is not enough to say
+    // WHERE the CPU stops, and a full Quartus compile costs about an hour,
+    // so expose a byte the firmware can stamp at each milestone and wire
+    // it straight to LEDR[7:0]. Value 0 = firmware never got far enough to
+    // write it at all.
+    output wire [7:0]   debug_trace,
+
+    // NEW: ECC Reconstruction handshake. The host pushes 16 bytes down the
+    // normal UART RX path before the key chain starts; they land in
+    // aes_pt_reg, which the CPU can already read. All that was missing was a
+    // way for firmware to notice the block had arrived, and a way to retract
+    // it afterwards -- otherwise control_fsm would later treat that helper
+    // block as an AES plaintext and emit a stray ciphertext.
+    output wire         pt_ack
 );
+
+    // =========================================================================
+    // HELPER DATA NUNG SẴN VÀO BITSTREAM  -- CHỈ CẦN SỬA 4 DÒNG DƯỚI ĐÂY
+    // =========================================================================
+    // Board không có bộ nhớ không bay hơi, nên sau mỗi lần mất điện nó phải
+    // lấy lại helper data của lần Enroll từ đâu đó. Cách mặc định là hỏi host
+    // qua UART (xem mem[160] trong Instruction_memory.v). Cách thứ hai, không
+    // cần mạng và không cần ESP: nung thẳng helper vào giá trị reset của thanh
+    // ghi -- nó trở thành một phần của bitstream.
+    //
+    // Cách làm:
+    //   1. Để nguyên như dưới (VALID = 0), build, nạp, chạy Enroll một lần.
+    //   2. Lấy chuỗi helper 24 ký tự hex trong log, ví dụ
+    //          4CECF1C5DAA972A849C184D6
+    //      cắt làm ba, mỗi phần 8 ký tự, điền theo đúng thứ tự:
+    //          BAKED_HELPER_0 = 32'h4CECF1C5
+    //          BAKED_HELPER_1 = 32'hDAA972A8
+    //          BAKED_HELPER_2 = 32'h49C184D6
+    //   3. Đổi BAKED_HELPER_VALID thành 1'b1, build lại, nạp.
+    //
+    // Từ đó mỗi lần bật nguồn board tự chạy Reconstruction và dẫn xuất lại
+    // ĐÚNG khóa của lần Enroll đó -- firmware đọc ECC_MODE thấy đã bằng 1 nên
+    // bỏ qua luôn bước hỏi host.
+    //
+    // Đánh đổi: bitstream gắn chặt với đúng con chip này. Đem nạp sang board
+    // khác thì helper không khớp đáp ứng PUF của nó, ECC sửa sai, ra khóa rác.
+    // Muốn Enroll lại thì phải lặp lại ba bước trên.
+    // =========================================================================
+    localparam        BAKED_HELPER_VALID = 1'b0;          // 1'b1 = bật Reconstruct ngay từ reset
+    localparam [31:0] BAKED_HELPER_0     = 32'h00000000;  // = HELPER_OUT_0, hex byte 0-3
+    localparam [31:0] BAKED_HELPER_1     = 32'h00000000;  // = HELPER_OUT_1, hex byte 4-7
+    localparam [31:0] BAKED_HELPER_2     = 32'h00000000;  // = HELPER_OUT_2, hex byte 8-11
 
     // =========================================================================
     // PARAMETER HÓA ĐỊA CHỈ 
@@ -82,6 +147,38 @@ module axi_reg_bank (
     localparam ECC_HELPER_0    = 10'h050;
     localparam ECC_HELPER_1    = 10'h054;
     localparam ECC_HELPER_2    = 10'h058;
+
+    // Vùng nhớ 96-bit ĐỌC helper data thật do ECC tính ra lúc Enrollment
+    // (khác với ECC_HELPER_0..2 ở trên vốn là đầu vào helper_in_i cho chế
+    // độ Reconstruction, do CPU/host ghi xuống).
+    localparam HELPER_OUT_0    = 10'h060;
+    localparam HELPER_OUT_1    = 10'h064;
+    localparam HELPER_OUT_2    = 10'h068;
+
+    // Vùng nhớ 128-bit staging cho khối gửi UART thủ công (Enroll response)
+    localparam MANUAL_TX_0     = 10'h070;
+    localparam MANUAL_TX_1     = 10'h074;
+    localparam MANUAL_TX_2     = 10'h078;
+    localparam MANUAL_TX_3     = 10'h07C;
+    localparam MANUAL_TX_CTRL  = 10'h080; // Ghi bit0=1 -> xung 1 chu kỳ "gửi ngay"
+    localparam MANUAL_TX_STAT  = 10'h084; // Đọc bit0 = đang bận gửi (tx_busy)
+
+    // Vùng nhớ 256-bit ĐỌC khóa SHA-256 dùng làm "key" báo cáo trong Enroll
+    localparam KEY_OUT_0       = 10'h090;
+    localparam KEY_OUT_1       = 10'h094;
+    localparam KEY_OUT_2       = 10'h098;
+    localparam KEY_OUT_3       = 10'h09C;
+    localparam KEY_OUT_4       = 10'h0A0;
+    localparam KEY_OUT_5       = 10'h0A4;
+    localparam KEY_OUT_6       = 10'h0A8;
+    localparam KEY_OUT_7       = 10'h0AC;
+
+    // Byte CRC (XOR-fold phần cứng của toàn bộ 44 byte payload Enroll:
+    // 12 byte helper + 32 byte key) -- tính sẵn bằng tổ hợp logic để
+    // firmware không cần viết vòng lặp XOR bằng tay.
+    // *** TEMP DIAGNOSTIC -- REVERT BEFORE REAL USE ***
+    localparam DEBUG_TRACE     = 10'h0C0;
+    localparam ENROLL_CRC      = 10'h0B0;
 
     localparam ADDR_ID         = 10'h0F8;
     localparam ADDR_VERSION    = 10'h0FC;
@@ -155,10 +252,44 @@ module axi_reg_bank (
     reg [1:0]   aes_ctrl_reg;
     reg         ecc_ctrl_reg; 
     
-    reg [31:0]  aes_pt_reg [0:3]; 
-    reg [31:0]  aes_ct_reg [0:3]; 
+    reg [31:0]  aes_pt_reg [0:3];
+    reg [31:0]  aes_ct_reg [0:3];
     reg [31:0]  ecc_helper_reg [0:2]; // Thanh ghi Helper Data
     reg [127:0] aes_dout_reg;
+    // NOTE: manual-TX staging reuses aes_ct_reg[0:3] instead of adding 4 new
+    // 32-bit registers. aes_ct_reg is the AES-decrypt ciphertext input,
+    // which this design never uses (aes_decrypt_en is always 0 -- decrypt
+    // mode is never enabled by the boot firmware), so it's dead storage
+    // otherwise. Saves 128 flip-flops of new logic (was tipping Fitter
+    // routing over the edge in an unrelated area of the design).
+
+    // Ghi 1 vào STATUS bit 3 vừa xoá cờ, vừa báo control_fsm bỏ khối đang
+    // treo -- nếu không, sau khi key_ready lên thì FSM sẽ đem chính khối
+    // helper đó đi mã hoá và nhả ra 16 byte rác.
+    assign pt_ack = slv_reg_wren && (axi_awaddr[7:0] == SHA_ADDR_STATUS)
+                    && axi_wstrb_reg[0] && axi_wdata_reg[3];
+
+    assign manual_tx_start = slv_reg_wren && (axi_awaddr[7:0] == MANUAL_TX_CTRL) && axi_wstrb_reg[0] && axi_wdata_reg[0];
+    assign manual_tx_data  = {aes_ct_reg[3], aes_ct_reg[2], aes_ct_reg[1], aes_ct_reg[0]};
+
+    // NEW: CRC = XOR-fold 44 byte payload Enroll (12 byte helper + 32 byte
+    // key). Thuần tổ hợp, luôn "sẵn sàng" ngay khi helper/key có giá trị --
+    // XOR có tính giao hoán/kết hợp nên thứ tự gộp byte không quan trọng,
+    // miễn firmware gửi đúng tập 44 byte này đi (thứ tự gửi tùy ý).
+    wire [351:0] enroll_payload_bits = {hw_sha_key_out, hw_ecc_helper_out};
+    reg  [7:0]   enroll_crc;
+    integer      crc_i;
+    always @(*) begin
+        enroll_crc = 8'h00;
+        for (crc_i = 0; crc_i < 44; crc_i = crc_i + 1)
+            enroll_crc = enroll_crc ^ enroll_payload_bits[crc_i*8 +: 8];
+    end
+
+    reg status_pt_reg;   // sticky: một khối 16 byte đã tới từ UART
+
+    // *** TEMP DIAGNOSTIC -- REVERT BEFORE REAL USE ***
+    reg [7:0] debug_trace_reg;
+    assign debug_trace = debug_trace_reg;
 
     reg status_done_reg;
     reg status_error_reg;
@@ -172,15 +303,21 @@ module axi_reg_bank (
             puf_chlg_reg     <= 16'hA5A5;
             puf_wind_reg     <= 32'd50;
             aes_ctrl_reg     <= 2'b01; 
-            ecc_ctrl_reg     <= 1'b1;  
+            // Reset về chế độ nung sẵn: 1 = Reconstruct khi đã điền helper,
+            // 0 = để firmware tự quyết (hỏi host, hết giờ thì Enroll).
+            ecc_ctrl_reg     <= BAKED_HELPER_VALID;
             
             aes_pt_reg[0] <= 32'h0; aes_pt_reg[1] <= 32'h0; aes_pt_reg[2] <= 32'h0; aes_pt_reg[3] <= 32'h0;
             aes_ct_reg[0] <= 32'h0; aes_ct_reg[1] <= 32'h0; aes_ct_reg[2] <= 32'h0; aes_ct_reg[3] <= 32'h0;
-            ecc_helper_reg[0] <= 32'h0; ecc_helper_reg[1] <= 32'h0; ecc_helper_reg[2] <= 32'h0;
+            ecc_helper_reg[0] <= BAKED_HELPER_0;
+            ecc_helper_reg[1] <= BAKED_HELPER_1;
+            ecc_helper_reg[2] <= BAKED_HELPER_2;
             
             status_done_reg  <= 1'b0;
             status_error_reg <= 1'b0;
             aes_dout_reg     <= 128'h0;
+            debug_trace_reg  <= 8'h00;
+            status_pt_reg    <= 1'b0;
         end else begin
             // Hardware Status Logic
             if (reg_start) begin
@@ -201,6 +338,14 @@ module axi_reg_bank (
                     end
                 end
             end
+
+            // Đặt cờ khi có khối mới; firmware xoá bằng cách ghi 1 vào bit 3
+            // của STATUS. Tách riêng khỏi khối done/error ở trên vì reg_start
+            // không được phép xoá nó: khối helper tới TRƯỚC khi ghi START.
+            if (hw_pt_load_valid)
+                status_pt_reg <= 1'b1;
+            else if (pt_ack)
+                status_pt_reg <= 1'b0;
 
             // NEW: hardware load of plaintext from UART RX buffer (128-bit block
             // complete). Given priority over a same-cycle CPU write to AES_PT_*.
@@ -232,7 +377,14 @@ module axi_reg_bank (
                     ECC_HELPER_0: for (i=0; i<4; i=i+1) if (axi_wstrb_reg[i]) ecc_helper_reg[0][(i*8)+:8] <= axi_wdata_reg[(i*8)+:8];
                     ECC_HELPER_1: for (i=0; i<4; i=i+1) if (axi_wstrb_reg[i]) ecc_helper_reg[1][(i*8)+:8] <= axi_wdata_reg[(i*8)+:8];
                     ECC_HELPER_2: for (i=0; i<4; i=i+1) if (axi_wstrb_reg[i]) ecc_helper_reg[2][(i*8)+:8] <= axi_wdata_reg[(i*8)+:8];
-                    default: ; 
+
+                    // Reuses aes_ct_reg -- see note above where it's declared.
+                    DEBUG_TRACE: if (axi_wstrb_reg[0]) debug_trace_reg <= axi_wdata_reg[7:0];
+                    MANUAL_TX_0: for (i=0; i<4; i=i+1) if (axi_wstrb_reg[i]) aes_ct_reg[0][(i*8)+:8] <= axi_wdata_reg[(i*8)+:8];
+                    MANUAL_TX_1: for (i=0; i<4; i=i+1) if (axi_wstrb_reg[i]) aes_ct_reg[1][(i*8)+:8] <= axi_wdata_reg[(i*8)+:8];
+                    MANUAL_TX_2: for (i=0; i<4; i=i+1) if (axi_wstrb_reg[i]) aes_ct_reg[2][(i*8)+:8] <= axi_wdata_reg[(i*8)+:8];
+                    MANUAL_TX_3: for (i=0; i<4; i=i+1) if (axi_wstrb_reg[i]) aes_ct_reg[3][(i*8)+:8] <= axi_wdata_reg[(i*8)+:8];
+                    default: ;
                 endcase
             end
         end
@@ -272,7 +424,8 @@ module axi_reg_bank (
                 axi_rvalid <= 1'b1; axi_rresp <= 2'b00; 
                 case (axi_araddr[7:0])
                     SHA_ADDR_CTRL:   axi_rdata <= 32'h0;
-                    SHA_ADDR_STATUS: axi_rdata <= {29'h0, status_error_reg, status_done_reg, hw_busy}; 
+                    SHA_ADDR_STATUS: axi_rdata <= {28'h0, status_pt_reg,
+                                                   status_error_reg, status_done_reg, hw_busy}; 
                     AES_ADDR_CTRL:   axi_rdata <= {30'h0, aes_ctrl_reg};
                     ECC_ADDR_CTRL:   axi_rdata <= {31'h0, ecc_ctrl_reg};
                     PUF_CHLG:        axi_rdata <= {16'h0, puf_chlg_reg}; 
@@ -292,6 +445,24 @@ module axi_reg_bank (
                     AES_OUT_1:       axi_rdata <= aes_dout_reg[63:32];
                     AES_OUT_2:       axi_rdata <= aes_dout_reg[95:64];
                     AES_OUT_3:       axi_rdata <= aes_dout_reg[127:96];
+                    HELPER_OUT_0:    axi_rdata <= hw_ecc_helper_out[31:0];
+                    HELPER_OUT_1:    axi_rdata <= hw_ecc_helper_out[63:32];
+                    HELPER_OUT_2:    axi_rdata <= hw_ecc_helper_out[95:64];
+                    MANUAL_TX_0:     axi_rdata <= aes_ct_reg[0];
+                    MANUAL_TX_1:     axi_rdata <= aes_ct_reg[1];
+                    MANUAL_TX_2:     axi_rdata <= aes_ct_reg[2];
+                    MANUAL_TX_3:     axi_rdata <= aes_ct_reg[3];
+                    MANUAL_TX_STAT:  axi_rdata <= {31'h0, hw_uart_tx_busy};
+                    KEY_OUT_0:       axi_rdata <= hw_sha_key_out[31:0];
+                    KEY_OUT_1:       axi_rdata <= hw_sha_key_out[63:32];
+                    KEY_OUT_2:       axi_rdata <= hw_sha_key_out[95:64];
+                    KEY_OUT_3:       axi_rdata <= hw_sha_key_out[127:96];
+                    KEY_OUT_4:       axi_rdata <= hw_sha_key_out[159:128];
+                    KEY_OUT_5:       axi_rdata <= hw_sha_key_out[191:160];
+                    KEY_OUT_6:       axi_rdata <= hw_sha_key_out[223:192];
+                    KEY_OUT_7:       axi_rdata <= hw_sha_key_out[255:224];
+                    ENROLL_CRC:      axi_rdata <= {24'h0, enroll_crc};
+                    DEBUG_TRACE:     axi_rdata <= {24'h0, debug_trace_reg};
                     ADDR_ID:         axi_rdata <= 32'h43525950; // "CRYP"
                     ADDR_VERSION:    axi_rdata <= 32'h00010000;
                     default: begin

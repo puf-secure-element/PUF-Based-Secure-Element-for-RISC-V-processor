@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Demo xác thực thiết bị bằng PUF</title>
+<style>
+  body { font-family: -apple-system, sans-serif; max-width: 560px; margin: 40px auto; padding: 0 20px; color: #222; }
+  h1 { font-size: 20px; }
+  h2 { font-size: 15px; margin-top: 28px; color: #555; }
+  .card { border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 16px; }
+  label { display: block; margin: 10px 0 4px; font-size: 14px; }
+  select, button { font-size: 15px; padding: 8px 12px; border-radius: 6px; border: 1px solid #ccc; }
+  button { cursor: pointer; border: none; color: white; margin-top: 12px; margin-right: 8px; }
+  .btn-real { background: #0969da; }
+  .btn-enroll { background: #8250df; }
+  .result { margin-top: 20px; padding: 16px; border-radius: 8px; font-size: 15px; }
+  .result.pass { background: #e6f4ea; border: 1px solid #1a7f37; }
+  .result.fail { background: #fbe9e9; border: 1px solid #a3242c; }
+  .result.pending { background: #fff8e6; border: 1px solid #d4a72c; }
+  .status-label { font-size: 22px; font-weight: bold; }
+  .status-label.pass { color: #1a7f37; }
+  .status-label.fail { color: #a3242c; }
+  .status-label.pending { color: #9a7b1a; }
+  .field { font-family: monospace; font-size: 12px; word-break: break-all; margin: 4px 0; color: #555; }
+  .hidden { display: none; }
+  input[type=text] { font-size: 15px; padding: 8px 12px; border-radius: 6px; border: 1px solid #ccc; width: 100%; box-sizing: border-box; }
+  #nonce { font-family: monospace; letter-spacing: 0.5px; }
+  #nonce.bad { border-color: #a3242c; background: #fdf2f2; }
+  #nonce.good { border-color: #1a7f37; background: #f2fbf5; }
+  .check { font-size: 14px; margin: 14px 0 6px; display: flex; align-items: center; gap: 8px; }
+  .check input { margin: 0; }
+  .hint { font-size: 12px; color: #777; margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<h1>Demo xác thực thiết bị bằng PUF (qua ESP)</h1>
+
+<div class="card">
+  <label for="device_id">Device ID</label>
+  <input type="text" id="device_id" value="0001" />
+
+  <h2>Bước 1: Enroll (làm 1 lần cho mỗi device_id)</h2>
+  <button class="btn-enroll" onclick="enrollViaEsp()">Enroll thiết bị (qua ESP)</button>
+
+  <h2>Bước 2: Xác thực</h2>
+
+  <label class="check">
+    <input type="checkbox" id="manual_nonce_on" onchange="toggleNonce()" />
+    Tự nhập nonce (để gỡ lỗi -- cùng nonce luôn cho cùng cipher)
+  </label>
+  <div id="nonce_row" class="hidden">
+    <input type="text" id="nonce" maxlength="47" spellcheck="false"
+           placeholder="000102030405060708090a0b0c0d0e0f"
+           oninput="checkNonce()" />
+    <div class="hint" id="nonce_hint">Cần đúng 32 ký tự hex (16 byte). Cho phép cách, dấu : hoặc -.</div>
+  </div>
+
+  <button class="btn-real" onclick="authenticateReal()">Xác thực với board thật (qua ESP)</button>
+</div>
+
+<div id="result-box" class="hidden"></div>
+
+<script>
+const deviceIdOf = () => document.getElementById('device_id').value;
+const box = () => document.getElementById('result-box');
+
+const nonceEl = () => document.getElementById('nonce');
+const manualOn = () => document.getElementById('manual_nonce_on').checked;
+const cleanNonce = () => nonceEl().value.replace(/[\s:-]/g, '');
+
+function toggleNonce() {
+  document.getElementById('nonce_row').classList.toggle('hidden', !manualOn());
+  if (manualOn()) { nonceEl().focus(); checkNonce(); }
+}
+
+// Backend van la noi kiem tra that su; cho nay chi de biet ngay khi go.
+function checkNonce() {
+  const v = cleanNonce();
+  const el = nonceEl();
+  const hint = document.getElementById('nonce_hint');
+  const isHex = /^[0-9a-fA-F]*$/.test(v);
+  el.classList.remove('good', 'bad');
+  if (v.length === 0) {
+    hint.textContent = 'Cần đúng 32 ký tự hex (16 byte). Cho phép cách, dấu : hoặc -.';
+  } else if (!isHex) {
+    el.classList.add('bad');
+    hint.textContent = 'Chỉ được dùng ký tự hex 0-9 và a-f.';
+  } else if (v.length === 32) {
+    el.classList.add('good');
+    hint.textContent = 'Đủ 16 byte.';
+  } else {
+    el.classList.add('bad');
+    hint.textContent = `${v.length}/32 ký tự hex (${Math.floor(v.length / 2)}/16 byte).`;
+  }
+}
+
+function renderResult(status, data, nonce, source) {
+  const cls = status === 'passed' ? 'pass' : status === 'failed' ? 'fail' : 'pending';
+  const label = cls === 'pass' ? 'PASSED - Mở khóa'
+              : cls === 'fail' ? 'FAILED - Từ chối'
+              : 'Đang chờ board phản hồi...';
+
+  box().className = '';
+  box().innerHTML = `
+    <div class="result ${cls}">
+      <div class="status-label ${cls}">${label}</div>
+      ${nonce ? `<div class="field">Nonce (${source}): ${nonce}</div>` : ''}
+    </div>
+  `;
+}
+
+async function enrollViaEsp() {
+  box().className = '';
+  box().innerHTML = '<div class="result pending"><div class="status-label pending">Đang gửi yêu cầu Enroll tới board...</div></div>';
+
+  let jobId;
+  try {
+    const startRes = await fetch('/api/enroll/start', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ device_id: deviceIdOf() })
+    });
+    const startData = await startRes.json();
+    if (!startRes.ok) { box().innerHTML = `<div class="result fail"><p>Lỗi: ${startData.error}</p></div>`; return; }
+    jobId = startData.job_id;
+  } catch (err) {
+    box().innerHTML = `<div class="result fail"><p>Không kết nối được backend: ${err}</p></div>`;
+    return;
+  }
+
+  for (let i = 0; i < 30; i++) {
+    await new Promise(r => setTimeout(r, 1000));
+    const res = await fetch(`/api/enroll/result/${jobId}`);
+    const data = await res.json();
+    if (data.status === 'done') {
+      box().innerHTML = `<div class="result pass"><div class="status-label pass">Enroll thành công</div><div class="field">Helper Data: ${data.helper_data}</div></div>`;
+      return;
+    }
+  }
+  box().innerHTML = `<div class="result fail"><p>Hết thời gian chờ Enroll -- kiểm tra ESP/FPGA đã bật chưa.</p></div>`;
+}
+
+async function authenticateReal() {
+  box().className = '';
+  box().innerHTML = '<div class="result pending"><div class="status-label pending">Đang gửi yêu cầu tới board...</div></div>';
+
+  let sessionId, usedNonce = '', nonceSource = '';
+  try {
+    const payload = { device_id: deviceIdOf() };
+    if (manualOn()) payload.nonce = cleanNonce();
+    const startRes = await fetch('/api/auth/start', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const startData = await startRes.json();
+    if (!startRes.ok) { box().innerHTML = `<div class="result fail"><p>Lỗi: ${startData.error}</p></div>`; return; }
+    sessionId = startData.session_id;
+    usedNonce = startData.nonce;
+    nonceSource = startData.nonce_source;
+  } catch (err) {
+    box().innerHTML = `<div class="result fail"><p>Không kết nối được backend: ${err}</p></div>`;
+    return;
+  }
+
+  for (let i = 0; i < 30; i++) {
+    await new Promise(r => setTimeout(r, 1000));
+    const res = await fetch(`/api/auth/result/${sessionId}`);
+    const data = await res.json();
+    if (data.status === 'passed' || data.status === 'failed') {
+      renderResult(data.status, data, usedNonce, nonceSource);
+      return;
+    }
+    renderResult('pending', data, usedNonce, nonceSource);
+  }
+  box().innerHTML = `<div class="result fail"><p>Hết thời gian chờ -- kiểm tra ESP/FPGA đã bật chưa.</p></div>`;
+}
+</script>
+
+</body>
+</html>

@@ -24,17 +24,30 @@ module axi_slave_top (
     // System Signals
     output wire         irq,
     output wire [127:0] data_out,
+    output wire         aes_done,
 
     // NEW: UART <-> AES streaming interface
     input  wire [127:0] uart_plaintext,       // from uart_rx_buffer
     input  wire         uart_plaintext_valid, // from uart_rx_buffer (1-cycle pulse)
-    output wire         aes_block_valid       // to uart_tx_buffer (1-cycle pulse, data_out is valid)
+    output wire         aes_block_valid,      // to uart_tx_buffer (1-cycle pulse, data_out is valid)
+
+    // NEW: manual 16-byte UART TX trigger (Enroll response), bypasses AES.
+    // Merged with aes_block_valid/data_out at the soc.v level, right before
+    // feeding uart_top -- kept separate here so data_out/aes_block_valid
+    // above stay pure AES-only signals for existing testbenches.
+    input  wire          uart_tx_busy,        // from uart_top (hw_tx_busy)
+    output wire          manual_tx_valid,
+    output wire [127:0]  manual_tx_data,
+
+    // *** TEMP DIAGNOSTIC -- REVERT BEFORE REAL USE ***
+    output wire [7:0]    debug_trace
 );
 
     wire reg_start, soft_reset;
     wire hw_busy, hw_done_pulse, hw_error_pulse;
+    wire w_pt_ack;
     wire puf_start, ecc_start, sha_start, aes_start;
-    wire puf_valid, ecc_valid, sha_valid, sha_error, aes_done;
+    wire puf_valid, ecc_valid, sha_valid, sha_error;
     wire key_ready;
 
     wire [15:0]  reg_puf_challenge;
@@ -46,7 +59,9 @@ module axi_slave_top (
     wire [127:0] reg_aes_plaintext;
     wire [127:0] reg_aes_ciphertext;
     wire [127:0] hw_aes_dout;
-    
+    wire [95:0]  hw_ecc_helper_out;
+    wire [255:0] hw_sha_key_out;
+
     axi_reg_bank u_reg_bank (
         .clk                (clk),
         .rst_n              (rst_n),
@@ -83,9 +98,17 @@ module axi_slave_top (
         .reg_aes_plaintext  (reg_aes_plaintext),
         .reg_aes_ciphertext (reg_aes_ciphertext),
         .hw_aes_dout        (hw_aes_dout),
+        .hw_ecc_helper_out  (hw_ecc_helper_out),
+        .hw_sha_key_out     (hw_sha_key_out),
 
         .hw_pt_load_valid   (uart_plaintext_valid),
-        .hw_pt_load_data    (uart_plaintext)
+        .hw_pt_load_data    (uart_plaintext),
+
+        .hw_uart_tx_busy    (uart_tx_busy),
+        .manual_tx_start    (manual_tx_valid),
+        .manual_tx_data     (manual_tx_data),
+        .debug_trace        (debug_trace),
+        .pt_ack             (w_pt_ack)
     );
 
     control_fsm u_fsm (
@@ -108,6 +131,7 @@ module axi_slave_top (
 
         .key_ready          (key_ready),
         .plaintext_ready    (uart_plaintext_valid),
+        .plaintext_flush    (w_pt_ack),
         .uart_tx_valid      (aes_block_valid)
     );
 
@@ -134,7 +158,9 @@ module axi_slave_top (
         .aes_start          (aes_start),
         .key_ready          (key_ready),
         .aes_done           (aes_done),
-        .aes_dout           (hw_aes_dout)
+        .aes_dout           (hw_aes_dout),
+        .ecc_helper_out     (hw_ecc_helper_out),
+        .sha_key_out        (hw_sha_key_out)
     );
 
     assign data_out = hw_aes_dout;

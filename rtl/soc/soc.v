@@ -4,12 +4,28 @@ module soc (
 
     // Giao diện quan sát cho Testbench
     output  wire    [127:0] data_out,
-    output  wire            irq,
+    output  wire            aes_done,
 
     // UART serial pins
     input   wire             uart_rxd,
     output  wire             uart_txd,
-    output  wire             uart_irq
+    output  wire             uart_irq,
+
+    // TEMP DIAGNOSTIC: raw pulse, 1 cycle high whenever firmware triggers a
+    // manual 16-byte UART send (Enroll response). Exposed so de10_standard.v
+    // can latch it onto an LED -- lets us tell apart "CPU never reached the
+    // Enroll code" from "it triggered a send but the byte never made it out".
+    output  wire             manual_tx_fired,
+
+    // TEMP DIAGNOSTIC: 8-bit firmware progress stamp, driven onto
+    // LEDR[7:0] by de10_standard.v. See Instruction_memory.v for the
+    // meaning of each value.
+    output  wire     [7:0]   debug_trace,
+
+    // TEMP DIAGNOSTIC: xung 1 chu kỳ mỗi khi uart_rx_buffer gom đủ một khối
+    // 16 byte từ host. Đây là câu trả lời trực tiếp cho "nonce có tới được
+    // FPGA không" -- thứ mà trước đây không nhìn thấy được từ ngoài.
+    output  wire             rx_block_pulse
 );
 
     parameter   SHA_ADDR_CTRL       = 10'h00;
@@ -115,22 +131,60 @@ module soc (
     wire            w_uart_plaintext_valid;
     wire            w_aes_block_valid;
 
+    // NEW: manual 16-byte UART TX trigger (Enroll response), merged with the
+    // AES auto-TX path right before feeding uart_top -- see axi_slave_top.v.
+    wire            w_uart_tx_busy;
+    wire            w_manual_tx_valid;
+    wire    [127:0] w_manual_tx_data;
+    wire            w_final_aes_block_valid = w_aes_block_valid | w_manual_tx_valid;
+    wire    [127:0] w_final_aes_data        = w_manual_tx_valid ? w_manual_tx_data : data_out;
+
+    assign manual_tx_fired = w_manual_tx_valid;
+    assign rx_block_pulse  = w_uart_plaintext_valid;
+
+    // *** TEMP DIAGNOSTIC -- REVERT BEFORE REAL USE ***
+    // ro_puf_core removal alone did not bring LEDR9/irq alive, so the
+    // problem is somewhere else in soc -- possibly in the CPU/AXI/crypto
+    // infrastructure that's ALSO not to blame for irq's computation at all
+    // (irq is pure UART FIFO status, no dependency on any of this). Strip
+    // everything except uart_top out of the netlist entirely to test
+    // whether UART on its own, totally alone, comes alive. HADDR/HTRANS/etc
+    // are tied to idle/inactive values since nothing drives the AHB bus in
+    // this build (no CPU config writes happen, so UART just free-runs
+    // in its post-reset default state).
+`ifdef SOC_DIAG_UART_ONLY
+    assign data_out = 128'h0;
+    assign aes_done = 1'b0;
+    wire [9:0]  ahb_HADDR_tied    = 10'h0;
+    wire [1:0]  ahb_HTRANS_tied   = 2'h0;
+    wire [2:0]  ahb_HBURST_tied   = 3'h0;
+    wire [2:0]  ahb_HSIZE_tied    = 3'h0;
+    wire [3:0]  ahb_HPROT_tied    = 4'h0;
+    wire        ahb_HWRITE_tied   = 1'b0;
+    wire        ahb_HSEL_tied     = 1'b0;
+    wire [31:0] ahb_HWDATA_tied   = 32'h0;
+    // axi_slave_top isn't instantiated in this diagnostic build, so tie its
+    // manual-TX outputs off instead of leaving them undriven.
+    assign w_manual_tx_valid = 1'b0;
+    assign w_manual_tx_data  = 128'h0;
+    assign debug_trace       = 8'h00;
+`else
     // =========================================================================
     // 1. KHỐI CPU RISC-V (Bản đã nâng cấp có mem_req, mem_ready)
     // =========================================================================
     RV32I rv32 (
         .clk        (clk),
         .rst_n      (rst_n),
-        
-        .mem_req    (cpu_req),    
-        .mem_we     (cpu_we),     
-        .mem_addr   (cpu_addr),   
-        .mem_wdata  (cpu_wdata),  
-        .mem_wstrb  (cpu_wstrb),  
-        
-        .mem_rdata  (cpu_rdata),  
-        .mem_ready  (cpu_ready),  
-        .mem_error  (cpu_error)   
+
+        .mem_req    (cpu_req),
+        .mem_we     (cpu_we),
+        .mem_addr   (cpu_addr),
+        .mem_wdata  (cpu_wdata),
+        .mem_wstrb  (cpu_wstrb),
+
+        .mem_rdata  (cpu_rdata),
+        .mem_ready  (cpu_ready),
+        .mem_error  (cpu_error)
     );
 
     // =========================================================================
@@ -139,7 +193,7 @@ module soc (
     rv32_axi_master axi_master_inst (
         .clk            (clk),
         .rst_n          (rst_n),
-        
+
         .cpu_req        (cpu_req),
         .cpu_we         (cpu_we),
         .cpu_addr       (cpu_addr),
@@ -148,7 +202,7 @@ module soc (
         .cpu_rdata      (cpu_rdata),
         .cpu_ready      (cpu_ready),
         .cpu_error      (cpu_error),
-        
+
         .m_axi_awaddr   (axi_awaddr),
         .m_axi_awvalid  (axi_awvalid),
         .m_axi_awready  (axi_awready),
@@ -174,7 +228,7 @@ module soc (
     axi_slave_top crypto_accelerator (
         .clk            (clk),
         .rst_n          (rst_n),
-        
+
         .s_axi_awaddr   (axi_awaddr),
         .s_axi_awvalid  (crypto_awvalid),
         .s_axi_awready  (crypto_awready),
@@ -192,14 +246,20 @@ module soc (
         .s_axi_rresp    (crypto_rresp),
         .s_axi_rvalid   (crypto_rvalid),
         .s_axi_rready   (axi_rready),
-        
+
         // Cắm dây xuất ra SoC ngoài cùng
         .irq            (irq),
+        .aes_done       (aes_done),
         .data_out       (data_out),
 
         .uart_plaintext         (w_uart_plaintext),
         .uart_plaintext_valid   (w_uart_plaintext_valid),
-        .aes_block_valid        (w_aes_block_valid)
+        .aes_block_valid        (w_aes_block_valid),
+
+        .uart_tx_busy           (w_uart_tx_busy),
+        .manual_tx_valid        (w_manual_tx_valid),
+        .manual_tx_data         (w_manual_tx_data),
+        .debug_trace            (debug_trace)
     );
 
     // =========================================================================
@@ -239,10 +299,39 @@ module soc (
         .m_HRDATA       (ahb_HRDATA),
         .m_HRESP        (ahb_HRESP)
     );
+`endif
 
     // =========================================================================
     // 4. UART (RX plaintext -> AES, AES data_out -> TX, CPU config via AHB)
     // =========================================================================
+`ifdef SOC_DIAG_UART_ONLY
+    uart_top u_uart (
+        .HCLK           (clk),
+        .HRESETN        (rst_n),
+        .HADDR          (ahb_HADDR_tied),
+        .HTRANS         (ahb_HTRANS_tied),
+        .HBURST         (ahb_HBURST_tied),
+        .HSIZE          (ahb_HSIZE_tied),
+        .HPROT          (ahb_HPROT_tied),
+        .HWRITE         (ahb_HWRITE_tied),
+        .HSEL           (ahb_HSEL_tied),
+        .HWDATA         (ahb_HWDATA_tied),
+        .HREADYOUT      (),
+        .HRDATA         (),
+        .HRESP          (),
+
+        .uart_rxd       (uart_rxd),
+        .uart_txd       (uart_txd),
+        .interrupt      (uart_irq),
+
+        .plaintext_valid    (),
+        .plaintext          (),
+
+        .aes_block_valid    (1'b0),
+        .aes_data_out       (128'h0),
+        .tx_busy            (w_uart_tx_busy)
+    );
+`else
     uart_top u_uart (
         .HCLK           (clk),
         .HRESETN        (rst_n),
@@ -265,8 +354,10 @@ module soc (
         .plaintext_valid    (w_uart_plaintext_valid),
         .plaintext          (w_uart_plaintext),
 
-        .aes_block_valid    (w_aes_block_valid),
-        .aes_data_out       (data_out)
+        .aes_block_valid    (w_final_aes_block_valid),
+        .aes_data_out       (w_final_aes_data),
+        .tx_busy            (w_uart_tx_busy)
     );
+`endif
 
 endmodule
